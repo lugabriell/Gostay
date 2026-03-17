@@ -1,0 +1,1 @@
+[10-Mar-2026 13:14:44 America/Fortaleza] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home3/idsedu66/public_html/idsead/delete/deleteprofessor.php:17) in /home3/idsedu66/public_html/idsead/delete/deleteprofessor.php on line 20

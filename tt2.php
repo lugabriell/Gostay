@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>StreamVibe — Design de Interfaces Modernas</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --blue-900: #0a1628;
+      --blue-800: #0d1f3c;
+      --blue-700: #102a52;
+      --blue-600: #1a3a6e;
+      --blue-500: #1e4d9b;
+      --blue-400: #2563eb;
+      --blue-300: #3b82f6;
+      --blue-200: #93c5fd;
+      --blue-100: #dbeafe;
+      --blue-50:  #eff6ff;
+      --white:    #ffffff;
+      --gray-50:  #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-400: #94a3b8;
+      --gray-600: #475569;
+      --gray-700: #334155;
+      --gray-800: #1e293b;
+      --accent:   #38bdf8;
+      --gold:     #fbbf24;
+      --green:    #10b981;
+
+      --nav-h: 68px;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --shadow-sm: 0 2px 8px rgba(30,77,155,.10);
+      --shadow-md: 0 8px 32px rgba(30,77,155,.16);
+      --shadow-lg: 0 20px 60px rgba(30,77,155,.22);
+      --transition: .3s cubic-bezier(.4,0,.2,1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--gray-50);
+      color: var(--gray-800);
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--gray-100); }
+    ::-webkit-scrollbar-thumb { background: var(--blue-300); border-radius: 99px; }
+
+    /* =============================================
+       NAVBAR
+    ============================================= */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      height: var(--nav-h);
+      background: rgba(255,255,255,.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(37,99,235,.08);
+      box-shadow: 0 1px 24px rgba(30,77,155,.08);
+      display: flex; align-items: center;
+      padding: 0 clamp(16px, 4vw, 48px);
+      gap: 32px;
+    }
+
+    .nav-logo {
+      font-size: 1.5rem; font-weight: 900; letter-spacing: -0.04em;
+      color: var(--blue-500); text-decoration: none;
+      white-space: nowrap; display: flex; align-items: center; gap: 6px;
+    }
+    .logo-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent); display: inline-block;
+      box-shadow: 0 0 8px var(--accent);
+      animation: pulse-dot 2s infinite;
+    }
+    @keyframes pulse-dot {
+      0%,100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.4); opacity: .7; }
+    }
+
+    .nav-links {
+      display: flex; align-items: center; gap: 4px;
+      list-style: none; flex: 1;
+    }
+    .nav-links a {
+      text-decoration: none; color: var(--gray-600);
+      font-size: .9rem; font-weight: 500;
+      padding: 6px 14px; border-radius: var(--radius-sm);
+      transition: var(--transition); position: relative;
+    }
+    .nav-links a:hover { color: var(--blue-400); background: var(--blue-50); }
+    .nav-links a.active { color: var(--blue-400); background: var(--blue-50); }
+    .nav-links a.active::after {
+      content: ''; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
+      width: 16px; height: 2px; background: var(--blue-400); border-radius: 99px;
+    }
+
+    .nav-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+
+    .nav-search-btn {
+      width: 38px; height: 38px; border-radius: 50%;
+      border: none; background: var(--blue-50); cursor: pointer;
+      display: grid; place-items: center; color: var(--blue-400);
+      transition: var(--transition);
+    }
+    .nav-search-btn:hover { background: var(--blue-100); transform: scale(1.05); }
+
+    .nav-avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue-400), var(--accent));
+      display: grid; place-items: center; cursor: pointer;
+      font-weight: 700; color: white; font-size: .85rem;
+      box-shadow: 0 2px 10px rgba(37,99,235,.35);
+      transition: var(--transition);
+    }
+    .nav-avatar:hover { transform: scale(1.08); }
+
+    .nav-hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      cursor: pointer; padding: 6px; border: none; background: none;
+    }
+    .nav-hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--blue-500); border-radius: 99px;
+    }
+
+    #mobile-nav-toggle { display: none; }
+    #mobile-nav-toggle:checked ~ .mobile-nav { display: block; }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+    }
+
+    .mobile-nav {
+      display: none; position: fixed; inset: 0; z-index: 999;
+      background: rgba(10,22,40,.7); backdrop-filter: blur(4px);
+    }
+    .mobile-nav-panel {
+      position: absolute; top: 0; right: 0; bottom: 0; width: 260px;
+      background: white; padding: 80px 24px 32px;
+      display: flex; flex-direction: column; gap: 8px;
+      box-shadow: -10px 0 40px rgba(10,22,40,.3);
+    }
+    .mobile-nav-panel a {
+      text-decoration: none; color: var(--gray-700);
+      font-size: 1rem; font-weight: 500; padding: 12px 16px;
+      border-radius: var(--radius-sm); transition: var(--transition);
+    }
+    .mobile-nav-panel a:hover { background: var(--blue-50); color: var(--blue-400); }
+    .mobile-nav-close-label { position: absolute; inset: 0; cursor: pointer; }
+
+    /* =============================================
+       BANNER
+    ============================================= */
+    .banner {
+      position: relative;
+      height: clamp(480px, 65vh, 700px);
+      margin-top: var(--nav-h);
+      overflow: hidden;
+    }
+
+    .banner-bg {
+      position: absolute; inset: 0;
+      background: url('https://picsum.photos/seed/design-course/1600/900') center/cover no-repeat;
+      transform: scale(1.04);
+      animation: banner-zoom 20s ease-in-out infinite alternate;
+    }
+    @keyframes banner-zoom {
+      from { transform: scale(1.04); }
+      to   { transform: scale(1.09); }
+    }
+
+    .banner-bg::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(37,99,235,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(37,99,235,.05) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    .banner-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(
+        105deg,
+        rgba(10,22,40,.95) 0%,
+        rgba(14,30,62,.80) 40%,
+        rgba(37,99,235,.20) 100%
+      );
+    }
+
+    .banner-overlay-bottom {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 160px;
+      background: linear-gradient(to top, var(--gray-50), transparent);
+    }
+
+    .banner-content {
+      position: relative; z-index: 2;
+      height: 100%; display: flex; flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 clamp(20px, 6vw, 80px) clamp(32px, 6vh, 72px);
+      max-width: 760px;
+    }
+
+    .banner-breadcrumb {
+      display: flex; align-items: center; gap: 8px;
+      color: rgba(255,255,255,.5); font-size: .78rem;
+      margin-bottom: 16px;
+    }
+    .banner-breadcrumb a { color: rgba(255,255,255,.5); text-decoration: none; transition: var(--transition); }
+    .banner-breadcrumb a:hover { color: var(--accent); }
+    .banner-breadcrumb span { color: rgba(255,255,255,.3); }
+
+    .banner-category {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(56,189,248,.15); border: 1px solid rgba(56,189,248,.3);
+      border-radius: 99px; padding: 4px 14px;
+      color: var(--accent); font-size: .72rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      margin-bottom: 14px; width: fit-content;
+      backdrop-filter: blur(8px);
+      animation: fadeUp .5s ease both .1s;
+    }
+
+    .banner-title {
+      font-size: clamp(2rem, 4.5vw, 3.8rem);
+      font-weight: 900; line-height: 1.05;
+      letter-spacing: -0.03em; color: white;
+      margin-bottom: 14px;
+      text-shadow: 0 2px 20px rgba(0,0,0,.4);
+      animation: fadeUp .5s ease both .2s;
+    }
+
+    .banner-meta {
+      display: flex; align-items: center; gap: 14px;
+      flex-wrap: wrap; margin-bottom: 28px;
+      animation: fadeUp .5s ease both .3s;
+    }
+    .banner-rating {
+      background: var(--gold); color: var(--gray-800);
+      font-size: .72rem; font-weight: 800; padding: 3px 9px; border-radius: 4px;
+    }
+    .banner-tag {
+      color: rgba(255,255,255,.6); font-size: .82rem;
+      display: flex; align-items: center; gap: 5px;
+    }
+    .banner-tag svg { opacity: .6; }
+
+    .banner-actions {
+      display: flex; gap: 12px; flex-wrap: wrap;
+      animation: fadeUp .5s ease both .4s;
+    }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 26px; border-radius: var(--radius-sm);
+      font-family: 'Outfit', sans-serif;
+      font-size: .9rem; font-weight: 600;
+      cursor: pointer; border: none; text-decoration: none;
+      transition: var(--transition); white-space: nowrap;
+    }
+    .btn-primary {
+      background: var(--blue-400); color: white;
+      box-shadow: 0 4px 20px rgba(37,99,235,.4);
+    }
+    .btn-primary:hover { background: var(--blue-300); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(37,99,235,.5); }
+    .btn-ghost {
+      background: rgba(255,255,255,.12); color: white;
+      border: 1px solid rgba(255,255,255,.25);
+      backdrop-filter: blur(8px);
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,.22); transform: translateY(-2px); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* =============================================
+       MAIN LAYOUT
+    ============================================= */
+    .main {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 clamp(16px, 4vw, 48px) 80px;
+    }
+
+    /* =============================================
+       INFO SECTION
+    ============================================= */
+    .info-section {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 32px;
+      margin-top: 40px;
+      animation: fadeUp .6s ease both .1s;
+    }
+
+    @media (max-width: 900px) {
+      .info-section { grid-template-columns: 1fr; }
+    }
+
+    /* Left: description + lessons */
+    .info-main {}
+
+    .info-desc-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-200);
+      margin-bottom: 28px;
+    }
+
+    .section-label {
+      font-size: .7rem; font-weight: 800;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: var(--blue-400); margin-bottom: 12px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .section-label::before {
+      content: ''; width: 3px; height: 14px;
+      background: linear-gradient(to bottom, var(--blue-400), var(--accent));
+      border-radius: 99px;
+    }
+
+    .info-title {
+      font-size: clamp(1.4rem, 2.5vw, 1.9rem);
+      font-weight: 800; letter-spacing: -0.02em;
+      color: var(--gray-800); margin-bottom: 14px;
+      line-height: 1.2;
+    }
+
+    .info-description {
+      font-family: 'Lora', serif;
+      font-size: clamp(.88rem, 1.2vw, .97rem);
+      color: var(--gray-600); line-height: 1.8;
+    }
+    .info-description p + p { margin-top: 12px; }
+
+    /* Right: stats card */
+    .info-sidebar {}
+
+    .stats-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--gray-200);
+      position: sticky; top: calc(var(--nav-h) + 20px);
+    }
+
+    .stats-card-thumb {
+      width: 100%; aspect-ratio: 16/9;
+      border-radius: var(--radius-md);
+      overflow: hidden; margin-bottom: 20px;
+      position: relative;
+    }
+    .stats-card-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .stats-card-thumb-overlay {
+      position: absolute; inset: 0;
+      background: rgba(10,22,40,.4);
+      display: grid; place-items: center;
+      opacity: 0; transition: var(--transition);
+    }
+    .stats-card-thumb:hover .stats-card-thumb-overlay { opacity: 1; }
+    .play-icon {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: var(--blue-400); display: grid; place-items: center;
+      color: white; box-shadow: 0 4px 20px rgba(37,99,235,.5);
+      transform: scale(.9); transition: var(--transition);
+    }
+    .stats-card-thumb:hover .play-icon { transform: scale(1); }
+
+    .stat-row {
+      display: flex; align-items: flex-start;
+      gap: 12px; padding: 12px 0;
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .stat-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .stat-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--blue-50); display: grid; place-items: center;
+      color: var(--blue-400); flex-shrink: 0;
+    }
+    .stat-info {}
+    .stat-label {
+      font-size: .68rem; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--gray-400); margin-bottom: 2px;
+    }
+    .stat-value {
+      font-size: .92rem; font-weight: 600; color: var(--gray-800);
+    }
+
+    .stats-enroll-btn {
+      width: 100%; margin-top: 20px;
+      padding: 14px; border-radius: var(--radius-sm);
+      background: var(--blue-400); color: white;
+      font-family: 'Outfit', sans-serif; font-size: .95rem; font-weight: 700;
+      border: none; cursor: pointer;
+      box-shadow: 0 4px 18px rgba(37,99,235,.35);
+      transition: var(--transition);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .stats-enroll-btn:hover { background: var(--blue-300); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(37,99,235,.45); }
+
+    /* =============================================
+       LESSONS SECTION
+    ============================================= */
+    .lessons-section {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-200);
+      animation: fadeUp .6s ease both .2s;
+    }
+
+    .lessons-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .lessons-count {
+      font-size: .82rem; color: var(--gray-400); font-weight: 500;
+    }
+
+    .lesson-item {
+      display: flex; align-items: center; gap: 16px;
+      padding: 14px 16px;
+      border-radius: var(--radius-md);
+      transition: var(--transition);
+      cursor: pointer;
+      border: 1px solid transparent;
+      text-decoration: none;
+      color: inherit;
+    }
+    .lesson-item:hover {
+      background: var(--blue-50);
+      border-color: var(--blue-100);
+      transform: translateX(4px);
+    }
+
+    .lesson-number {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--gray-100); display: grid; place-items: center;
+      font-size: .78rem; font-weight: 800; color: var(--blue-400);
+      flex-shrink: 0; transition: var(--transition);
+    }
+    .lesson-item:hover .lesson-number {
+      background: var(--blue-400); color: white;
+    }
+
+    .lesson-info { flex: 1; min-width: 0; }
+    .lesson-name {
+      font-size: .9rem; font-weight: 600; color: var(--gray-800);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      margin-bottom: 2px;
+    }
+    .lesson-subtitle {
+      font-size: .75rem; color: var(--gray-400);
+    }
+
+    .lesson-duration {
+      font-size: .78rem; font-weight: 600; color: var(--gray-400);
+      white-space: nowrap; display: flex; align-items: center; gap: 4px;
+    }
+
+    .lesson-play-btn {
+      width: 34px; height: 34px; border-radius: 50%;
+      border: 2px solid var(--blue-200);
+      background: white; display: grid; place-items: center;
+      color: var(--blue-400); cursor: pointer; transition: var(--transition);
+      flex-shrink: 0;
+    }
+    .lesson-item:hover .lesson-play-btn {
+      background: var(--blue-400); border-color: var(--blue-400); color: white;
+      transform: scale(1.1);
+    }
+
+    .lesson-divider {
+      height: 1px; background: var(--gray-100);
+      margin: 0 16px;
+    }
+
+    .lessons-show-more {
+      width: 100%; margin-top: 16px;
+      padding: 12px; border-radius: var(--radius-sm);
+      border: 1.5px dashed var(--blue-200);
+      background: transparent; cursor: pointer;
+      font-family: 'Outfit', sans-serif; font-size: .85rem; font-weight: 600;
+      color: var(--blue-400); transition: var(--transition);
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .lessons-show-more:hover { background: var(--blue-50); border-style: solid; }
+
+    /* =============================================
+       RELATED SECTION
+    ============================================= */
+    .related-section {
+      margin-top: 56px;
+      animation: fadeUp .6s ease both .3s;
+    }
+
+    .related-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .related-title {
+      font-size: clamp(1.1rem, 2vw, 1.3rem);
+      font-weight: 700; color: var(--gray-800);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .related-title::before {
+      content: ''; display: block;
+      width: 4px; height: 20px; border-radius: 99px;
+      background: linear-gradient(to bottom, var(--blue-400), var(--accent));
+    }
+
+    .related-see-all {
+      font-size: .82rem; font-weight: 600; color: var(--blue-400);
+      text-decoration: none; display: flex; align-items: center; gap: 4px;
+      transition: var(--transition);
+    }
+    .related-see-all:hover { color: var(--blue-300); gap: 8px; }
+
+    .related-carousel-wrapper { position: relative; }
+
+    .related-track-outer {
+      overflow-x: auto; overflow-y: visible;
+      padding: 8px 0 24px;
+      scrollbar-width: none;
+      scroll-behavior: smooth;
+      cursor: grab;
+    }
+    .related-track-outer:active { cursor: grabbing; }
+    .related-track-outer::-webkit-scrollbar { display: none; }
+
+    .related-track {
+      display: flex; gap: 18px;
+      width: max-content;
+    }
+
+    .rel-btn {
+      position: absolute; top: 50%; transform: translateY(-60%);
+      z-index: 10; width: 42px; height: 42px; border-radius: 50%;
+      border: none; cursor: pointer;
+      background: white; color: var(--blue-500);
+      box-shadow: var(--shadow-md);
+      display: grid; place-items: center;
+      transition: var(--transition);
+      opacity: 0; pointer-events: none;
+    }
+    .related-carousel-wrapper:hover .rel-btn { opacity: 1; pointer-events: auto; }
+    .rel-btn:hover { background: var(--blue-400); color: white; transform: translateY(-60%) scale(1.08); }
+    .rel-btn.prev { left: -16px; }
+    .rel-btn.next { right: -16px; }
+
+    /* Related card */
+    a.rel-card {
+      text-decoration: none; color: inherit;
+      flex-shrink: 0;
+      width: clamp(200px, 22vw, 260px);
+      border-radius: var(--radius-md);
+      background: white;
+      border: 1px solid var(--gray-200);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: transform var(--transition), box-shadow var(--transition);
+      display: block;
+    }
+    a.rel-card:hover { transform: translateY(-6px) scale(1.02); box-shadow: var(--shadow-lg); }
+
+    .rel-card-img {
+      width: 100%; aspect-ratio: 16/9;
+      object-fit: cover; display: block;
+      transition: transform var(--transition);
+    }
+    a.rel-card:hover .rel-card-img { transform: scale(1.05); }
+
+    .rel-card-body { padding: 14px 16px; }
+    .rel-card-category {
+      font-size: .65rem; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--blue-400); margin-bottom: 5px;
+    }
+    .rel-card-title {
+      font-size: .9rem; font-weight: 700; color: var(--gray-800);
+      line-height: 1.3; margin-bottom: 8px;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .rel-card-meta {
+      display: flex; align-items: center; gap: 8px;
+      font-size: .73rem; color: var(--gray-400);
+    }
+    .rel-card-rating { color: var(--gold); font-weight: 700; }
+    .rel-card-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--gray-300); }
+
+    /* =============================================
+       FOOTER
+    ============================================= */
+    footer {
+      background: linear-gradient(135deg, var(--blue-900) 0%, var(--blue-800) 100%);
+      color: rgba(255,255,255,.7);
+      padding: 40px clamp(20px, 6vw, 80px);
+      margin-top: 0;
+    }
+
+    .footer-inner {
+      max-width: 1280px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 20px;
+    }
+
+    .footer-logo {
+      font-size: 1.3rem; font-weight: 900; color: white;
+      letter-spacing: -.04em;
+    }
+    .footer-logo span { color: var(--accent); }
+
+    .footer-links {
+      display: flex; gap: 8px; list-style: none; flex-wrap: wrap;
+    }
+    .footer-links a {
+      text-decoration: none; color: rgba(255,255,255,.5);
+      font-size: .85rem; padding: 5px 12px; border-radius: 6px;
+      transition: var(--transition);
+    }
+    .footer-links a:hover { color: var(--accent); background: rgba(255,255,255,.06); }
+
+    .footer-copy {
+      font-size: .75rem; color: rgba(255,255,255,.25);
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <input type="checkbox" id="mobile-nav-toggle" style="display:none"/>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="streamvibe.html" class="nav-logo">
+      Stream<span style="color:var(--accent)">Vibe</span>
+      <span class="logo-dot"></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="streamvibe.html">Início</a></li>
+      <li><a href="#" class="active">Cursos</a></li>
+      <li><a href="#">Minha Lista</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="nav-search-btn" aria-label="Buscar">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+        </svg>
+      </button>
+      <div class="nav-avatar">VR</div>
+      <label for="mobile-nav-toggle" class="nav-hamburger">
+        <span></span><span></span><span></span>
+      </label>
+    </div>
+  </nav>
+
+  <!-- Mobile Nav -->
+  <div class="mobile-nav">
+    <label for="mobile-nav-toggle" class="mobile-nav-close-label"></label>
+    <div class="mobile-nav-panel">
+      <a href="streamvibe.html">Início</a>
+      <a href="#">Cursos</a>
+      <a href="#">Minha Lista</a>
+    </div>
+  </div>
+
+  <!-- BANNER -->
+  <section class="banner">
+    <div class="banner-bg"></div>
+    <div class="banner-overlay"></div>
+    <div class="banner-overlay-bottom"></div>
+    <div class="banner-content">
+      <div class="banner-breadcrumb">
+        <a href="streamvibe.html">Início</a>
+        <span>›</span>
+        <a href="#">Cursos</a>
+        <span>›</span>
+        <span style="color:rgba(255,255,255,.7)">Design de Interfaces Modernas</span>
+      </div>
+      <div class="banner-category">UI / UX Design</div>
+      <h1 class="banner-title">Design de Interfaces<br>Modernas</h1>
+      <div class="banner-meta">
+        <span class="banner-rating">★ 9.4</span>
+        <span class="banner-tag">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          42h 30min
+        </span>
+        <span class="banner-tag">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 10l4.553-2.069A1 1 0 0121 8.82V15.18a1 1 0 01-1.447.89L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/></svg>
+          68 aulas
+        </span>
+        <span class="banner-tag">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+          3.842 alunos
+        </span>
+      </div>
+      <div class="banner-actions">
+        <button class="btn btn-primary">
+          <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          Assistir agora
+        </button>
+        <button class="btn btn-ghost">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+          Adicionar à lista
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- INFO SECTION -->
+    <div class="info-section">
+
+      <!-- LEFT -->
+      <div class="info-main">
+
+        <!-- Description card -->
+        <div class="info-desc-card">
+          <div class="section-label">Sobre o curso</div>
+          <h2 class="info-title">Design de Interfaces Modernas com Figma e CSS</h2>
+          <div class="info-description">
+            <p>
+              Aprenda a criar interfaces digitais de alto impacto com foco em experiência do usuário, hierarquia visual e sistemas de design escaláveis. Este curso foi desenvolvido para designers e desenvolvedores que desejam elevar o nível das suas entregas e construir produtos digitais que encantam.
+            </p>
+            <p>
+              Ao longo das aulas, você vai dominar os fundamentos do design visual — tipografia, cor, espaçamento e grid — e aplicá-los diretamente no Figma, a ferramenta mais utilizada no mercado. Na segunda parte do curso, você aprende a transformar seus designs em interfaces reais utilizando HTML5 e CSS3 moderno, com Flexbox, Grid e variáveis CSS.
+            </p>
+            <p>
+              O curso inclui projetos práticos com feedback da comunidade, arquivos de referência editáveis e um certificado de conclusão reconhecido por empresas parceiras.
+            </p>
+          </div>
+        </div>
+
+        <!-- Lessons section -->
+        <div class="lessons-section">
+          <div class="lessons-header">
+            <div class="section-label" style="margin-bottom:0">Aulas do curso</div>
+            <span class="lessons-count">68 aulas · 42h 30min</span>
+          </div>
+
+          <!-- Lessons list -->
+          <a class="lesson-item" href="#">
+            <div class="lesson-number">01</div>
+            <div class="lesson-info">
+              <div class="lesson-name">Introdução ao Design de Interfaces</div>
+              <div class="lesson-subtitle">Conceitos fundamentais · Gratuita</div>
+            </div>
+            <div class="lesson-duration">
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              18min
+            </div>
+            <button class="lesson-play-btn" aria-label="Assistir">
+              <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+          </a>
+          <div class="lesson-divider"></div>
+
+          <a class="lesson-item" href="#">
+            <div class="lesson-number">02</div>
+            <div class="lesson-info">
+              <div class="lesson-name">Princípios de Tipografia para UI</div>
+              <div class="lesson-subtitle">Tipografia · Módulo 1</div>
+            </div>
+            <div class="lesson-duration">
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              34min
+            </div>
+            <button class="lesson-play-btn" aria-label="Assistir">
+              <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+          </a>
+          <div class="lesson-divider"></div>
+
+          <a class="lesson-item" href="#">
+            <div class="lesson-number">03</div>
+            <div class="lesson-info">
+              <div class="lesson-name">Teoria das Cores e Paletas Modernas</div>
+              <div class="lesson-subtitle">Cores · Módulo 1</div>
+            </div>
+            <div class="lesson-duration">
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              41min
+            </div>
+            <button class="lesson-play-btn" aria-label="Assistir">
+              <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+          </a>
+          <div class="lesson-divider"></div>
+
+          <a class="lesson-item" href="#">
+            <div class="lesson-number">04</div>
+            <div class="lesson-info">
+              <div class="lesson-name">Grid Systems e Layout Responsivo</div>
+              <div class="lesson-subtitle">Layout · Módulo 2</div>
+            </div>
+            <div class="lesson-duration">
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              52min
+            </div>
+            <button class="lesson-play-btn" aria-label="Assistir">
+              <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+          </a>
+          <div class="lesson-divider"></div>
+
+          <a class="lesson-item" href="#">
+            <div class="lesson-number">05</div>
+            <div class="lesson-info">
+              <div class="lesson-name">Componentes e Design Systems no Figma</div>
+              <div class="lesson-subtitle">Figma · Módulo 2</div>
+            </div>
+            <div class="lesson-duration">
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              1h 08min
+            </div>
+            <button class="lesson-play-btn" aria-label="Assistir">
+              <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+          </a>
+          <div class="lesson-divider"></div>
+
+          <a class="lesson-item" href="#">
+            <div class="lesson-number">06</div>
+            <div class="lesson-info">
+              <div class="lesson-name">Auto Layout e Variantes Avançadas</div>
+              <div class="lesson-subtitle">Figma · Módulo 2</div>
+            </div>
+            <div class="lesson-duration">
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              55min
+            </div>
+            <button class="lesson-play-btn" aria-label="Assistir">
+              <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+          </a>
+          <div class="lesson-divider"></div>
+
+          <a class="lesson-item" href="#">
+            <div class="lesson-number">07</div>
+            <div class="lesson-info">
+              <div class="lesson-name">HTML5 Semântico para Designers</div>
+              <div class="lesson-subtitle">Código · Módulo 3</div>
+            </div>
+            <div class="lesson-duration">
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              38min
+            </div>
+            <button class="lesson-play-btn" aria-label="Assistir">
+              <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+          </a>
+          <div class="lesson-divider"></div>
+
+          <a class="lesson-item" href="#">
+            <div class="lesson-number">08</div>
+            <div class="lesson-info">
+              <div class="lesson-name">CSS Moderno: Variáveis, Flexbox e Grid</div>
+              <div class="lesson-subtitle">Código · Módulo 3</div>
+            </div>
+            <div class="lesson-duration">
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              1h 22min
+            </div>
+            <button class="lesson-play-btn" aria-label="Assistir">
+              <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+          </a>
+
+
+        </div>
+
+      </div><!-- /info-main -->
+
+      <!-- SIDEBAR -->
+      <aside class="info-sidebar">
+        <div class="stats-card">
+          
+
+          <div class="stat-row">
+            <div class="stat-icon">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-label">Professor</div>
+              <div class="stat-value">Rafael Mendonça</div>
+            </div>
+          </div>
+
+          <div class="stat-row">
+            <div class="stat-icon">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-label">Carga horária</div>
+              <div class="stat-value">42 horas 30 minutos</div>
+            </div>
+          </div>
+
+          <div class="stat-row">
+            <div class="stat-icon">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 10l4.553-2.069A1 1 0 0121 8.82V15.18a1 1 0 01-1.447.89L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/></svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-label">Quantidade de aulas</div>
+              <div class="stat-value">68 aulas</div>
+            </div>
+          </div>
+
+          <div class="stat-row">
+            <div class="stat-icon">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 20h20M6 20V10M10 20V4M14 20v-8M18 20v-6"/></svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-label">Nível</div>
+              <div class="stat-value">Iniciante ao Avançado</div>
+            </div>
+          </div>
+
+          <div class="stat-row">
+            <div class="stat-icon">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-label">Certificado</div>
+              <div class="stat-value">Incluso na conclusão</div>
+            </div>
+          </div>
+
+          <div class="stat-row">
+            <div class="stat-icon">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z"/></svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-label">Idioma</div>
+              <div class="stat-value">Português (BR)</div>
+            </div>
+          </div>
+
+          <button class="stats-enroll-btn">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            Iniciar curso agora
+          </button>
+        </div>
+      </aside>
+
+    </div><!-- /info-section -->
+
+    <!-- RELATED SECTION -->
+    <section class="related-section">
+      <div class="related-header">
+        <h2 class="related-title">Você também pode gostar</h2>
+        <a href="#" class="related-see-all">Ver tudo →</a>
+      </div>
+      <div class="related-carousel-wrapper" id="rel-carousel">
+        <button class="rel-btn prev" onclick="scrollRel(-1)">
+          <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="related-track-outer" id="rel-track-outer">
+          <div class="related-track">
+
+            <a class="rel-card" href="#">
+              <img class="rel-card-img" src="https://picsum.photos/seed/ux-research/480/270" alt="UX Research"/>
+              <div class="rel-card-body">
+                <div class="rel-card-category">UX Research</div>
+                <div class="rel-card-title">Pesquisa com Usuários do Zero</div>
+                <div class="rel-card-meta">
+                  <span class="rel-card-rating">★ 9.1</span>
+                  <span class="rel-card-dot"></span>
+                  <span>28h 15min</span>
+                  <span class="rel-card-dot"></span>
+                  <span>44 aulas</span>
+                </div>
+              </div>
+            </a>
+
+            <a class="rel-card" href="#">
+              <img class="rel-card-img" src="https://picsum.photos/seed/motion-design/480/270" alt="Motion Design"/>
+              <div class="rel-card-body">
+                <div class="rel-card-category">Motion Design</div>
+                <div class="rel-card-title">Animações para Interfaces com CSS e JS</div>
+                <div class="rel-card-meta">
+                  <span class="rel-card-rating">★ 8.8</span>
+                  <span class="rel-card-dot"></span>
+                  <span>18h 40min</span>
+                  <span class="rel-card-dot"></span>
+                  <span>31 aulas</span>
+                </div>
+              </div>
+            </a>
+
+            <a class="rel-card" href="#">
+              <img class="rel-card-img" src="https://picsum.photos/seed/branding/480/270" alt="Branding"/>
+              <div class="rel-card-body">
+                <div class="rel-card-category">Branding</div>
+                <div class="rel-card-title">Identidade Visual e Marca Digital</div>
+                <div class="rel-card-meta">
+                  <span class="rel-card-rating">★ 9.3</span>
+                  <span class="rel-card-dot"></span>
+                  <span>22h 00min</span>
+                  <span class="rel-card-dot"></span>
+                  <span>36 aulas</span>
+                </div>
+              </div>
+            </a>
+
+            <a class="rel-card" href="#">
+              <img class="rel-card-img" src="https://picsum.photos/seed/frontend-dev/480/270" alt="Frontend"/>
+              <div class="rel-card-body">
+                <div class="rel-card-category">Front-end</div>
+                <div class="rel-card-title">React para Designers: do Figma ao Código</div>
+                <div class="rel-card-meta">
+                  <span class="rel-card-rating">★ 9.0</span>
+                  <span class="rel-card-dot"></span>
+                  <span>35h 20min</span>
+                  <span class="rel-card-dot"></span>
+                  <span>58 aulas</span>
+                </div>
+              </div>
+            </a>
+
+            <a class="rel-card" href="#">
+              <img class="rel-card-img" src="https://picsum.photos/seed/accessibility/480/270" alt="Acessibilidade"/>
+              <div class="rel-card-body">
+                <div class="rel-card-category">Acessibilidade</div>
+                <div class="rel-card-title">Design Inclusivo e WCAG na Prática</div>
+                <div class="rel-card-meta">
+                  <span class="rel-card-rating">★ 8.6</span>
+                  <span class="rel-card-dot"></span>
+                  <span>14h 50min</span>
+                  <span class="rel-card-dot"></span>
+                  <span>24 aulas</span>
+                </div>
+              </div>
+            </a>
+
+            <a class="rel-card" href="#">
+              <img class="rel-card-img" src="https://picsum.photos/seed/produto/480/270" alt="Produto"/>
+              <div class="rel-card-body">
+                <div class="rel-card-category">Produto</div>
+                <div class="rel-card-title">Product Design: Estratégia e Validação</div>
+                <div class="rel-card-meta">
+                  <span class="rel-card-rating">★ 9.5</span>
+                  <span class="rel-card-dot"></span>
+                  <span>30h 10min</span>
+                  <span class="rel-card-dot"></span>
+                  <span>52 aulas</span>
+                </div>
+              </div>
+            </a>
+
+          </div>
+        </div>
+        <button class="rel-btn next" onclick="scrollRel(1)">
+          <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo">Stream<span>Vibe</span>.</div>
+      <ul class="footer-links">
+        <li><a href="#">Sobre</a></li>
+        <li><a href="#">Termos</a></li>
+        <li><a href="#">Privacidade</a></li>
+        <li><a href="#">Contato</a></li>
+      </ul>
+      <p class="footer-copy">© 2024 StreamVibe. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script>
+    /* Related carousel */
+    function scrollRel(dir) {
+      const outer = document.getElementById('rel-track-outer');
+      outer.scrollBy({ left: dir * outer.clientWidth * 0.75, behavior: 'smooth' });
+    }
+
+    /* Drag-to-scroll */
+    const outer = document.getElementById('rel-track-outer');
+    let isDown = false, startX, scrollLeft;
+    outer.addEventListener('mousedown', e => { isDown = true; startX = e.pageX - outer.offsetLeft; scrollLeft = outer.scrollLeft; });
+    outer.addEventListener('mouseleave', () => { isDown = false; });
+    outer.addEventListener('mouseup', () => { isDown = false; });
+    outer.addEventListener('mousemove', e => { if (!isDown) return; e.preventDefault(); outer.scrollLeft = scrollLeft - (e.pageX - outer.offsetLeft - startX); });
+  </script>
+
+</body>
+</html>
