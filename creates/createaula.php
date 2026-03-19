@@ -14,9 +14,9 @@ if(isset($_POST['submit'])){
     }
 }
 else{
-    header('Location: ../nonvalidated.php');
+    //header('Location: ../nonvalidated.php');
 }
-$idcurso = $_POST['idcurso'];
+$idcurso = $_POST['curso'];
 $idprofessor = $_POST['professor'];
 $nome         = $_POST['nome'];
 $duracao         = $_POST['duracao'];

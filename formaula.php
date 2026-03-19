@@ -29,22 +29,7 @@
 
 
     }
-    $idcurso = $_GET['idcurso'];
-    // $sqlmodulo = "SELECT * From modulo WHERE idcurso = '$idcurso'";
-    // $resultmodulo = mysqli_query($conexao, $sqlmodulo);
 
-    
-
-    // if((!isset($_SESSION['email']) == true) and (!isset($_SESSION['senha']) == true)){
-    //     header('Location: index.html');
-    //     session_unset();
-    //     session_destroy();
-    // }
-    
-    // else{
-    //   $_SESSION['verificação'] = 'Ativo';
-          
-    // }
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -80,7 +65,7 @@
                     required
                 >
             </div>
-            <input type="hidden" name="idcurso" id="idcurso" value="<?php echo($idcurso); ?>">
+
             <!-- Campo Quantidade de Alunos -->
             <div class="form-group">
                 <label for="duracao">Duração em Minutos</label>
@@ -117,8 +102,6 @@
               <?php
               
             if(!isset($_GET['idcurso'])){
-                $sqlmodulo = "SELECT * From modulo";
-                $resultmodulo = mysqli_query($conexao, $sqlmodulo);
                 $sqlcursos2 = "SELECT * FROM curso";
                 $resultcursos2 = mysqli_query($conexao, $sqlcursos2);
                 while ($dadoscursos2 = mysqli_fetch_assoc($resultcursos2)): ?>
@@ -126,7 +109,7 @@
                     <label class="radio-label">
                         <input
                             type="radio"
-                            name="modulo"
+                            name="curso"
                             value="<?= $dadoscursos2['id'] ?>"
                             required
                         >
@@ -139,24 +122,12 @@
                     $idcurso = $_GET['idcurso'];
                     $sqlmodulo = "SELECT * From modulo WHERE idcurso = '$idcurso'";
                     $resultmodulo = mysqli_query($conexao, $sqlmodulo);
-                }
-            ?> 
-            <div class="form-group">
-              <div class="radio-group">
-              <?php while ($dadosmodulo = mysqli_fetch_assoc($resultmodulo)): ?>
-                          <label class="radio-label">
-                              <input
-                                  type="radio"
-                                  name="modulo"
-                                  value="<?= $dadosmodulo['id'] ?>"
-                                  required
-                              >
-                              <span><?= htmlspecialchars($dadosmodulo['nome']) ?></span>
-                          </label>
-              <?php endwhile; ?>
-
-              </div>
-          </div>
+                    ?>
+                    <input type="hidden" name="curso" id="curso" value="<?php echo($idcurso); ?>">
+                    <?php 
+                    
+                }?>
+           
 
 
             <!-- Campo Quantidade de Módulos -->
