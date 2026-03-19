@@ -1,7 +1,7 @@
 <?php
 
 
-$dbHost = 'localhost';
+    $dbHost = 'localhost';
     $dbUsername = 'idsedu66_idsead';
     $dbPassword = 'Lucas@2110';
     $bancodedados = 'idsedu66_idsead';

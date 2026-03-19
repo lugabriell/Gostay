@@ -335,7 +335,7 @@ $letras = strtoupper(
                         <th>Categoria</th>
                         <th>Status</th>
                         <th>Alunos</th>
-                        <th>Ações</th>
+                        <th>Aï¿½ï¿½es</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -386,7 +386,7 @@ $letras = strtoupper(
     </main>
 
     <footer class="footer">
-        <p>GoStay @ 2026 - Sistema de Gestão Educacional - v2.1.4</p>
+        <p>GoStay @ 2026 - Sistema de Gestï¿½o Educacional - v2.1.4</p>
     </footer>
 
     <script>
