@@ -10,7 +10,7 @@
 
 
 
-
+    // OPTION LOCAL
     // $dbHost = 'localhost';
     // $dbUsername = 'root';
     // $dbPassword = '';
