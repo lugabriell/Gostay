@@ -53,7 +53,41 @@ $stmt->bind_param(
 
 
 if ($stmt->execute()) {
+    $sqlaula = "SELECT idaula FROM sua_tabela 
+        WHERE idcurso = '$idcurso'
+        AND idprofessor = '$idprofessor'
+        AND nome = '$nome'
+        AND duracao = '$duracao'
+        AND caminhoconteudo = '$mediabd'
+        AND caminhovideo = '$videobd'
+        AND qtdalunos = '$qtdalunos'
+        AND ordem = '$ordem'
+        AND descricao = '$descricao'
+        AND statusaula = '$statusa'";
+    $resultaula = mysqli_query($conexao, $sqlaula);
+    $dadosaula = mysqli_fetch_assoc($resultaula);
+    $idaula = $dadosaula['idaula'];
+    $nao = "nao";
+    $sqlalunoaula = "SELECT idaluno FROM cursoaluno WHERE idcurso = '$idcurso'";
+    $resultalunoaula = mysqli_query($conexao, $sqlalunoaula);
+    while($dadosalunoaula = mysqli_fetch_assoc($resultalunoaula)){
+        $stmt2 =  $conexao->prepare("INSERT INTO alunoaula (idaula, idcurso, statusal, progresso, datafim, datainicio, ultimaposicao) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt2->bind_param(
+            "iisssss",
+            $idaula,
+            $idcurso,
+            $statusa,
+            $nao,
+            $nao,
+            $nao,
+            $nao
+
+        );
+        $stmt2->execute();
+    }
+
     header("Location: ../curso.php?id=$idcurso");
+
 //     // $result = mysqli_query($conexao, $sqlautenticado);
 //     // $dados = mysqli_fetch_assoc($result);
     
