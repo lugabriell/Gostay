@@ -13,7 +13,9 @@ if (isset($_FILES['arquivo'])) {
 
 $nome          = $_POST['nome'];
 $email         = $_POST['email'];
+
 $senha         = $_POST['senha'];
+
 $telefone      = $_POST['telefone'];
 $senhacripto   = password_hash($senha, PASSWORD_ARGON2ID);
 $datanas = $_POST['datanas'];
@@ -24,8 +26,8 @@ $arquivobd = salvarft($arquivooriginal, $conexao);
 
 if(isset($_SESSION['nameadm']) && isset($_SESSION['emailadm'])){
     $autenticado = $_POST['autenticado'];
-    //de onde vem a foto de perfil aqui var(ftperfil) --> é o arquivooriginal ?
-    $stmt = $conexao->prepare(" 
+    
+    $stmt = $conexao->prepare("
         INSERT INTO alunos 
         (nome, email, senha, telefone, datanascimento, formacao, ftperfil, autenticado) 
         VALUES (?, ?, ?, ?, ?, ?, ?,?)

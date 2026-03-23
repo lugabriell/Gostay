@@ -26,9 +26,30 @@ $stmt->bind_param(
     $idcurso,
     $status
 );
-
+$nao = "nao";
 if($stmt->execute()){
-    header("Location: ../curso.php?id=$idcurso");
+    $sqlaula = "SELECT * FROM aula WHERE idcurso = '$idcurso'";
+    $resultaula = mysqli_query($conexao, $sqlaula);
+    while($dadosaula = mysqli_fetch_assoc($resultaula)){
+        $stmt2 = $conexao->prepare("
+        INSERT INTO alunoaula (idaluno, idaula, statusal,progresso, ultimaposicao, datainicio,datafim) VALUES (?,?,?,?,?,?,?)");
+        $stmt2->bind_param(
+            "iisssss",
+            $idaluno,
+            $dadosaula['id'],
+            $status,
+            $nao,
+            $nao,
+            $nao,
+            $nao
+        );
+        if($stmt2->execute()){
+            header("Location: ../curso.php?id=$idcurso");
+        }
+        else{
+            header("Location: ../curso.php?id=$idcurso?user=naoencontrado");
+        }
+    }
 }
 $stmt->close();
 $conexao->close();

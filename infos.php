@@ -5,30 +5,60 @@
   if(!isset($_SESSION['email'])|| !isset($_SESSION['nome'])){
     header("Location:login.php");
   }
-
-  $sqlnovidades = "SELECT * FROM curso WHERE tipo ='gratis' ORDER BY datacadastro DESC";
-  $resultnovidades = mysqli_query($conexao, $sqlnovidades);
   $idcurso = $_GET['trackid'];
-  $sqlinfo = "SELECT * FROM curso WHERE id = '$idcurso'";
-  $resultinfo = mysqli_query($conexao, $sqlinfo);
-  $dadosinfo = mysqli_fetch_assoc($resultinfo);
-  $idcategoria = $dadosinfo['idcategoria'];
-  $sqlcategoria = "SELECT * FROM categoria WHERE id = '$idcategoria'";
-  $resultcategoria = mysqli_query($conexao, $sqlcategoria);
-  $dadoscategoria = mysqli_fetch_assoc($resultcategoria);
-  $idprofessor= $dadosinfo['idprofessor'];
-  $sqlprofessor= "SELECT * FROM professor WHERE id = '$idprofessor'";
-  $resultprofessor= mysqli_query($conexao, $sqlprofessor);
-  $dadosprofessor= mysqli_fetch_assoc($resultprofessor);
-  $sqlmycursos = "SELECT * FROM cursoaluno WHERE idcurso = '$idcurso' AND idaluno = '$idaluno'";
-  $resultmycursos = mysqli_query($conexao, $sqlmycursos);
-  $numrows = mysqli_num_rows($resultmycursos);
-  $sqlaula = "SELECT * FROM aula WHERE idcurso = '$idcurso' ORDER BY ordem ASC";
-  $resultaula = mysqli_query($conexao, $sqlaula);
-  $resultaula2 = mysqli_query($conexao, $sqlaula);
-  $dadosaula2 = mysqli_fetch_assoc($resultaula2);
-  $idaula = $dadosaula2['id'];
 
+  $sqlcurso = "SELECT * FROM curso WHERE id = '$idcurso'";
+  $resultcurso = mysqli_query($conexao,$sqlcurso);
+  $dadoscurso = mysqli_fetch_assoc($resultcurso);
+  $tipo = $dadoscurso['tipo'];
+  $sqlalunocurso = "SELECT * FROM cursoaluno WHERE idcurso = '$idcurso'";
+  $resultcursoaluno = mysqli_query($conexao, $sqlalunocurso);
+  $numrowsaluno = mysqli_num_rows($resultcursoaluno);
+
+
+  if($tipo == "gratis" || $numrowsaluno > 0){
+    $sqlnovidades = "SELECT * FROM curso WHERE tipo ='gratis' ORDER BY datacadastro DESC";
+    $resultnovidades = mysqli_query($conexao, $sqlnovidades);
+
+    $sqlinfo = "SELECT * FROM curso WHERE id = '$idcurso'";
+    $resultinfo = mysqli_query($conexao, $sqlinfo);
+    $dadosinfo = mysqli_fetch_assoc($resultinfo);
+
+
+    $idcategoria = $dadosinfo['idcategoria'];
+    $sqlcategoria = "SELECT * FROM categoria WHERE id = '$idcategoria'";
+    $resultcategoria = mysqli_query($conexao, $sqlcategoria);
+    $dadoscategoria = mysqli_fetch_assoc($resultcategoria);
+
+
+    $idprofessor= $dadosinfo['idprofessor'];
+    $sqlprofessor= "SELECT * FROM professor WHERE id = '$idprofessor'";
+    $resultprofessor= mysqli_query($conexao, $sqlprofessor);
+    $dadosprofessor= mysqli_fetch_assoc($resultprofessor);
+
+
+    $sqlaula = "
+    SELECT aula.*
+    FROM alunoaula
+    JOIN aula ON aula.id = alunoaula.idaula
+    WHERE alunoaula.idaluno = '$idaluno'
+    AND alunoaula.statusal = 'ativo'
+    ORDER BY aula.ordem ASC
+    ";
+
+    $resultaula = mysqli_query($conexao, $sqlaula);
+    $numrows = mysqli_num_rows($resultaula);
+    $resultaula2 = mysqli_query($conexao, $sqlaula);
+    $dadosaula2 = mysqli_fetch_assoc($resultaula2);
+
+    
+
+  }
+  else{
+    header("Location: homepage.php");
+  }
+
+  
 
 
 
@@ -56,7 +86,7 @@
 
   <input type="checkbox" id="mobile-nav-toggle" style="display:none"/>
 
-  <!-- NAVBAR -->
+
   <nav class="navbar">
     <a href="homepage.php" class="nav-logo">
       Go<span style="color:var(--accent)">Stay</span>
@@ -70,9 +100,9 @@
     <div class="nav-right">
 
     </div>
-  </nav>
+  </nav> 
 
-  <!-- Mobile Nav -->
+
   <div class="mobile-nav">
     <label for="mobile-nav-toggle" class="mobile-nav-close-label"></label>
     <div class="mobile-nav-panel">
@@ -269,7 +299,7 @@
             ?>
 
             <a class="rel-card" href="infos.php?trackid=<?php echo $idnovidade; ?>">
-              <img class="rel-card-img" src="<?php echo("creates/". $dadosnovidades['posterft']); ?>" alt="UX Research"/>
+              <img class="rel-card-img" src="<?php echo("creates/". $dadosnovidades['posterft']); ?>" alt="Curso"/>
               <div class="rel-card-body">
                 <div class="rel-card-category"><?php echo($dadosnovidades['nome']); ?></div>
                 <div class="rel-card-title"><?php echo($dadosnovidades['descricao']); ?></div>
