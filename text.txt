@@ -1,0 +1,1171 @@
+<?php
+require_once __DIR__ . "/connection.php";
+session_start();
+if(!isset($_SESSION['emailadm']) && !isset($_SESSION['nameadm'])){
+    header('Location: nonvalidated.php');
+}
+else{
+    $email = $_SESSION['emailadm'];
+    $nome = $_SESSION['nameadm'];
+    $sql = "SELECT autenticado FROM adms WHERE email = '$email' AND nome = '$nome' ";
+    $result = mysqli_query($conexao, $sql);
+    $dados = mysqli_fetch_assoc($result);
+    $sqlcategoria = 'SELECT * from categoria';
+    $resultcategoria =mysqli_query($conexao, $sqlcategoria);
+    $sqlcursos = 'SELECT * from curso';
+    $resultcurso =mysqli_query($conexao, $sqlcursos);
+    
+    $qtdcurso = mysqli_num_rows($resultcurso);
+    $qtdcategoria = mysqli_num_rows($resultcategoria);
+    if(empty($dados)){
+        header('Location: nonvalidated.php');
+    }
+    else{
+        if($dados['autenticado'] == 'nao'){
+            header('Location: nonvalidated.php');
+        }
+    }
+
+
+
+}
+$sql2 = "SELECT nome FROM adms WHERE email = '$email' AND nome = '$nome' ";
+$result2 = mysqli_query($conexao, $sql2);
+$dados2 = mysqli_fetch_assoc($result2);
+$nomeCompleto = $dados2['nome'];
+$sqlprofessor = "SELECT * FROM professor";
+$resultprofessor = mysqli_query($conexao, $sqlprofessor);
+$sqlaula = "SELECT * FROM aula";
+$resultaula = mysqli_query($conexao, $sqlaula);
+
+$partesNome = explode(' ', trim($nomeCompleto));
+$nomePrincipal = $partesNome[0] . ' ' . ($partesNome[1] ?? '');
+
+$letras = strtoupper(
+    substr($partesNome[0], 0, 1) .
+    (isset($partesNome[1]) ? substr($partesNome[1], 0, 1) : '')
+);
+
+
+
+?>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IdsEad - Dashboard de Cursos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <button class="menu-toggle" id="menuToggle">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+            <div class="logo">I</div>
+            <h1 class="brand-name">IdsEad</h1>
+        </div>
+        <div class="user-profile">
+            <button class="user-button" id="userButton">
+                <div class="user-avatar"><?php echo($letras); ?></div>
+
+                <span class="user-name"><?php echo($nomePrincipal); ?></span>
+                <svg class="dropdown-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </button>
+            <div class="dropdown-menu" id="dropdownMenu">
+            
+                <a href="sairadm.php" class="dropdown-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    Sair
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar Overlay (Mobile) -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <button class="sidebar-toggle" id="sidebarToggle">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
+        <nav>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="testando.php" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                        <span class="nav-text">Categorias</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="dashadm.php" class="nav-link active">
+                        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                        </svg>
+                        <span class="nav-text">Dashboard Principal</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="alunosadm.php" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        <span class="nav-text">Alunos</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="profadm.php" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                            <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                        </svg>
+                        <span class="nav-text">Professores</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="videosadm.php" class="nav-link">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="7" width="15" height="10" rx="2" ry="2"></rect>
+                        <polygon points="17 10 22 7 22 17 17 14"></polygon>
+                    </svg>
+                        <span class="nav-text">Videos</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M12 1v6m0 6v6m5.196-15.196l-4.242 4.242m0 5.656l-4.242 4.242M23 12h-6m-6 0H1m18.196-5.196l-4.242 4.242m0 5.656l4.242 4.242"></path>
+                        </svg>
+                        <span class="nav-text">Configurações</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+    <h2 class="page-title">Perfil</h2>
+    <p class="page-subtitle">Informações pessoais do usuário</p>
+</div>
+
+<!-- Card Perfil -->
+<div class="kpi-grid">
+    <div class="kpi-card" style="width: 100%;">
+        <div class="kpi-header" style="align-items: center; gap: 20px;">
+
+            <!-- Avatar -->
+            <div>
+                <img src="creates/assets/abobrinha.png" 
+                     alt="Avatar" 
+                     style="width:200px; height:2000px; border-radius:50%; object-fit:cover;">
+            </div>
+
+            <!-- Informações -->
+            <div>
+                <div class="kpi-value">
+                    Teste
+                </div>
+
+                <div class="kpi-label" style="margin-top:8px;">
+                    <strong>Formação:</strong> Teste
+                </div>
+
+                <div class="kpi-label" style="margin-top:4px;">
+                    <strong>Email:</strong> Teste
+                </div>
+            </div>
+
+            <!-- Ícone lateral opcional -->
+            <div class="kpi-icon primary">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" 
+                     stroke="currentColor" stroke-width="2" 
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <form action="admre.php" method="post">
+                <button type="submit" name="curso" value="curso" class="btn btn-primary">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Novo Curso
+                </button>
+                <button type="submit" name="categoria" value="categoria" class="btn btn-primary">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4169E1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Nova Categoria
+                </button>
+        
+                <button type="submit" name="categorias" value="categorias" class="btn btn-secondary">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    Gerenciar Categorias
+                </button>
+            </form>
+        </div>
+
+        <!-- Content Grid -->
+        <div class="content-grid">
+            <!-- Latest Courses -->
+            <div class="content-card">
+                <div class="content-card-header">
+                    <h3 class="content-card-title">Professores </h3>
+                    <a href="professoradm.php" class="view-all-link">Ver todos →</a>
+                </div>
+                <?php 
+                    $numteste = 0;
+                    while($numteste <=3 and $dadosprofessor = mysqli_fetch_assoc($resultprofessor)):
+
+                ?>
+
+                <div class="course-list-item">
+
+                    <div class="course-icon">📚</div>
+                    <div class="course-info">
+                        <div class="course-name"><?php echo($dadosprofessor['nome']); ?></div>
+                        <div class="course-meta"><?php echo($dadosprofessor['formacao']); ?></div>
+                    </div>
+
+                </div>
+
+            </div>
+            <?php 
+                $numteste++;
+                endwhile; 
+            ?>
+
+            <div class="content-card">
+                <div class="content-card-header">
+                    <h3 class="content-card-title">Aulas</h3>
+                    <a href="aulasadm.php" class="view-all-link">Ver todos →</a>
+                </div>
+
+                <?php 
+                $numaula = 0;
+                while(($dadosaula = mysqli_fetch_assoc($resultaula)) && $numaula < 4):
+                ?>
+                
+                    <div class="course-list-item">
+                        <div class="course-icon">📚</div>
+                        <div class="course-info">
+                            <div class="course-name">
+                                <?php echo $dadosaula['nome']; ?>
+                            </div>
+                            <div class="course-meta">
+                                <?php echo $dadosaula['duracao']; ?>
+                            </div>
+                        </div>
+                    </div>
+
+                <?php 
+                    $numaula++;
+                endwhile;
+                ?>
+
+            </div>
+            </div>
+
+        <!-- Courses Table -->
+        <div class="table-container">
+            <div class="table-header">
+                <h3 class="table-title">Todos os Cursos</h3>
+                <div class="search-box">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <input type="text" placeholder="Buscar cursos...">
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome do Curso</th>
+                        <th>Categoria</th>
+                        <th>Status</th>
+                        <th>Alunos</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+
+                        while($dadoscursos = mysqli_fetch_assoc($resultcurso)):
+                            
+                            $idcategoria2 = $dadoscursos['idcategoria'];
+                            $sqlcategoriaid = "SELECT * from categoria where id = '$idcategoria2'";
+                            $resultcategoria2 = mysqli_query($conexao, $sqlcategoriaid);
+                            $dadoscategoria2 = mysqli_fetch_assoc($resultcategoria2);
+                             if($dadoscursos['statuscurso'] === 'ativo'){
+                                $badgeclass = 'badge-active';
+                             }
+                             else{
+                                $badgeclass = 'badge-pending';
+                             }
+                    ?>
+                    <tr>
+                        
+                        <!-- //$dadoscursos = mysqli_fetch_assoc($resultcurso); -->
+                        <td><strong><?php echo($dadoscursos['nome']);?></strong></td>
+                        <td><?php echo($dadoscategoria2['nome']);  ?></td>
+                        <td><span class="badge <?php echo($badgeclass); ?>"><?php echo($dadoscursos['statuscurso']);?></span></td>
+                        <td><?php echo($dadoscursos['qtdal']);?></td>
+                        <td>
+                            <div class="table-actions">
+                                <a href='curso.php?id=<?= $dadoscursos['id'] ?>' class="action-btn" title="Editar">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                    </svg>
+                                </a>
+                                <a href='delete/deletecurso.php?id=<?= $dadoscursos['id'] ?>' class="action-btn" title="Excluir">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                   <?php endwhile ?>
+                    
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>IdsEad © 2026 - Sistema de Gestão Educacional - v2.1.4</p>
+    </footer>
+
+    <script>
+        // User dropdown toggle
+        const userButton = document.getElementById('userButton');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+
+        userButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userButton.classList.toggle('active');
+            dropdownMenu.classList.toggle('active');
+        });
+
+        document.addEventListener('click', () => {
+            userButton.classList.remove('active');
+            dropdownMenu.classList.remove('active');
+        });
+
+        // Sidebar toggle (desktop)
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+        });
+
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('mobile-open');
+            sidebarOverlay.classList.toggle('active');
+        });
+
+        sidebarOverlay.addEventListener('click', () => {
+            sidebar.classList.remove('mobile-open');
+            sidebarOverlay.classList.remove('active');
+        });
+
+        // Close mobile menu when clicking a nav item
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.remove('mobile-open');
+                    sidebarOverlay.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<?php
+  session_start();
+  include_once("connection.php");
+  $idaluno = $_SESSION['id'];
+  if(!isset($_SESSION['email'])|| !isset($_SESSION['nome'])){
+    header("Location:login.php");
+  }
+  $sqlmycourse = "SELECT * FROM cursoaluno WHERE idaluno = '$idaluno'";
+  $sqlfreecourse = "SELECT * FROM curso WHERE tipo = 'gratis'";
+  $resultmycourse = mysqli_query($conexao, $sqlmycourse);
+  $resultfreecourse = mysqli_query($conexao, $sqlfreecourse);
+  $resultfreecourse2 = mysqli_query($conexao, $sqlfreecourse);
+  $dadosfreecourse = mysqli_fetch_assoc($resultfreecourse2);
+  $idcategoria = $dadosfreecourse['idcategoria'];
+  $sqlcategoria = "SELECT nome FROM categoria WHERE id ='$idcategoria'";
+  $resultcategoria = mysqli_query($conexao, $sqlcategoria);
+  $dadoscategoria = mysqli_fetch_assoc($resultcategoria);
+ 
+
+?>
+
+
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ids Ead</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="stylehomepage.css">
+  <style>
+    .hero {
+      position: relative; width: 100%;
+      height: clamp(520px, 80vh, 780px);
+      overflow: hidden; margin-top: var(--nav-h);
+    }
+
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(160deg,
+          rgba(10,22,40,.85) 0%,
+          rgba(30,77,155,.6) 40%,
+          rgba(56,189,248,.25) 100%),
+        url('<?php  echo("creates/".$dadosfreecourse['posterft']); ?>') center/cover no-repeat;
+      transform: scale(1.04);
+      animation: hero-zoom 18s ease-in-out infinite alternate;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Mobile nav toggle (CSS-only) -->
+  <input type="checkbox" id="mobile-nav-toggle" style="display:none"/>
+
+  <!-- =============================================
+       NAVBAR
+  ============================================= -->
+  <nav class="navbar">
+    <a href="#" class="nav-logo">
+      Ids<span style="color:var(--accent)">EAD</span>
+      <span class="logo-dot"></span>
+    </a>
+
+    <ul class="nav-links">
+
+      <li><a href="#section-destques">Destaques</a></li>
+      <li><a href="#">Gratuitos</a></li>
+      <li><a href="#">Meus Cursos</a></li>
+    </ul>
+
+    <div class="nav-right">
+
+      
+  </nav>
+
+  <!-- Mobile Nav (CSS-only toggle) -->
+  <div class="mobile-nav">
+    <label for="mobile-nav-toggle" class="mobile-nav-close-label"></label>
+    <div class="mobile-nav-panel">
+      <a href="#destaques">Destaques</a>
+      <a href="#">Gratuitos</a>
+      <a href="#">Meus Cursos</a>
+    </div>
+  </div>
+
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-gradient"></div>
+    <div class="hero-gradient-bottom"></div>
+    <div class="hero-content">
+      <div class="hero-badge">Em destaque agora</div>
+      <h1 class="hero-title"><span><?php echo($dadosfreecourse['nome']); ?></span></h1>
+      <div class="hero-meta">
+   
+        <span class="hero-genre"><?php echo($dadoscategoria['nome']); ?></span>
+        <span class="hero-sep">·</span>
+        <span class="hero-duration"><?php echo($dadosfreecourse['cargahoraria']); ?>H</span>
+      </div>
+      <p class="hero-desc">
+        <?php echo($dadosfreecourse['descricao']); ?>
+      </p>
+      <div class="hero-actions">
+        <a href="#" class="btn btn-primary">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          Assistir
+        </a>
+        <a href="#" class="btn btn-ghost">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          Mais Informações
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <main class="main">
+
+    <!-- DESTAQUES -->
+    <section class="section-destaques">
+      <div class="section-header">
+        <h2 class="section-title">Destaques</h2>
+    
+      </div>
+      <div class="carousel-wrapper" id="carousel-hot">
+        <button class="carousel-btn prev" onclick="scrollCarousel('carousel-hot', -1)">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="carousel-track-outer">
+          <div class="carousel-track">
+
+            <!-- Card 1 -->
+            <a class="card-link" href="#">
+            <div class="card">
+              <div class="card-poster">
+                <span class="card-badge hot">Hot</span>
+                <img src="https://picsum.photos/seed/101/300/450" alt="Luz Perdida" loading="lazy"/>
+                <div class="card-title-overlay"><span>Luz Perdida</span></div>
+              </div>
+              <div class="card-tooltip">
+                <div class="card-tooltip-title">Luz Perdida</div>
+                <div class="card-tooltip-meta">
+                  <span class="card-tooltip-rating">★ 8.4</span>
+                  <span>2023</span><span>·</span><span>Drama</span>
+                </div>
+                <div class="card-tooltip-desc">Uma história emocionante sobre coragem, amizade e autodescoberta em tempos difíceis.</div>
+                <div class="card-tooltip-actions">
+                  <button class="card-tooltip-btn play">▶ Assistir</button>
+                  <button class="card-tooltip-btn info">ℹ Info</button>
+                </div>
+              </div>
+            </div>
+            </a>
+
+            <!-- Card 2 -->
+            <a class="card-link" href="#">
+            <div class="card">
+              <div class="card-poster">
+                <span class="card-badge new">Novo</span>
+                <img src="https://picsum.photos/seed/202/300/450" alt="Sombras do Amanhã" loading="lazy"/>
+                <div class="card-title-overlay"><span>Sombras do Amanhã</span></div>
+              </div>
+              <div class="card-tooltip">
+                <div class="card-tooltip-title">Sombras do Amanhã</div>
+                <div class="card-tooltip-meta">
+                  <span class="card-tooltip-rating">★ 7.9</span>
+                  <span>2024</span><span>·</span><span>Thriller</span>
+                </div>
+                <div class="card-tooltip-desc">Mundos paralelos colidem nesta aventura épica que desafia os limites da realidade.</div>
+                <div class="card-tooltip-actions">
+                  <button class="card-tooltip-btn play">▶ Assistir</button>
+                  <button class="card-tooltip-btn info">ℹ Info</button>
+                </div>
+              </div>
+            </div>
+            </a>
+
+            <!-- Card 3 -->
+            <a class="card-link" href="#">
+            <div class="card">
+              <div class="card-poster">
+                <img src="https://picsum.photos/seed/303/300/450" alt="Eco do Silêncio" loading="lazy"/>
+                <div class="card-title-overlay"><span>Eco do Silêncio</span></div>
+              </div>
+              <div class="card-tooltip">
+                <div class="card-tooltip-title">Eco do Silêncio</div>
+                <div class="card-tooltip-meta">
+                  <span class="card-tooltip-rating">★ 8.1</span>
+                  <span>2022</span><span>·</span><span>Ação</span>
+                </div>
+                <div class="card-tooltip-desc">Suspense intenso: cada decisão conta quando o relógio está sempre correndo.</div>
+                <div class="card-tooltip-actions">
+                  <button class="card-tooltip-btn play">▶ Assistir</button>
+                  <button class="card-tooltip-btn info">ℹ Info</button>
+                </div>
+              </div>
+            </div>
+            </a>
+
+            <!-- Card 4 -->
+            <a class="card-link" href="#">
+            <div class="card">
+              <div class="card-poster">
+                <span class="card-badge hot">Hot</span>
+                <img src="https://picsum.photos/seed/404/300/450" alt="Horizonte Partido" loading="lazy"/>
+                <div class="card-title-overlay"><span>Horizonte Partido</span></div>
+              </div>
+              <div class="card-tooltip">
+                <div class="card-tooltip-title">Horizonte Partido</div>
+                <div class="card-tooltip-meta">
+                  <span class="card-tooltip-rating">★ 9.0</span>
+                  <span>2024</span><span>·</span><span>Ficção Científica</span>
+                </div>
+                <div class="card-tooltip-desc">Uma jornada emocionante de redenção, amor e sacrifício em um mundo à beira do colapso.</div>
+                <div class="card-tooltip-actions">
+                  <button class="card-tooltip-btn play">▶ Assistir</button>
+                  <button class="card-tooltip-btn info">ℹ Info</button>
+                </div>
+              </div>
+            </div>
+            </a>
+
+            <!-- Card 5 -->
+            <a class="card-link" href="#">
+            <div class="card">
+              <div class="card-poster">
+                <img src="https://picsum.photos/seed/505/300/450" alt="A Última Fronteira" loading="lazy"/>
+                <div class="card-title-overlay"><span>A Última Fronteira</span></div>
+              </div>
+              <div class="card-tooltip">
+                <div class="card-tooltip-title">A Última Fronteira</div>
+                <div class="card-tooltip-meta">
+                  <span class="card-tooltip-rating">★ 8.7</span>
+                  <span>2023</span><span>·</span><span>Animação</span>
+                </div>
+                <div class="card-tooltip-desc">Animação premiada que encanta crianças e adultos com sua beleza visual única.</div>
+                <div class="card-tooltip-actions">
+                  <button class="card-tooltip-btn play">▶ Assistir</button>
+                  <button class="card-tooltip-btn info">ℹ Info</button>
+                </div>
+              </div>
+            </div>
+            </a>
+
+          </div>
+        </div>
+        <button class="carousel-btn next" onclick="scrollCarousel('carousel-hot', 1)">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- GRATUITOS -->
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">Gratuitos</h2>
+       
+      </div>
+      <div class="carousel-wrapper" id="carousel-rec">
+        <button class="carousel-btn prev" onclick="scrollCarousel('carousel-rec', -1)">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="carousel-track-outer">
+          <div class="carousel-track">
+
+            <!-- Card 1 -->
+            <a class="card-link" href="#">
+            <div class="card">
+              <div class="card-poster">
+                <span class="card-badge free">Grátis</span>
+                <img src="https://picsum.photos/seed/601/300/450" alt="Névoa Azul" loading="lazy"/>
+                <div class="card-title-overlay"><span>Névoa Azul</span></div>
+              </div>
+              <div class="card-tooltip">
+                <div class="card-tooltip-title">Névoa Azul</div>
+                <div class="card-tooltip-meta">
+                  <span class="card-tooltip-rating">★ 7.5</span>
+                  <span>2021</span><span>·</span><span>Comédia</span>
+                </div>
+                <div class="card-tooltip-desc">Uma comédia vibrante cheia de reviravoltas inesperadas e personagens memoráveis.</div>
+                <div class="card-tooltip-actions">
+                  <button class="card-tooltip-btn play">▶ Assistir</button>
+                  <button class="card-tooltip-btn info">ℹ Info</button>
+                </div>
+              </div>
+            </div>
+            </a>
+
+            <!-- Card 2 -->
+            <a class="card-link" href="#">
+            <div class="card">
+              <div class="card-poster">
+                <span class="card-badge free">Grátis</span>
+                <img src="https://picsum.photos/seed/702/300/450" alt="Vento Norte" loading="lazy"/>
+                <div class="card-title-overlay"><span>Vento Norte</span></div>
+              </div>
+              <div class="card-tooltip">
+                <div class="card-tooltip-title">Vento Norte</div>
+                <div class="card-tooltip-meta">
+                  <span class="card-tooltip-rating">★ 8.2</span>
+                  <span>2022</span><span>·</span><span>Documentário</span>
+                </div>
+                <div class="card-tooltip-desc">Documentário revelador que expõe os bastidores de um dos eventos mais marcantes do século.</div>
+                <div class="card-tooltip-actions">
+                  <button class="card-tooltip-btn play">▶ Assistir</button>
+                  <button class="card-tooltip-btn info">ℹ Info</button>
+                </div>
+              </div>
+            </div>
+            </a>
+
+            <!-- Card 3 -->
+            <a class="card-link" href="#">
+            <div class="card">
+              <div class="card-poster">
+                <span class="card-badge free">Grátis</span>
+                <img src="https://picsum.photos/seed/803/300/450" alt="Código Vermelho" loading="lazy"/>
+                <div class="card-title-overlay"><span>Código Vermelho</span></div>
+              </div>
+              <div class="card-tooltip">
+                <div class="card-tooltip-title">Código Vermelho</div>
+                <div class="card-tooltip-meta">
+                  <span class="card-tooltip-rating">★ 7.8</span>
+                  <span>2023</span><span>·</span><span>Terror</span>
+                </div>
+                <div class="card-tooltip-desc">Thriller psicológico onde nada é o que parece e cada resposta gera novas perguntas.</div>
+                <div class="card-tooltip-actions">
+                  <button class="card-tooltip-btn play">▶ Assistir</button>
+                  <button class="card-tooltip-btn info">ℹ Info</button>
+                </div>
+              </div>
+            </div>
+            </a>
+
+            <!-- Card 4 -->
+            <a class="card-link" href="#">
+            <div class="card">
+              <div class="card-poster">
+                <span class="card-badge free">Grátis</span>
+                <img src="https://picsum.photos/seed/904/300/450" alt="Espelho Infinito" loading="lazy"/>
+                <div class="card-title-overlay"><span>Espelho Infinito</span></div>
+              </div>
+              <div class="card-tooltip">
+                <div class="card-tooltip-title">Espelho Infinito</div>
+                <div class="card-tooltip-meta">
+                  <span class="card-tooltip-rating">★ 8.6</span>
+                  <span>2024</span><span>·</span><span>Drama</span>
+                </div>
+                <div class="card-tooltip-desc">Uma história emocionante sobre coragem, amizade e autodescoberta em tempos difíceis.</div>
+                <div class="card-tooltip-actions">
+                  <button class="card-tooltip-btn play">▶ Assistir</button>
+                  <button class="card-tooltip-btn info">ℹ Info</button>
+                </div>
+              </div>
+            </div>
+            </a>
+
+            <!-- Card 5 -->
+            <a class="card-link" href="#">
+            <div class="card">
+              <div class="card-poster">
+                <span class="card-badge free">Grátis</span>
+                <img src="https://picsum.photos/seed/1005/300/450" alt="Terra Nova" loading="lazy"/>
+                <div class="card-title-overlay"><span>Terra Nova</span></div>
+              </div>
+              <div class="card-tooltip">
+                <div class="card-tooltip-title">Terra Nova</div>
+                <div class="card-tooltip-meta">
+                  <span class="card-tooltip-rating">★ 7.3</span>
+                  <span>2022</span><span>·</span><span>Ação</span>
+                </div>
+                <div class="card-tooltip-desc">Suspense intenso: cada decisão conta quando o relógio está sempre correndo.</div>
+                <div class="card-tooltip-actions">
+                  <button class="card-tooltip-btn play">▶ Assistir</button>
+                  <button class="card-tooltip-btn info">ℹ Info</button>
+                </div>
+              </div>
+            </div>
+            </a>
+
+          </div>
+        </div>
+        <button class="carousel-btn next" onclick="scrollCarousel('carousel-rec', 1)">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- NOVIDADES (wide cards) -->
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">Novidades</h2>
+        
+      </div>
+      <div class="carousel-wrapper" id="carousel-new">
+        <button class="carousel-btn prev" onclick="scrollCarousel('carousel-new', -1)">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="carousel-track-outer">
+          <div class="carousel-track">
+
+            <!-- Wide Card 1 -->
+            <a class="card-link" href="#">
+            <div class="card-wide">
+              <div style="position:relative;overflow:hidden;border-radius:14px 14px 0 0">
+                <span class="card-badge new" style="position:absolute;top:8px;left:8px;z-index:2">Novo</span>
+                <img class="card-wide-img" src="https://picsum.photos/seed/111/640/360" alt="Pulsão" loading="lazy"/>
+                <div class="card-wide-title-overlay"><span>Pulsão</span></div>
+              </div>
+              <div class="card-wide-body">
+                <div class="card-wide-meta">★ 8.3 · 2024 · Ficção Científica</div>
+              </div>
+            </div>
+            </a>
+
+            <!-- Wide Card 2 -->
+            <a class="card-link" href="#">
+            <div class="card-wide">
+              <div style="position:relative;overflow:hidden;border-radius:14px 14px 0 0">
+                <span class="card-badge new" style="position:absolute;top:8px;left:8px;z-index:2">Novo</span>
+                <img class="card-wide-img" src="https://picsum.photos/seed/222/640/360" alt="Deriva" loading="lazy"/>
+                <div class="card-wide-title-overlay"><span>Deriva</span></div>
+              </div>
+              <div class="card-wide-body">
+                <div class="card-wide-meta">★ 7.6 · 2024 · Drama</div>
+              </div>
+            </div>
+            </a>
+
+            <!-- Wide Card 3 -->
+            <a class="card-link" href="#">
+            <div class="card-wide">
+              <div style="position:relative;overflow:hidden;border-radius:14px 14px 0 0">
+                <img class="card-wide-img" src="https://picsum.photos/seed/333/640/360" alt="Singularidade" loading="lazy"/>
+                <div class="card-wide-title-overlay"><span>Singularidade</span></div>
+              </div>
+              <div class="card-wide-body">
+                <div class="card-wide-meta">★ 9.1 · 2024 · Thriller</div>
+              </div>
+            </div>
+            </a>
+
+            <!-- Wide Card 4 -->
+            <a class="card-link" href="#">
+            <div class="card-wide">
+              <div style="position:relative;overflow:hidden;border-radius:14px 14px 0 0">
+                <span class="card-badge hot" style="position:absolute;top:8px;left:8px;z-index:2">Hot</span>
+                <img class="card-wide-img" src="https://picsum.photos/seed/444/640/360" alt="Protocolo Ômega" loading="lazy"/>
+                <div class="card-wide-title-overlay"><span>Protocolo Ômega</span></div>
+              </div>
+              <div class="card-wide-body">
+                <div class="card-wide-meta">★ 8.8 · 2023 · Ação</div>
+              </div>
+            </div>
+            </a>
+
+            <!-- Wide Card 5 -->
+            <a class="card-link" href="#">
+            <div class="card-wide">
+              <div style="position:relative;overflow:hidden;border-radius:14px 14px 0 0">
+                <img class="card-wide-img" src="https://picsum.photos/seed/555/640/360" alt="Além dos Mares" loading="lazy"/>
+                <div class="card-wide-title-overlay"><span>Além dos Mares</span></div>
+              </div>
+              <div class="card-wide-body">
+                <div class="card-wide-meta">★ 7.9 · 2023 · Documentário</div>
+              </div>
+            </div>
+            </a>
+
+          </div>
+        </div>
+        <button class="carousel-btn next" onclick="scrollCarousel('carousel-new', 1)">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- MEUS CURSOS -->
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title"> Meus Cursos</h2>
+      
+      </div>
+      <div class="carousel-wrapper" id="carousel-pop">
+        <button class="carousel-btn prev" onclick="scrollCarousel('carousel-pop', -1)">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="carousel-track-outer">
+          <div class="carousel-track">
+
+            <!-- Card 1 -->
+            <a class="card-link" href="#">
+            <div class="card">
+              <div class="card-poster">
+                <img src="https://picsum.photos/seed/1101/300/450" alt="Cicatrizes" loading="lazy"/>
+                <div class="card-title-overlay"><span>Cicatrizes</span></div>
+              </div>
+              <div class="card-tooltip">
+                <div class="card-tooltip-title">Cicatrizes</div>
+                <div class="card-tooltip-meta">
+                  <span class="card-tooltip-rating">★ 8.0</span>
+                  <span>2022</span><span>·</span><span>Drama</span>
+                </div>
+                <div class="card-tooltip-desc">Uma história emocionante sobre coragem, amizade e autodescoberta em tempos difíceis.</div>
+                <div class="card-tooltip-actions">
+                  <button class="card-tooltip-btn play">▶ Assistir</button>
+                  <button class="card-tooltip-btn info">ℹ Info</button>
+                </div>
+              </div>
+            </div>
+            </a>
+
+            <!-- Card 2 -->
+            <a class="card-link" href="#">
+            <div class="card">
+              <div class="card-poster">
+                <span class="card-badge new">Novo</span>
+                <img src="https://picsum.photos/seed/1202/300/450" alt="O Guardião" loading="lazy"/>
+                <div class="card-title-overlay"><span>O Guardião</span></div>
+              </div>
+              <div class="card-tooltip">
+                <div class="card-tooltip-title">O Guardião</div>
+                <div class="card-tooltip-meta">
+                  <span class="card-tooltip-rating">★ 8.5</span>
+                  <span>2024</span><span>·</span><span>Ação</span>
+                </div>
+                <div class="card-tooltip-desc">Mundos paralelos colidem nesta aventura épica que desafia os limites da realidade.</div>
+                <div class="card-tooltip-actions">
+                  <button class="card-tooltip-btn play">▶ Assistir</button>
+                  <button class="card-tooltip-btn info">ℹ Info</button>
+                </div>
+              </div>
+            </div>
+            </a>
+
+            <!-- Card 3 -->
+            <a class="card-link" href="#">
+            <div class="card">
+              <div class="card-poster">
+                <img src="https://picsum.photos/seed/1303/300/450" alt="Aurora" loading="lazy"/>
+                <div class="card-title-overlay"><span>Aurora</span></div>
+              </div>
+              <div class="card-tooltip">
+                <div class="card-tooltip-title">Aurora</div>
+                <div class="card-tooltip-meta">
+                  <span class="card-tooltip-rating">★ 9.3</span>
+                  <span>2024</span><span>·</span><span>Animação</span>
+                </div>
+                <div class="card-tooltip-desc">Animação premiada que encanta crianças e adultos com sua beleza visual única.</div>
+                <div class="card-tooltip-actions">
+                  <button class="card-tooltip-btn play">▶ Assistir</button>
+                  <button class="card-tooltip-btn info">ℹ Info</button>
+                </div>
+              </div>
+            </div>
+            </a>
+
+            <!-- Card 4 -->
+            <a class="card-link" href="#">
+            <div class="card">
+              <div class="card-poster">
+                <span class="card-badge hot">Hot</span>
+                <img src="https://picsum.photos/seed/1404/300/450" alt="Fragmento" loading="lazy"/>
+                <div class="card-title-overlay"><span>Fragmento</span></div>
+              </div>
+              <div class="card-tooltip">
+                <div class="card-tooltip-title">Fragmento</div>
+                <div class="card-tooltip-meta">
+                  <span class="card-tooltip-rating">★ 7.7</span>
+                  <span>2023</span><span>·</span><span>Thriller</span>
+                </div>
+                <div class="card-tooltip-desc">Thriller psicológico onde nada é o que parece e cada resposta gera novas perguntas.</div>
+                <div class="card-tooltip-actions">
+                  <button class="card-tooltip-btn play">▶ Assistir</button>
+                  <button class="card-tooltip-btn info">ℹ Info</button>
+                </div>
+              </div>
+            </div>
+            </a>
+
+            <!-- Card 5 -->
+            <a class="card-link" href="#">
+            <div class="card">
+              <div class="card-poster">
+                <img src="https://picsum.photos/seed/1505/300/450" alt="Paralelo" loading="lazy"/>
+                <div class="card-title-overlay"><span>Paralelo</span></div>
+              </div>
+              <div class="card-tooltip">
+                <div class="card-tooltip-title">Paralelo</div>
+                <div class="card-tooltip-meta">
+                  <span class="card-tooltip-rating">★ 8.9</span>
+                  <span>2022</span><span>·</span><span>Ficção Científica</span>
+                </div>
+                <div class="card-tooltip-desc">Uma jornada emocionante de redenção, amor e sacrifício em um mundo à beira do colapso.</div>
+                <div class="card-tooltip-actions">
+                  <button class="card-tooltip-btn play">▶ Assistir</button>
+                  <button class="card-tooltip-btn info">ℹ Info</button>
+                </div>
+              </div>
+            </div>
+            </a>
+
+          </div>
+        </div>
+        <button class="carousel-btn next" onclick="scrollCarousel('carousel-pop', 1)">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =============================================
+       FOOTER
+  ============================================= -->
+  <footer>
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="logo">StreamVibe<span style="color:var(--accent)">.</span></span>
+        <p>Seu universo de entretenimento e aprendizado. Conteúdo de qualidade, disponível a qualquer hora, em qualquer lugar.</p>
+        <div class="footer-social">
+          <button class="social-btn" title="Twitter">
+            <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+          </button>
+          <button class="social-btn" title="Instagram">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zM17.5 6.5h.01"/></svg>
+          </button>
+          <button class="social-btn" title="YouTube">
+            <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.96A29 29 0 0023 12a29 29 0 00-.46-5.58zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Empresa</h4>
+        <ul>
+          <li><a href="#">Sobre nós</a></li>
+          <li><a href="#">Carreiras</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Imprensa</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Suporte</h4>
+        <ul>
+          <li><a href="#">Central de ajuda</a></li>
+          <li><a href="#">Contato</a></li>
+          <li><a href="#">Status</a></li>
+          <li><a href="#">Comunidade</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Termos de uso</a></li>
+          <li><a href="#">Privacidade</a></li>
+          <li><a href="#">Cookies</a></li>
+          <li><a href="#">Acessibilidade</a></li>
+        </ul>
+      </div>
+    </div>
+    <hr class="footer-divider"/>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2024 StreamVibe. Todos os direitos reservados.</span>
+      <div class="footer-badge">
+        <span>HD</span><span>4K</span><span>Dolby</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* Carousel arrow scroll */
+    function scrollCarousel(wrapperId, dir) {
+      const wrapper = document.getElementById(wrapperId);
+      const outer = wrapper.querySelector('.carousel-track-outer');
+      outer.scrollBy({ left: dir * outer.clientWidth * 0.75, behavior: 'smooth' });
+    }
+
+    /* Drag-to-scroll */
+    document.querySelectorAll('.carousel-track-outer').forEach(el => {
+      let isDown = false, startX, scrollLeft;
+      el.addEventListener('mousedown', e => {
+        isDown = true;
+        startX = e.pageX - el.offsetLeft;
+        scrollLeft = el.scrollLeft;
+      });
+      el.addEventListener('mouseleave', () => { isDown = false; });
+      el.addEventListener('mouseup',    () => { isDown = false; });
+      el.addEventListener('mousemove', e => {
+        if (!isDown) return;
+        e.preventDefault();
+        el.scrollLeft = scrollLeft - (e.pageX - el.offsetLeft - startX);
+      });
+    });
+  </script>
+</body>
+</html>

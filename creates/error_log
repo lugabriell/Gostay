@@ -1,0 +1,3 @@
+[10-Mar-2026 10:47:40 America/Fortaleza] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home3/idsedu66/public_html/idsead/creates/createaula.php:31) in /home3/idsedu66/public_html/idsead/creates/createaula.php on line 57
+[10-Mar-2026 10:56:33 America/Fortaleza] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home3/idsedu66/public_html/idsead/creates/createaluno.php:26) in /home3/idsedu66/public_html/idsead/creates/createaluno.php on line 83
+[10-Mar-2026 14:15:37 America/Fortaleza] PHP Warning:  Trying to access array offset on value of type null in /home3/idsedu66/public_html/idsead/creates/createaluno.php on line 78

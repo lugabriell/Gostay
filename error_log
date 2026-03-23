@@ -1,0 +1,93 @@
+[10-Mar-2026 10:34:46 America/Fortaleza] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home3/idsedu66/public_html/idsead/securityAdm.php:19) in /home3/idsedu66/public_html/idsead/securityAdm.php on line 25
+[10-Mar-2026 10:39:18 America/Fortaleza] PHP Warning:  Undefined variable $qtdvideos in /home3/idsedu66/public_html/idsead/videosadm.php on line 234
+[10-Mar-2026 10:39:18 America/Fortaleza] PHP Warning:  Undefined variable $qtdvideos in /home3/idsedu66/public_html/idsead/videosadm.php on line 275
+[10-Mar-2026 10:52:46 America/Fortaleza] PHP Warning:  Undefined variable $qtdvideos in /home3/idsedu66/public_html/idsead/videosadm.php on line 234
+[10-Mar-2026 10:52:46 America/Fortaleza] PHP Warning:  Undefined variable $qtdvideos in /home3/idsedu66/public_html/idsead/videosadm.php on line 275
+[10-Mar-2026 10:52:55 America/Fortaleza] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home3/idsedu66/public_html/idsead/admre8.php:21) in /home3/idsedu66/public_html/idsead/admre8.php on line 25
+[10-Mar-2026 10:52:55 America/Fortaleza] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home3/idsedu66/public_html/idsead/admre8.php:21) in /home3/idsedu66/public_html/idsead/admre8.php on line 26
+[10-Mar-2026 10:52:55 America/Fortaleza] PHP Warning:  filesize(): stat failed for ../creates/assets/69b020fc491f5.txt in /home3/idsedu66/public_html/idsead/admre8.php on line 27
+[10-Mar-2026 10:52:55 America/Fortaleza] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home3/idsedu66/public_html/idsead/admre8.php:21) in /home3/idsedu66/public_html/idsead/admre8.php on line 27
+[10-Mar-2026 10:52:55 America/Fortaleza] PHP Warning:  readfile(../creates/assets/69b020fc491f5.txt): Failed to open stream: No such file or directory in /home3/idsedu66/public_html/idsead/admre8.php on line 29
+[10-Mar-2026 10:52:55 America/Fortaleza] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home3/idsedu66/public_html/idsead/admre8.php:21) in /home3/idsedu66/public_html/idsead/admre8.php on line 30
+[10-Mar-2026 10:53:04 America/Fortaleza] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home3/idsedu66/public_html/idsead/admre8.php:21) in /home3/idsedu66/public_html/idsead/admre8.php on line 25
+[10-Mar-2026 10:53:04 America/Fortaleza] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home3/idsedu66/public_html/idsead/admre8.php:21) in /home3/idsedu66/public_html/idsead/admre8.php on line 26
+[10-Mar-2026 10:53:04 America/Fortaleza] PHP Warning:  filesize(): stat failed for ../creates/assets/69b020fc491f5.txt in /home3/idsedu66/public_html/idsead/admre8.php on line 27
+[10-Mar-2026 10:53:04 America/Fortaleza] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home3/idsedu66/public_html/idsead/admre8.php:21) in /home3/idsedu66/public_html/idsead/admre8.php on line 27
+[10-Mar-2026 10:53:04 America/Fortaleza] PHP Warning:  readfile(../creates/assets/69b020fc491f5.txt): Failed to open stream: No such file or directory in /home3/idsedu66/public_html/idsead/admre8.php on line 29
+[10-Mar-2026 10:53:04 America/Fortaleza] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home3/idsedu66/public_html/idsead/admre8.php:21) in /home3/idsedu66/public_html/idsead/admre8.php on line 30
+[10-Mar-2026 10:53:42 America/Fortaleza] PHP Warning:  filesize(): stat failed for ../creates/assets/69b020fc491f5.txt in /home3/idsedu66/public_html/idsead/admre8.php on line 27
+[10-Mar-2026 10:53:42 America/Fortaleza] PHP Warning:  readfile(../creates/assets/69b020fc491f5.txt): Failed to open stream: No such file or directory in /home3/idsedu66/public_html/idsead/admre8.php on line 29
+[10-Mar-2026 10:54:21 America/Fortaleza] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home3/idsedu66/public_html/idsead/admre8.php:20) in /home3/idsedu66/public_html/idsead/admre8.php on line 26
+[10-Mar-2026 10:54:21 America/Fortaleza] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home3/idsedu66/public_html/idsead/admre8.php:20) in /home3/idsedu66/public_html/idsead/admre8.php on line 27
+[10-Mar-2026 10:54:21 America/Fortaleza] PHP Warning:  filesize(): stat failed for ../creates/assets/69b020fc491f5.txt in /home3/idsedu66/public_html/idsead/admre8.php on line 28
+[10-Mar-2026 10:54:21 America/Fortaleza] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home3/idsedu66/public_html/idsead/admre8.php:20) in /home3/idsedu66/public_html/idsead/admre8.php on line 28
+[10-Mar-2026 10:54:21 America/Fortaleza] PHP Warning:  readfile(../creates/assets/69b020fc491f5.txt): Failed to open stream: No such file or directory in /home3/idsedu66/public_html/idsead/admre8.php on line 30
+[10-Mar-2026 10:54:21 America/Fortaleza] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home3/idsedu66/public_html/idsead/admre8.php:20) in /home3/idsedu66/public_html/idsead/admre8.php on line 31
+[10-Mar-2026 13:13:32 America/Fortaleza] PHP Warning:  Undefined variable $email in /home3/idsedu66/public_html/idsead/dashadm.php on line 32
+[10-Mar-2026 13:13:32 America/Fortaleza] PHP Warning:  Undefined variable $nome in /home3/idsedu66/public_html/idsead/dashadm.php on line 32
+[10-Mar-2026 13:13:32 America/Fortaleza] PHP Warning:  Trying to access array offset on value of type null in /home3/idsedu66/public_html/idsead/dashadm.php on line 35
+[10-Mar-2026 13:13:32 America/Fortaleza] PHP Warning:  Undefined variable $qtdcurso in /home3/idsedu66/public_html/idsead/dashadm.php on line 193
+[10-Mar-2026 13:13:32 America/Fortaleza] PHP Warning:  Undefined variable $qtdcategoria in /home3/idsedu66/public_html/idsead/dashadm.php on line 214
+[10-Mar-2026 13:13:32 America/Fortaleza] PHP Warning:  Undefined variable $resultcurso in /home3/idsedu66/public_html/idsead/dashadm.php on line 344
+[10-Mar-2026 13:13:32 America/Fortaleza] PHP Fatal error:  Uncaught TypeError: mysqli_fetch_assoc(): Argument #1 ($result) must be of type mysqli_result, null given in /home3/idsedu66/public_html/idsead/dashadm.php:344
+Stack trace:
+#0 /home3/idsedu66/public_html/idsead/dashadm.php(344): mysqli_fetch_assoc(NULL)
+#1 {main}
+  thrown in /home3/idsedu66/public_html/idsead/dashadm.php on line 344
+[10-Mar-2026 13:23:32 America/Fortaleza] PHP Warning:  Trying to access array offset on value of type null in /home3/idsedu66/public_html/idsead/curso.php on line 200
+[10-Mar-2026 14:13:04 America/Fortaleza] PHP Warning:  Undefined array key "id" in /home3/idsedu66/public_html/idsead/homepage.php on line 4
+[10-Mar-2026 14:15:37 America/Fortaleza] PHP Warning:  Undefined array key "id" in /home3/idsedu66/public_html/idsead/homepage.php on line 4
+[10-Mar-2026 14:24:06 America/Fortaleza] PHP Fatal error:  Uncaught Error: Undefined constant "php" in /home3/idsedu66/public_html/idsead/player.php:1220
+Stack trace:
+#0 {main}
+  thrown in /home3/idsedu66/public_html/idsead/player.php on line 1220
+[10-Mar-2026 14:24:19 America/Fortaleza] PHP Fatal error:  Uncaught Error: Undefined constant "php" in /home3/idsedu66/public_html/idsead/player.php:1220
+Stack trace:
+#0 {main}
+  thrown in /home3/idsedu66/public_html/idsead/player.php on line 1220
+[10-Mar-2026 14:24:24 America/Fortaleza] PHP Fatal error:  Uncaught Error: Undefined constant "php" in /home3/idsedu66/public_html/idsead/player.php:1220
+Stack trace:
+#0 {main}
+  thrown in /home3/idsedu66/public_html/idsead/player.php on line 1220
+[10-Mar-2026 14:27:35 America/Fortaleza] PHP Warning:  Trying to access array offset on value of type null in /home3/idsedu66/public_html/idsead/player.php on line 1212
+[11-Mar-2026 15:18:55 America/Fortaleza] PHP Warning:  Undefined variable $email in /home3/idsedu66/public_html/idsead/curso.php on line 46
+[11-Mar-2026 15:18:55 America/Fortaleza] PHP Warning:  Undefined variable $nome in /home3/idsedu66/public_html/idsead/curso.php on line 46
+[11-Mar-2026 15:18:55 America/Fortaleza] PHP Warning:  Trying to access array offset on value of type null in /home3/idsedu66/public_html/idsead/curso.php on line 49
+[11-Mar-2026 15:18:55 America/Fortaleza] PHP Warning:  Undefined variable $dadoscursopp in /home3/idsedu66/public_html/idsead/curso.php on line 198
+[11-Mar-2026 15:18:55 America/Fortaleza] PHP Warning:  Trying to access array offset on value of type null in /home3/idsedu66/public_html/idsead/curso.php on line 198
+[11-Mar-2026 15:18:55 America/Fortaleza] PHP Warning:  Undefined variable $dadoscursopp in /home3/idsedu66/public_html/idsead/curso.php on line 199
+[11-Mar-2026 15:18:55 America/Fortaleza] PHP Warning:  Trying to access array offset on value of type null in /home3/idsedu66/public_html/idsead/curso.php on line 199
+[11-Mar-2026 15:18:55 America/Fortaleza] PHP Warning:  Undefined variable $dadosprof in /home3/idsedu66/public_html/idsead/curso.php on line 200
+[11-Mar-2026 15:18:55 America/Fortaleza] PHP Warning:  Trying to access array offset on value of type null in /home3/idsedu66/public_html/idsead/curso.php on line 200
+[11-Mar-2026 15:18:55 America/Fortaleza] PHP Warning:  Undefined variable $dadoscursopp in /home3/idsedu66/public_html/idsead/curso.php on line 209
+[11-Mar-2026 15:18:55 America/Fortaleza] PHP Warning:  Trying to access array offset on value of type null in /home3/idsedu66/public_html/idsead/curso.php on line 209
+[11-Mar-2026 15:18:55 America/Fortaleza] PHP Warning:  Undefined variable $dadoscursopp in /home3/idsedu66/public_html/idsead/curso.php on line 230
+[11-Mar-2026 15:18:55 America/Fortaleza] PHP Warning:  Trying to access array offset on value of type null in /home3/idsedu66/public_html/idsead/curso.php on line 230
+[11-Mar-2026 15:18:55 America/Fortaleza] PHP Warning:  Undefined variable $idcurso in /home3/idsedu66/public_html/idsead/curso.php on line 252
+[11-Mar-2026 15:18:55 America/Fortaleza] PHP Warning:  Undefined variable $idcurso in /home3/idsedu66/public_html/idsead/curso.php on line 259
+[11-Mar-2026 15:18:55 America/Fortaleza] PHP Warning:  Undefined variable $idcurso in /home3/idsedu66/public_html/idsead/curso.php on line 266
+[11-Mar-2026 15:18:55 America/Fortaleza] PHP Warning:  Undefined variable $idcurso in /home3/idsedu66/public_html/idsead/curso.php on line 274
+[11-Mar-2026 15:18:55 America/Fortaleza] PHP Warning:  Undefined variable $resultmodulo in /home3/idsedu66/public_html/idsead/curso.php on line 295
+[11-Mar-2026 15:18:55 America/Fortaleza] PHP Fatal error:  Uncaught TypeError: mysqli_fetch_assoc(): Argument #1 ($result) must be of type mysqli_result, null given in /home3/idsedu66/public_html/idsead/curso.php:295
+Stack trace:
+#0 /home3/idsedu66/public_html/idsead/curso.php(295): mysqli_fetch_assoc(NULL)
+#1 {main}
+  thrown in /home3/idsedu66/public_html/idsead/curso.php on line 295
+[11-Mar-2026 15:28:31 America/Fortaleza] PHP Warning:  Undefined variable $qtdvideos in /home3/idsedu66/public_html/idsead/videosadm.php on line 234
+[11-Mar-2026 15:28:31 America/Fortaleza] PHP Warning:  Undefined variable $qtdvideos in /home3/idsedu66/public_html/idsead/videosadm.php on line 275
+[11-Mar-2026 15:30:32 America/Fortaleza] PHP Warning:  Undefined variable $qtdvideos in /home3/idsedu66/public_html/idsead/videosadm.php on line 234
+[11-Mar-2026 15:30:32 America/Fortaleza] PHP Warning:  Undefined variable $qtdvideos in /home3/idsedu66/public_html/idsead/videosadm.php on line 275
+[11-Mar-2026 15:30:45 America/Fortaleza] PHP Warning:  Trying to access array offset on value of type null in /home3/idsedu66/public_html/idsead/curso.php on line 352
+[11-Mar-2026 15:30:45 America/Fortaleza] PHP Warning:  Trying to access array offset on value of type null in /home3/idsedu66/public_html/idsead/curso.php on line 352
+[11-Mar-2026 15:30:51 America/Fortaleza] PHP Warning:  Trying to access array offset on value of type null in /home3/idsedu66/public_html/idsead/curso.php on line 352
+[11-Mar-2026 15:30:51 America/Fortaleza] PHP Warning:  Trying to access array offset on value of type null in /home3/idsedu66/public_html/idsead/curso.php on line 352
+[11-Mar-2026 15:31:12 America/Fortaleza] PHP Warning:  Trying to access array offset on value of type null in /home3/idsedu66/public_html/idsead/curso.php on line 352
+[11-Mar-2026 15:31:13 America/Fortaleza] PHP Warning:  Trying to access array offset on value of type null in /home3/idsedu66/public_html/idsead/curso.php on line 352
+[13-Mar-2026 11:58:22 America/Fortaleza] PHP Warning:  Trying to access array offset on value of type null in /home3/idsedu66/public_html/idsead/player.php on line 1212
+[13-Mar-2026 12:09:42 America/Fortaleza] PHP Warning:  Undefined variable $qtdvideos in /home3/idsedu66/public_html/idsead/videosadm.php on line 234
+[13-Mar-2026 12:09:42 America/Fortaleza] PHP Warning:  Undefined variable $qtdvideos in /home3/idsedu66/public_html/idsead/videosadm.php on line 275
+[16-Mar-2026 20:27:38 America/Fortaleza] PHP Warning:  Undefined variable $qtdvideos in /home3/idsedu66/public_html/idsead/videosadm.php on line 234
+[16-Mar-2026 20:27:38 America/Fortaleza] PHP Warning:  Undefined variable $qtdvideos in /home3/idsedu66/public_html/idsead/videosadm.php on line 275
+[16-Mar-2026 20:27:42 America/Fortaleza] PHP Warning:  Undefined variable $qtdvideos in /home3/idsedu66/public_html/idsead/videosadm.php on line 234
+[16-Mar-2026 20:27:42 America/Fortaleza] PHP Warning:  Undefined variable $qtdvideos in /home3/idsedu66/public_html/idsead/videosadm.php on line 275
+[16-Mar-2026 20:27:52 America/Fortaleza] PHP Warning:  Trying to access array offset on value of type null in /home3/idsedu66/public_html/idsead/player.php on line 1212
