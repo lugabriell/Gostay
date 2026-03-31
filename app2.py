@@ -1,13 +1,20 @@
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from dotenv import load_dotenv
 import sys
+import os
 import json
+
+load_dotenv()
+
+password = os.getenv("GMAILPASSWORD")
+password = password.replace("_", "\b")
 
 smtp_server = 'smtp.gmail.com'
 smtp_port = 587
 sender_email = 'lucas74126@gmail.com'
-password = 'wejz quik hhih fuus'
+
 
 
 def enviodeemail(emails, chave):

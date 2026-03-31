@@ -1,10 +1,13 @@
 <?php
+require("functions/env.php");
 
+$path = __DIR__ . '/.env';
+loadEnv($path);
     // OPTION HOSPEDAGEM
     // $dbHost = 'localhost';
-    // $dbUsername = 'idsedu66_idsead';
-    // $dbPassword = 'Lucas@2110';
-    // $bancodedados = 'idsedu66_idsead';
+    // $dbUsername = $_ENV['DBUSERNAME'];
+    // $dbPassword = $_ENV['DBPASSWORD'];
+    // $bancodedados = $_ENV['DBDATABASE'];
 
     // $conexao = new mysqli($dbHost,$dbUsername,$dbPassword,$bancodedados, 3306) or die("not connected");
 
@@ -12,10 +15,11 @@
 
     // OPTION LOCAL
     $dbHost = 'localhost';
-    $dbUsername = 'root';
-    $dbPassword = '';
-    $bancodedados = 'idsead';
+    $dbUsername = $_ENV['DBUSERNAME'];
+    $dbPassword = "";
+    $bancodedados = $_ENV['DBDATABASE'];
 
     $conexao = new mysqli($dbHost,$dbUsername,$dbPassword,$bancodedados, 3306) or die("not connected");
+
 
 ?>

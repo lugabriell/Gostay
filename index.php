@@ -22,6 +22,10 @@
       z-index: 9999;
       background: #0f1c3f;   /* matches IdsEad's dark navy */
       overflow: hidden;
+
+      /*intro começa escondida e só ativa quando precisa ( na primeira sessão )*/
+      display: none; /* Começa escondido */
+      position: fixed;
     }
 
     /* Logo central que aparece após o expand */
@@ -660,6 +664,29 @@
       curtainBot.style.transform = 'scaleY(0)';
       requestAnimationFrame(loop);
     });
+
+    /* renderizar a animação apenas uma vez (na primeira entrada do usuário)*/
+
+    /* ── Controle de Exibição (Apenas 1 vez por sessão) ─────────── */
+    const introKey = 'gostay_intro_done';
+
+    if (!sessionStorage.getItem(introKey)) {
+      // Se NÃO existe a chave no storage, executa a animação
+      intro.style.display = 'block'; // Mostra o container da intro
+  
+    requestAnimationFrame(() => {
+      curtainTop.style.transform = 'scaleY(0)';
+      curtainBot.style.transform = 'scaleY(0)';
+      requestAnimationFrame(loop);
+    });
+
+  // Marca que a animação já rodou
+  sessionStorage.setItem(introKey, 'true');
+} else {
+  // Se JÁ rodou, remove a classe de trava de scroll e garante que a intro suma
+  document.body.classList.remove('intro-active');
+  intro.style.display = 'none';
+}
   </script>
 </body>
 </html>
