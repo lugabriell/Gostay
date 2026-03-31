@@ -1,9 +1,21 @@
 <?php
 include_once('../connection.php');
     session_start();
-    $idaluno = $_GET['idaluno'];
-    $idcurso = $_GET['idcurso'];
-    if(!empty($_GET['idaluno']) and !empty($_GET['idcurso']))
+        if($_SERVER['REQUEST_METHOD']!== 'POST'){
+        exit("Método Inválido");
+    }
+    if (!isset($_POST['token']) ||
+        !hash_equals($_SESSION['tokenadm'], $_POST['token'])) {
+        echo($_SESSION['tokenadm']);
+    }
+    $idaluno = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+    $idcurso =filter_input(INPUT_POST, 'idcurso', FILTER_VALIDATE_INT);
+    
+    if (!$idaluno || !$idcurso) {
+        exit("ID inválido");
+    }
+
+    if(!empty($idaluno) || !empty($idcurso))
     {
         
 

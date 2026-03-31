@@ -1,25 +1,36 @@
 <?php
 include_once('../connection.php');
     session_start();
-    $idmedia = $_GET['id'];
-  
-    if(!empty($_GET['id']))
-    {
-        
 
-
-
-        $sqlSelect = "SELECT * FROM media WHERE id = '$idmedia' ";
-        $result = $conexao->query($sqlSelect);
-        if($result->num_rows > 0)
-        {
-            $sqlDelete= "DELETE FROM media WHERE id = '$idmedia' ";
-            $resultDelete = $conexao->query($sqlDelete);
-            echo('bom bom');
-        }
+    if($_SERVER['REQUEST_METHOD']!== 'POST'){
+        exit("Método Inválido");
     }
-    header("Location: ../videosadm.php");
+    if (!isset($_POST['token']) ||
+        !hash_equals($_SESSION['tokenadm'], $_POST['token'])) {
+        echo($_SESSION['tokenadm']);
+    }
+        $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+        if (!$id) {
+            exit("ID inválido");
+        }
     
+        if(!empty($id))
+        {
+            
+
+
+
+            $sqlSelect = "SELECT * FROM media WHERE id = '$id' ";
+            $result = $conexao->query($sqlSelect);
+            if($result->num_rows > 0)
+            {
+                $sqlDelete= "DELETE FROM media WHERE id = '$id' ";
+                $resultDelete = $conexao->query($sqlDelete);
+                
+            }
+        }
+        header("Location: ../videosadm.php");
+        
 
 
 ?>

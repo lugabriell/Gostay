@@ -1,4 +1,11 @@
 <?php
+    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'");
+    header("X-Content-Type-Options: nosniff");
+    header("X-Frame-Options: DENY");
+    header("X-XSS-Protection: 1; mode=block");
+    header("Referrer-Policy: strict-origin-when-cross-origin");
+    header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
+    header("Permissions-Policy: geolocation=(), camera=(), microphone=()");
 require_once __DIR__ . "/connection.php";
 session_start();
 if(!isset($_SESSION['emailadm']) && !isset($_SESSION['nameadm'])){
@@ -75,6 +82,7 @@ $letras = strtoupper(
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="assets/ACELERADOR DO POTENCIAL HUMANO (1).png" type="image/x-icon">
 </head>
 <body>
     <!-- Header -->
@@ -289,12 +297,18 @@ $letras = strtoupper(
                                         <circle cx="12" cy="12" r="3"></circle>
                                     </svg>
                                 </a>
-                                <a href='delete/deletemedia.php?id=<?= $videos[$teste]['id'] ?>' class="action-btn" title="Excluir">
+                                <form method="POST" action="delete/deletemedia.php" style="display:inline;">
+                                <input type="hidden" name="id" value="<?= $videos[$teste]['id'] ?>">
+                                <input type="hidden" name="token" value="<?= $_SESSION['tokenadm'] ?>">
+                                
+                                <button type="submit" class="action-btn" title="Excluir">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <polyline points="3 6 5 6 21 6"></polyline>
                                         <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                                     </svg>
-                                </a>
+                                </button>
+                                </form>
+
                             </div>
                         </td>
                     </tr>

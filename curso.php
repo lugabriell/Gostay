@@ -1,4 +1,11 @@
 <?php
+    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'");
+    header("X-Content-Type-Options: nosniff");
+    header("X-Frame-Options: DENY");
+    header("X-XSS-Protection: 1; mode=block");
+    header("Referrer-Policy: strict-origin-when-cross-origin");
+    header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
+    header("Permissions-Policy: geolocation=(), camera=(), microphone=()"); 
 require_once __DIR__ . "/connection.php";
 session_start();
 if(!isset($_SESSION['emailadm']) && !isset($_SESSION['nameadm'])){
@@ -283,41 +290,7 @@ $letras = strtoupper(
         </div>
 
         <!-- Content Grid -->
-        <div class="content-grid">
-            <!-- Latest Courses -->
-            <div class="content-card">
-                <div class="content-card-header">
-                    <h3 class="content-card-title">Módulos</h3>
-                    <a href="#" class="view-all-link">Ver todos →</a>
-                </div>
-                <?php 
-                $nummodulo = 0;
-                while($dadosmodulo = mysqli_fetch_assoc($resultmodulo)): ?>
-                <div class="course-list-item">
-                    <div class="course-icon">📚</div>
-                    <div class="course-info">
-                        <div class="course-name"><?php echo($dadosmodulo['nome']);  ?></div>
-                    </div>
-                    <a href='editarmodulo.php?id=<?= $dadosmodulo['id'] ?>' class="action-btn" title="Editar">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                        </svg>
-                    </a>
-                    <a href='delete/deletemodulo.php?id=<?= $dadosmodulo['id'] ?>' class="action-btn" title="Excluir">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="3 6 5 6 21 6"></polyline>
-                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                        </svg>
-                    </a>
-                </div>
-            <?php 
-            $nummodulo++;
-            endwhile; ?>
-            </div>
-
-
-        </div>
+       
 
         <!-- Courses Table -->
         <div class="table-container">
@@ -367,12 +340,19 @@ $letras = strtoupper(
                                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                     </svg>
                                 </a>
-                                <a href='delete/deleteaula.php?id=<?= $dadoscursos['id'] ?>' class="action-btn" title="Excluir">
+                               <form method="POST" action="delete/deleteaula.php" style="display:inline;">
+                                <input type="hidden" name="id" value="<?= $dadoscursos['id'] ?>">
+                                <input type="hidden" name="token" value="<?= $_SESSION['tokenadm'] ?>">
+                               
+                                
+                                
+                                <button type="submit" class="action-btn" title="Excluir">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <polyline points="3 6 5 6 21 6"></polyline>
                                         <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                                     </svg>
-                                </a>
+                                </button>
+                                </form>
                             </div>
                         </td>
                     </tr>
@@ -427,12 +407,18 @@ $letras = strtoupper(
                                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                     </svg>
                                 </a>
-                                <a href='delete/deletealunocurso.php?idaluno=<?=$dadosaluno['id']?>&idcurso=<?=$idcurso?>' class="action-btn" title="Excluir">
+                                <form method="POST" action="delete/deletealunocurso.php" style="display:inline;">
+                                <input type="hidden" name="id" value="<?= $dadosaluno['id'] ?>">
+                                <input type="hidden" name="idcurso" value="<?php echo($idcurso); ?>">
+                                <input type="hidden" name="token" value="<?= $_SESSION['tokenadm'] ?>">
+                                
+                                <button type="submit" class="action-btn" title="Excluir">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <polyline points="3 6 5 6 21 6"></polyline>
                                         <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                                     </svg>
-                                </a>
+                                </button>
+                                </form>
                             </div>
                         </td>
                     </tr>

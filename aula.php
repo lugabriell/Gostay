@@ -1,4 +1,11 @@
 <?php
+    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'");
+    header("X-Content-Type-Options: nosniff");
+    header("X-Frame-Options: DENY");
+    header("X-XSS-Protection: 1; mode=block");
+    header("Referrer-Policy: strict-origin-when-cross-origin");
+    header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
+    header("Permissions-Policy: geolocation=(), camera=(), microphone=()");
 require_once __DIR__ . "/connection.php";
 session_start();
 if(!isset($_SESSION['emailadm']) && !isset($_SESSION['nameadm'])){
@@ -27,8 +34,10 @@ else{
 
 }
 $idinfo = $_GET['id'];
-$sqlvideo = "SELECT caminhovideo, caminhoconteudo, id FROM aula WHERE id = '$idinfo'";
-$resultvideo = mysqli_query($conexao, $sqlvideo);
+$sqlvideo = $conexao->prepare("SELECT caminhovideo, caminhoconteudo, id FROM aula WHERE id = ?");
+$sqlvideo->bind_param("i", $idinfo);
+$sqlvideo->execute();
+$resultvideo = $sqlvideo->get_result();
 $dadosvideo = mysqli_fetch_assoc($resultvideo);
 $sql2 = "SELECT nome FROM adms WHERE email = '$email' AND nome = '$nome' ";
 $result2 = mysqli_query($conexao, $sql2);
@@ -334,12 +343,18 @@ $dadosinfo = mysqli_fetch_assoc($resultinfo);
                                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                     </svg>
                                 </a>
-                                <a href='delete/deletealunoaula.php?id=<?= $dadoscursos['id'] ?>&idaula=<?php echo($idinfo); ?>' class="action-btn" title="Excluir">
+                               <form method="POST" action="delete/deletealunoaula.php" style="display:inline;">
+                                <input type="hidden" name="id" value="<?= $dadosaluno['id'] ?>">
+                                <input type="hidden" name="idaula" value="<?php echo($idinfo); ?>">
+                                <input type="hidden" name="token" value="<?= $_SESSION['tokenadm'] ?>">
+                                
+                                <button type="submit" class="action-btn" title="Excluir">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <polyline points="3 6 5 6 21 6"></polyline>
                                         <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                                     </svg>
-                                </a>
+                                </button>
+                                </form>
                             </div>
                         </td>
                     </tr>

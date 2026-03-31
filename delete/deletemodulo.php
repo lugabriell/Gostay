@@ -3,7 +3,7 @@ include_once('../connection.php');
     session_start();
     $idmodulo = $_GET['id'];
   
-    if(!empty($_GET['id']))
+    if(!empty($id))
     {
         
 

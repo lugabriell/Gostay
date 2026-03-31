@@ -1,4 +1,11 @@
 <?php
+    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'");
+    header("X-Content-Type-Options: nosniff");
+    header("X-Frame-Options: DENY");
+    header("X-XSS-Protection: 1; mode=block");
+    header("Referrer-Policy: strict-origin-when-cross-origin");
+    header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
+    header("Permissions-Policy: geolocation=(), camera=(), microphone=()");
 require_once __DIR__ . "/connection.php";
 session_start();
 if(!isset($_SESSION['emailadm']) && !isset($_SESSION['nameadm'])){
@@ -69,6 +76,7 @@ $dadosinfo = mysqli_fetch_assoc($resultinfo);
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" href="assets/ACELERADOR DO POTENCIAL HUMANO (1).png" type="image">
+
 </head>
 <body>
     <!-- Header -->
@@ -213,21 +221,21 @@ $dadosinfo = mysqli_fetch_assoc($resultinfo);
             <!-- Informações -->
             <div>
                 <div class="kpi-value">
-                    <?php echo($dadosinfo['nome']); ?>
+                    <?php echo htmlspecialchars($dadosinfo['nome'],ENT_QUOTES, 'UTF-8'); ?>
                 </div>
 
                 <div class="kpi-label" style="margin-top:8px;">
-                    <strong>Formação:</strong> <?php echo($dadosinfo['formacao']); ?>
+                    <strong>Formação:</strong> <?php echo htmlspecialchars($dadosinfo['formacao'],ENT_QUOTES, 'UTF-8'); ?>
                 </div>
 
                 <div class="kpi-label" style="margin-top:4px;">
-                    <strong>Email:</strong> <?php echo($dadosinfo['email']); ?>
+                    <strong>Email:</strong> <?php echo htmlspecialchars($dadosinfo['email'],ENT_QUOTES, 'UTF-8'); ?>
                 </div>
                 <div class="kpi-label" style="margin-top:4px;">
-                    <strong>Data Cadastro:</strong> <?php echo($dadosinfo['cadastradodata']); ?>
+                    <strong>Data Cadastro:</strong> <?php echo htmlspecialchars($dadosinfo['cadastradodata']); ?>
                 </div>
                 <div class="kpi-label" style="margin-top:4px;">
-                    <strong>Telefone:</strong> <?php echo($dadosinfo['telefone']); ?>
+                    <strong>Telefone:</strong> <?php echo htmlspecialchars($dadosinfo['telefone'],ENT_QUOTES, 'UTF-8'); ?>
                 </div>
                 <div class="kpi-label" style="margin-top:4px;">
                     <strong>Autenticado:</strong> <?php echo($dadosinfo['autenticado']); ?>
