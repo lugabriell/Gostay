@@ -276,7 +276,7 @@
     }
   </style>
 </head>
-<body class="intro-active">
+<body>
 
   <!-- ══════════════════════════════════════════════════════════════════
        INTRO OVERLAY — avião voa, rastro se expande, cortina abre

@@ -26,8 +26,10 @@ if(isset($_POST['submit']) && !empty($_POST['senha']) && !empty($_POST['email'])
         echo('1 etapa clear');
         if(password_verify($userSenha, $userData['senha'])) {
             echo('2 etapa clear');
-            $_SESSION['emailadm'] = $userData['email'];
-            $_SESSION['nameadm'] = $userData['nome'];
+            $_SESSION['emailprof'] = $userData['email'];
+            $_SESSION['nameprof'] = $userData['nome'];
+            $_SESSION['idprof'] =  $userData['id'];
+            $_SESSION['tokenprof'] = bin2hex(random_bytes(32));
 
             header("Location: homeprof.php");
             
