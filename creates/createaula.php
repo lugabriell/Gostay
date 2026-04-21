@@ -4,12 +4,17 @@ require_once __DIR__ . "/../codehex.php";
 require_once __DIR__ . "/../functions/savemedia.php";
 session_start();
 if(isset($_POST['submit'])){
-    if (isset($_FILES['video']) and isset($_FILES['media'])) {
+    if (isset($_FILES['video']) && $_FILES['video']['error'] === 0 &&
+        isset($_FILES['media']) && $_FILES['media']['error'] === 0){
         $videooriginal = $_FILES['video'];
         $mediaoriginal = $_FILES['media'];
     } else {
     
-    echo "<script>alert('Você não enviou os arquivos.');</script>";
+    echo "<script>
+        alert('Você não enviou os arquivos.');
+        window.location.href = '../pagina.php';
+    </script>";
+    exit;
 
     }
 }
