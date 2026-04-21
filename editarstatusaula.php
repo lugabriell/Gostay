@@ -54,11 +54,11 @@
         </div>
 
         <!-- Formulário -->
-        <form action="edit/editstatusaula.php" method="POST">
+        <form action="edit/editstatusaula.php" method="POST"  enctype="multipart/form-data">
             
             <!-- Campo Nome do Curso -->
             <input type="hidden" name="token" value="<?php echo($_SESSION['tokenprof']); ?>">
-            <input type="hidden" name="idaluno" value="<?php echo($idaula); ?>">
+            <input type="hidden" name="idaula" value="<?php echo($idaula); ?>">
             <div class="form-group">
                 <input type="text" name="nome" id="nome" value="<?php echo($dadosaula['nome']); ?>">
                 <label>Status</label>
@@ -82,12 +82,7 @@
                     </label>
                 </div>
                 <div>
-                <div>
-                <label>Selecione um video:</label><br>
 
-                <input type="file" name="video" required id="video" accept="video/*">
-                </div>
-            </div>
             <div>
                 <div>
                 <label>Selecione o Conteúdo:</label><br>
