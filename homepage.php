@@ -13,7 +13,7 @@
     header("Location:login.php");
   }
   $sqlmycourse = "SELECT * FROM cursoaluno WHERE idaluno = '$idaluno'";
-  $sqlfreecourse = "SELECT * FROM curso WHERE tipo = 'gratis'";
+  $sqlfreecourse = "SELECT * FROM curso WHERE tipo = 'gratis' AND statuscurso = 'ativo'";
   $resultmycourse = mysqli_query($conexao, $sqlmycourse);
   $resultfreecourse = mysqli_query($conexao, $sqlfreecourse);
   $resultfreecourse2 = mysqli_query($conexao, $sqlfreecourse);
@@ -23,14 +23,9 @@
   $resultcategoria = mysqli_query($conexao, $sqlcategoria);
   $dadoscategoria = mysqli_fetch_assoc($resultcategoria);
   $resultfreecourse3 = mysqli_query($conexao, $sqlfreecourse);
-  $sqlnovidades = "SELECT * FROM curso WHERE tipo ='gratis' ORDER BY datacadastro DESC";
+  $sqlnovidades = "SELECT * FROM curso WHERE tipo ='gratis' AND statuscurso = 'ativo' ORDER BY datacadastro DESC";
   $resultnovidades = mysqli_query($conexao, $sqlnovidades);
- 
-
 ?>
-
-
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>

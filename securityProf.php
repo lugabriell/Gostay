@@ -23,9 +23,7 @@ if(isset($_POST['submit']) && !empty($_POST['senha']) && !empty($_POST['email'])
     
     if($result->num_rows > 0) {
         $userData = $result->fetch_assoc();
-        echo('1 etapa clear');
         if(password_verify($userSenha, $userData['senha'])) {
-            echo('2 etapa clear');
             $_SESSION['emailprof'] = $userData['email'];
             $_SESSION['nameprof'] = $userData['nome'];
             $_SESSION['idprof'] =  $userData['id'];

@@ -21,7 +21,7 @@
 </head>
 <body>
   <div class="navbar">
-    <a href="index.html">Voltar</a>
+    <a href="index.php">Voltar</a>
   </div>
 
   <div class="login-container">

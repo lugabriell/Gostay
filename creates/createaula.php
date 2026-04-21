@@ -53,7 +53,7 @@ $stmt->bind_param(
 
 
 if ($stmt->execute()) {
-    $sqlaula = "SELECT idaula FROM sua_tabela 
+    $sqlaula = "SELECT id FROM aula
         WHERE idcurso = '$idcurso'
         AND idprofessor = '$idprofessor'
         AND nome = '$nome'
@@ -66,24 +66,24 @@ if ($stmt->execute()) {
         AND statusaula = '$statusa'";
     $resultaula = mysqli_query($conexao, $sqlaula);
     $dadosaula = mysqli_fetch_assoc($resultaula);
-    $idaula = $dadosaula['idaula'];
+    $idaula = $dadosaula['id'];
     $nao = "nao";
-    $sqlalunoaula = "SELECT idaluno FROM cursoaluno WHERE idcurso = '$idcurso'";
+    $sqlalunoaula = "SELECT idaluno, statusa FROM cursoaluno WHERE idcurso = '$idcurso'";
     $resultalunoaula = mysqli_query($conexao, $sqlalunoaula);
     while($dadosalunoaula = mysqli_fetch_assoc($resultalunoaula)){
-        $stmt2 =  $conexao->prepare("INSERT INTO alunoaula (idaula, idcurso, statusal, progresso, datafim, datainicio, ultimaposicao) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt2->bind_param(
-            "iisssss",
-            $idaula,
-            $idcurso,
-            $statusa,
-            $nao,
-            $nao,
-            $nao,
-            $nao
-
-        );
-        $stmt2->execute();
+        if($dadosalunoaula['statusa'] == 'ativo'){
+            $stmt2 =  $conexao->prepare("INSERT INTO alunoaula (idaula, statusal, progresso, datafim, datainicio, ultimaposicao) VALUES (?, ?, ?, ?, ?, ?)");
+            $stmt2->bind_param(
+                "isssss",
+                $idaula,
+                $statusa,
+                $nao,
+                $nao,
+                $nao,
+                $nao
+            );
+            $stmt2->execute();
+        }
     }
 
     header("Location: ../curso.php?id=$idcurso");

@@ -111,7 +111,7 @@
             
 
             <!-- Botão de Envio -->
-            <button type="submit" name="submit">Cadastrar Aluno</button>
+            <button type="submit" name="submit">Editar Aluno</button>
             
         </form>
     </div>

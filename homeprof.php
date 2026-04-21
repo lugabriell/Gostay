@@ -25,9 +25,11 @@
     $qtdalunos = [];
     $idaluno = [];
     $statusa =[];
+
     for($i = 0; $i< $qtdcurso; $i++){
+        
         $row=$result2->fetch_assoc();   
-        $idcursoss = $row['idcurso'];
+        $idcursoss = $row['id'];
         $stmt3 =$conexao->prepare("SELECT * FROM cursoaluno WHERE idcurso = ?");
         $stmt3->bind_param("i", $idcursoss);
         $stmt3->execute();
@@ -126,7 +128,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="alunosprof.php" class="nav-link">
+                    <a href="cursosprof.php" class="nav-link">
                         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                             <circle cx="9" cy="7" r="4"></circle>
@@ -211,7 +213,7 @@
                         <circle cx="11" cy="11" r="8"></circle>
                         <path d="m21 21-4.35-4.35"></path>
                     </svg>
-                    <input type="text" placeholder="Buscar cursos...">
+                    <input type="text" placeholder="Buscar...">
                 </div>
             </div>
             <table>
@@ -255,7 +257,7 @@
                             <td><strong><?php echo($cursos['nome']); ?></strong></td>
                             <td>
                                 <div class="table-actions">
-                                    <a href='editaralunocurso.php?id=<?= $dadosalunos['id'] ?>' class="action-btn" title="Editar">
+                                    <a href='editarstatusaluno.php?id=<?= $dadosalunos['id'] ?>&idcurso=<?php echo($idcurso[$l]); ?>' class="action-btn" title="Editar">
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>

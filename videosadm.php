@@ -239,7 +239,7 @@ $letras = strtoupper(
             <div class="kpi-card">
                 <div class="kpi-header">
                     <div>
-                        <div class="kpi-value"><?php echo($qtdvideos); ?></div>
+                        <div class="kpi-value"><?php if(isset($qtdvideos)){echo($qtdvideos);}else{echo 0;} ?></div>
                         <div class="kpi-label">N° de Aulas</div>
                         <span class="kpi-trend positive">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -280,6 +280,7 @@ $letras = strtoupper(
                 <tbody>
                     <?php
                         $teste = 0;
+                        if(isset($qtdvideos)){
                         while($teste<$qtdvideos):
                             
         
@@ -314,7 +315,11 @@ $letras = strtoupper(
                     </tr>
                    <?php 
                    $teste++;
-                   endwhile ?>
+                        endwhile; }
+                        else{
+                            echo("Não há videos disponiveis");
+                        }
+                    ?>
                     
                 </tbody>
             </table>
