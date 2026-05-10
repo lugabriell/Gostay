@@ -1,21 +1,22 @@
 <?php
-    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'");
-    header("X-Content-Type-Options: nosniff");
-    header("X-Frame-Options: DENY");
-    header("X-XSS-Protection: 1; mode=block");
-    header("Referrer-Policy: strict-origin-when-cross-origin");
-    header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
-    header("Permissions-Policy: geolocation=(), camera=(), microphone=()");
 require_once __DIR__ . "/connection.php";
 session_start();
 $trackid = $_GET['trackid'];
 $sqlselect = "SELECT * FROM aula WHERE id = '$trackid' ORDER BY ordem DESC";
 $resultselect = mysqli_query($conexao, $sqlselect);
 $dadosselect = mysqli_fetch_assoc($resultselect);
+$sqlselect2 = "SELECT * FROM alunoaula WHERE idaula = '$trackid'";
+$resultselect2 = mysqli_query($conexao, $sqlselect2);
+$dadosselect2 = mysqli_fetch_assoc($resultselect2);
 $caminho = $dadosselect['caminhovideo'];
 $idcurso = $dadosselect['idcurso'];
 $ordem = $dadosselect['ordem'];
-
+if($dadosselect2['ultimoacesso'] !== 'nao'){
+  $ultimaposicao = $dadosselect2['ultimoacesso'];
+}
+else{
+  $ultimaposicao = false;
+}
 
 
 $sqlcurso = "SELECT * FROM curso WHERE id = '$idcurso'";
@@ -76,7 +77,7 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
       align-items: center;
       justify-content: center;
       background: #000;
-      cursor: none; /* custom cursor */
+      cursor: none;
     }
 
     #video {
@@ -84,7 +85,18 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
       height: 100%;
       object-fit: contain;
       display: block;
+      /* Bloqueia todos os controles nativos do Chrome/Safari */
+      pointer-events: none;
     }
+
+    /* Suprime a UI nativa do Chrome no elemento <video> */
+    #video::-webkit-media-controls              { display: none !important; }
+    #video::-webkit-media-controls-enclosure    { display: none !important; }
+    #video::-webkit-media-controls-panel        { display: none !important; }
+    #video::-webkit-media-controls-play-button  { display: none !important; }
+    #video::-webkit-media-controls-timeline     { display: none !important; }
+    #video::-webkit-media-controls-volume-slider{ display: none !important; }
+    #video::-webkit-media-controls-overlay-play-button { display: none !important; }
 
 
     .cursor {
@@ -639,6 +651,14 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
     .tap-zone.left  { left: 0; }
     .tap-zone.right { right: 0; }
 
+    /* Zona central para toggle play */
+    .tap-zone-center {
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 30%; right: 30%;
+      z-index: 8;
+      cursor: pointer;
+    }
 
     .big-pause-icon {
       position: absolute;
@@ -677,11 +697,9 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
   
   <div id="player" class="is-paused">
 
-    
+    <!-- O atributo controls NÃO deve estar presente aqui -->
     <video id="video" preload="metadata">
-   
       <source src="<?php echo("creates/". $caminho); ?>" type="video/mp4"/>
-   
       <track kind="subtitles" srclang="pt" label="Português" id="captions-track"/>
     </video>
 
@@ -710,17 +728,21 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
     </div>
 
 
+    <!-- Zona esquerda: retroceder 10s -->
     <div class="tap-zone left"  id="tap-left"></div>
+    <!-- Zona central: play/pause -->
+    <div class="tap-zone-center" id="tap-center"></div>
+    <!-- Zona direita: avançar 10s -->
     <div class="tap-zone right" id="tap-right"></div>
 
 
     <div class="top-bar">
-      <a href="infos.php?trackid=<?php echo($dadoscurso['id']); ?>" class="back-btn">
+      <a href="infos.php?trackid=<?php echo($dadoscurso['id']);  ?>" class="back-btn">
         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
         <span>Voltar ao curso</span>
       </a>
       <div class="top-titles">
-        <div class="top-course-name"><?php  echo($dadoscurso['nome']); ?></div>
+        <div class="top-course-name"><?php  echo($dadoscurso['nome']);?></div>
         <div class="top-lesson-name">Aula <?php echo($dadosselect['ordem']) ?> — <?php echo($dadosselect['nome']); ?></div>
       </div>
     </div>
@@ -909,17 +931,21 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
     const skipRight     = document.getElementById('skip-right');
     const tapLeft       = document.getElementById('tap-left');
     const tapRight      = document.getElementById('tap-right');
+    const tapCenter     = document.getElementById('tap-center');
 
    
-    let controlsTimer  = null;
-    let isDragging     = false;
-    let captionsOn     = false;
-    let autoplayOn     = true;
-    let countdownTimer = null;
-    let countdownSecs  = 10;
+    let controlsTimer     = null;
+    let isDragging        = false;
+    let captionsOn        = false;
+    let autoplayOn        = true;
+    let countdownTimer    = null;
+    let countdownSecs     = 10;
     let nextCardDismissed = false;
     const speeds = [0.5, 0.75, 1, 1.25, 1.5, 2];
     let speedIdx = 2; // default 1×
+
+    // Garante que o vídeo nunca mostre controles nativos
+    video.removeAttribute('controls');
 
 
     function fmtTime(s) {
@@ -981,12 +1007,28 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
       pulseCenter('play');
     });
 
-    playBtn.addEventListener('click', togglePlay);
-
-  
-    video.addEventListener('click', e => {
-  
+    // Botão play da barra de controles
+    playBtn.addEventListener('click', e => {
+      e.stopPropagation();
       togglePlay();
+    });
+
+    // Zona central da tela: play/pause
+    tapCenter.addEventListener('click', e => {
+      e.stopPropagation();
+      togglePlay();
+    });
+
+    // Zona esquerda: retroceder 10s
+    tapLeft.addEventListener('click', e => {
+      e.stopPropagation();
+      skipTime(-10);
+    });
+
+    // Zona direita: avançar 10s
+    tapRight.addEventListener('click', e => {
+      e.stopPropagation();
+      skipTime(+10);
     });
 
 
@@ -1008,12 +1050,8 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
       el.classList.add('show');
     }
 
-    rewindBtn.addEventListener('click',  () => skipTime(-10));
-    forwardBtn.addEventListener('click', () => skipTime(+10));
-
-
-    tapLeft.addEventListener('click',  () => skipTime(-10));
-    tapRight.addEventListener('click', () => skipTime(+10));
+    rewindBtn.addEventListener('click',  e => { e.stopPropagation(); skipTime(-10); });
+    forwardBtn.addEventListener('click', e => { e.stopPropagation(); skipTime(+10); });
 
 
     const VOL_HIGH = `<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.8-1-3.3-2.5-4.1v8.2c1.5-.8 2.5-2.3 2.5-4.1zM14 3.2v2.1c2.9.9 5 3.6 5 6.7s-2.1 5.8-5 6.7v2.1c4-.9 7-4.5 7-8.8s-3-7.9-7-8.8z"/>`;
@@ -1026,7 +1064,8 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
       else                   volPath.setAttribute('d', VOL_HIGH.match(/d="([^"]+)"/)[1]);
     }
 
-    muteBtn.addEventListener('click', () => {
+    muteBtn.addEventListener('click', e => {
+      e.stopPropagation();
       video.muted = !video.muted;
       updateVolIcon(video.volume, video.muted);
     });
@@ -1081,6 +1120,7 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
     }
 
     progressWrap.addEventListener('mousedown', e => {
+      e.stopPropagation();
       isDragging = true;
       progressWrap.classList.add('dragging');
       seekTo(e);
@@ -1099,6 +1139,7 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
     });
 
     progressWrap.addEventListener('touchstart', e => {
+      e.stopPropagation();
       isDragging = true;
       seekTo(e.touches[0]);
     }, { passive: true });
@@ -1121,7 +1162,8 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
       return !!(document.fullscreenElement || document.webkitFullscreenElement);
     }
 
-    fsBtn.addEventListener('click', () => {
+    fsBtn.addEventListener('click', e => {
+      e.stopPropagation();
       if (!isFullscreen()) {
         (player.requestFullscreen || player.webkitRequestFullscreen).call(player);
       } else {
@@ -1144,7 +1186,8 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
     });
 
     qualityMenu.querySelectorAll('.quality-item').forEach(item => {
-      item.addEventListener('click', () => {
+      item.addEventListener('click', e => {
+        e.stopPropagation();
         qualityMenu.querySelectorAll('.quality-item').forEach(i => i.classList.remove('active'));
         item.classList.add('active');
         qualityBtn.textContent = item.dataset.q;
@@ -1152,7 +1195,8 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
       });
     });
 
-    captionsBtn.addEventListener('click', () => {
+    captionsBtn.addEventListener('click', e => {
+      e.stopPropagation();
       captionsOn = !captionsOn;
       captionsBtn.classList.toggle('captions-on', captionsOn);
       captionsBtn.setAttribute('data-tip', captionsOn ? 'Legendas: ON (C)' : 'Legendas: OFF (C)');
@@ -1164,13 +1208,15 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
       qualityWrap.classList.remove('open');
     });
 
-    speedItem.addEventListener('click', () => {
+    speedItem.addEventListener('click', e => {
+      e.stopPropagation();
       speedIdx = (speedIdx + 1) % speeds.length;
       video.playbackRate = speeds[speedIdx];
       speedVal.textContent = speeds[speedIdx] + '×';
     });
 
-    autoplayItem.addEventListener('click', () => {
+    autoplayItem.addEventListener('click', e => {
+      e.stopPropagation();
       autoplayOn = !autoplayOn;
       autoplayVal.textContent = autoplayOn ? 'Ativado' : 'Desativado';
     });
@@ -1183,7 +1229,7 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
     const NEXT_TRIGGER = 15;
 
     function checkNextCard() {
-      if (!video.duration || nextCardDismissed || !autoplayOn) return;
+      if (!nextCard || !video.duration || nextCardDismissed || !autoplayOn) return;
       const remaining = video.duration - video.currentTime;
       if (remaining <= NEXT_TRIGGER && remaining > 0) {
         showNextCard(remaining);
@@ -1193,39 +1239,41 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
     }
 
     function showNextCard(remaining) {
+      if (!nextCard) return;
       if (!nextCard.classList.contains('visible')) {
         nextCard.classList.add('visible');
-        startCountdown();
       }
-
       const pct = (remaining / NEXT_TRIGGER) * 100;
-      countdownArc.style.strokeDasharray = `${pct} 100`;
-      countdownNum.textContent = Math.ceil(remaining);
+      if (countdownArc) countdownArc.style.strokeDasharray = `${pct} 100`;
+      if (countdownNum) countdownNum.textContent = Math.ceil(remaining);
     }
 
     function hideNextCard() {
+      if (!nextCard) return;
       nextCard.classList.remove('visible');
       clearInterval(countdownTimer);
     }
 
-    function startCountdown() {
-      clearInterval(countdownTimer);
+    if (nextDismissBtn) {
+      nextDismissBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        nextCardDismissed = true;
+        hideNextCard();
+      });
     }
 
-    nextDismissBtn.addEventListener('click', () => {
-      nextCardDismissed = true;
-      hideNextCard();
-    });
-    const nextVideo = "player.php?trackid=<?php echo $dadosprox['id']; ?>";
+    const nextVideo = "player.php?trackid=<?php echo isset($dadosprox['id']) ? $dadosprox['id'] : ''; ?>";
 
-    nextPlayBtn.addEventListener('click', () => {
-
-       window.location.href = nextVideo;
-    });
+    if (nextPlayBtn) {
+      nextPlayBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        if (nextVideo) window.location.href = nextVideo;
+      });
+    }
 
     video.addEventListener('ended', () => {
-      if (autoplayOn && !nextCardDismissed) {
-         window.location.href = nextVideo;
+      if (autoplayOn && !nextCardDismissed && nextVideo) {
+        window.location.href = nextVideo;
       }
     });
 
@@ -1283,11 +1331,39 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
 
     showControls();
 
-   
     video.muted = false;
-    video.play().catch(() => {
-
+    player.addEventListener('contextmenu', e => e.preventDefault());
+    video.addEventListener('dragstart', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+      if ((e.ctrlKey || e.metaKey) && ['s','S','u','U'].includes(e.key)) {
+        e.preventDefault();
+      }
     });
+    function salvarProgresso() {
+      const dados = new FormData();
+        dados.append('tempo_atual', video.currentTime);
+        dados.append('tempo_total', video.duration || 0);
+        dados.append('trackid', <?php echo $trackid?>);
+        const ok = navigator.sendBeacon('functions/savetime.php', dados);
+        console.log('sendBeacon enviou:', ok);
+      }
+
+      window.addEventListener('beforeunload', salvarProgresso);
+      window.addEventListener('pagehide', salvarProgresso);
+      
+        const ultimaposicao = <?php echo json_encode($ultimaposicao); ?>;
+
+        if(ultimaposicao) {
+          if(video.readyState >= 1) {
+            // metadados já carregaram, seta direto
+            video.currentTime = parseFloat(ultimaposicao);
+          } else {
+            // ainda não carregou, espera o evento
+            video.addEventListener('loadedmetadata', () => {
+              video.currentTime = parseFloat(ultimaposicao);
+            });
+          }
+        }
   </script>
 </body>
 </html>

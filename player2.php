@@ -1018,12 +1018,14 @@
         progressBuf.style.width = buffered + '%';
       }
     });
-
-    video.addEventListener('loadedmetadata', () => {
+    if (video.readyState >= 1) {
       durationEl.textContent = fmtTime(video.duration);
-    });
-
-  
+    } else {
+      video.addEventListener('loadedmetadata', () => {
+        durationEl.textContent = fmtTime(video.duration);
+      });
+    }
+      
     progressWrap.addEventListener('mousemove', e => {
       const rect = progressWrap.querySelector('.progress-track').getBoundingClientRect();
       const pct  = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
@@ -1243,10 +1245,28 @@
     showControls();
 
    
-    video.muted = false;
-    video.play().catch(() => {
+  video.muted = true;
+  video.play().catch((err) => {
+    console.error('Erro ao dar play:', err);
+  });
 
+    // ─── Salvar tempo ao sair ───────────────────────────────────────────────────
+
+  function saveProgress() {
+    if (!video.duration) return;
+
+    const payload = new FormData();
+    payload.append('current_time', Math.floor(video.currentTime));
+    payload.append('total_time',   Math.floor(video.duration));
+    fetch('functions/savetime.php', {
+      method: 'POST',
+      body: payload,
+      keepalive: true
     });
+  }
+    document.querySelector('.back-btn').addEventListener('click', saveProgress);
+    window.addEventListener('beforeunload', saveProgress)
+    window.addEventListener('pagehide', saveProgress);
   </script>
 </body>
 </html>

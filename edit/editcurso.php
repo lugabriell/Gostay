@@ -12,6 +12,7 @@ $descricao     = $_POST['descricao'];
 $status        = $_POST['status'];
 $categoria     = $_POST['categoria'];
 $nivel         = $_POST['nivel'];
+$tipo = $_POST['tipo'];
 $datacadastro  = $_POST['data-cadastro'];
 
 // você preenche esse id
@@ -24,6 +25,7 @@ $stmt = $conexao->prepare("
         idprofessor = ?,
         qtdm = ?,
         qtda = ?,
+        tipo=?,
         cargahoraria = ?,
         descricao = ?,
         statuscurso = ?,
@@ -34,12 +36,13 @@ $stmt = $conexao->prepare("
 ");
 
 $stmt->bind_param(
-    "sisiissssssi",
+    "sisiisssssssi",
     $nome,
     $qtdal,
     $professor,
     $qtdm,
     $qtda,
+    $tipo,
     $cargahoraria,
     $descricao,
     $status,

@@ -1,30 +1,30 @@
 <?php
-    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'");
-    header("X-Content-Type-Options: nosniff");
-    header("X-Frame-Options: DENY");
-    header("X-XSS-Protection: 1; mode=block");
-    header("Referrer-Policy: strict-origin-when-cross-origin");
-    header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
-    header("Permissions-Policy: geolocation=(), camera=(), microphone=()");
-require("functions/env.php");
 
-$path = __DIR__ . '/.env';
+require("functions/env.php");
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+$path = __DIR__ . '/../.env';
 loadEnv($path);
-    // OPTION HOSPEDAGEM
-    // $dbHost = 'localhost';
+    
+    // $dbHost = '127.0.0.1';
     // $dbUsername = $_ENV['DBUSERNAMEHOSP'];
     // $dbPassword = $_ENV['DBPASSWORDHOSP'];
     // $bancodedados = $_ENV['DBDATABASEHOSP'];
 
-    // $conexao = new mysqli($dbHost,$dbUsername,$dbPassword,$bancodedados, 3306) or die("not connected");
+    // $conexao = new mysqli($dbHost,$dbUsername,$dbPassword,$bancodedados, 3306);
+    // if ($conexao->connect_error) {
+    //     die("Erro de conexão: " . $conexao->connect_error);
+    // }
 
 
 
     // OPTION LOCAL
     $dbHost = 'localhost';
-    $dbUsername = $_ENV['DBUSERNAME'];
+    $dbUsername = 'root';
     $dbPassword = "";
-    $bancodedados = $_ENV['DBDATABASE'];
+    $bancodedados = 'idsead';
 
     $conexao = new mysqli($dbHost,$dbUsername,$dbPassword,$bancodedados, 3306) or die("not connected");
 

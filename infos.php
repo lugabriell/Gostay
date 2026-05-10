@@ -18,7 +18,7 @@
   $resultcurso = mysqli_query($conexao,$sqlcurso);
   $dadoscurso = mysqli_fetch_assoc($resultcurso);
   $tipo = $dadoscurso['tipo'];
-  $sqlalunocurso = "SELECT * FROM cursoaluno WHERE idcurso = '$idcurso'";
+  $sqlalunocurso = "SELECT * FROM cursoaluno WHERE idcurso = '$idcurso' AND idaluno = '$idaluno'";
   $resultcursoaluno = mysqli_query($conexao, $sqlalunocurso);
   $numrowsaluno = mysqli_num_rows($resultcursoaluno);
 
@@ -143,22 +143,34 @@
         <?php echo($dadosinfo['descricao']); ?>
         </span>
       </div>
-      <?php if($numrows < 1){ ?>
-      <div class="banner-actions">
-        <a href="creates/autocreate.php?trackid=<?php echo($dadosinfo['id']); ?>" class="btn btn-ghost">
-          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-          Adicionar aos meus Cursos
-        </a >
-        <?php }else{ ?>
-        <div class="banner-actions">
-          <a href="player.php?trackid=<?php echo($idaula); ?>" class="btn btn-primary">
-          <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-          Assistir a aula 
-        </a >
-        <a href="media.php?trackid=<?php echo($idaula); ?>" class="btn btn-ghost">
-          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-          Baixar Conteúdo
-        </a >
+      <?php if($numrowsaluno < 1){ ?>
+        
+            <div class="banner-actions">
+                <a href="creates/autocreate.php?trackid=<?php echo($dadosinfo['id']); ?>" class="btn btn-ghost">
+                    Adicionar aos meus Cursos
+                </a>
+            </div>
+        
+        <?php } else { ?>
+        
+            <?php if($numrows < 1){ ?>
+        
+                <h2 style="color: white;">Não há aulas disponíveis</h2>
+        
+            <?php } else { ?>
+        
+                <div class="banner-actions">
+                    <a href="player.php?trackid=<?php echo($dadosaula2['id']); ?>" class="btn btn-primary">
+                        Assistir a aula 
+                    </a>
+        
+                    <a href="media.php?trackid=<?php echo($dadosaula2['id']); ?>" class="btn btn-ghost">
+                        Baixar Conteúdo
+                    </a>
+                </div>
+        
+            <?php } ?>
+        
         <?php } ?>
       </div>
     </div>

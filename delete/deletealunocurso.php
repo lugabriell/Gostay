@@ -27,10 +27,9 @@ include_once('../connection.php');
         {
             $sqlDelete= "DELETE FROM cursoaluno WHERE idaluno = '$idaluno' AND idcurso ='$idcurso'";
             $resultDelete = $conexao->query($sqlDelete);
-            echo('bom bom');
         }
     }
-    header("Location: ../curso?idcurso=$idcurso");
+    header("Location: ../curso.php?id=$idcurso");
     
 
 

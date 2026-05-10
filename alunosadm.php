@@ -186,7 +186,7 @@ $letras = strtoupper(
                             <circle cx="12" cy="12" r="3"></circle>
                             <path d="M12 1v6m0 6v6m5.196-15.196l-4.242 4.242m0 5.656l-4.242 4.242M23 12h-6m-6 0H1m18.196-5.196l-4.242 4.242m0 5.656l4.242 4.242"></path>
                         </svg>
-                        <span class="nav-text">Configurações</span>
+                        <span class="nav-text">ConfiguraÃ§Ãµes</span>
                     </a>
                 </li>
             </ul>
@@ -228,7 +228,7 @@ $letras = strtoupper(
                 <div class="kpi-header">
                     <div>
                         <div class="kpi-value"><?php echo($qtdcategoria); ?></div>
-                        <div class="kpi-label">N° de Alunos</div>
+                        <div class="kpi-label">NÂ° de Alunos</div>
                         <span class="kpi-trend positive">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
@@ -274,13 +274,12 @@ $letras = strtoupper(
             </form>
         </div>
 
-        <!-- Content Grid -->
-        <div class="content-grid">
-            <!-- Latest Courses -->
+     <div class="content-grid">
+
             <div class="content-card">
                 <div class="content-card-header">
                     <h3 class="content-card-title">Professores </h3>
-                    <a href="professoradm.php" class="view-all-link">Ver todos →</a>
+                    <a href="professoradm.php" class="view-all-link">Ver todos â†’</a>
                 </div>
                 <?php 
                     $numteste = 0;
@@ -290,24 +289,24 @@ $letras = strtoupper(
 
                 <div class="course-list-item">
 
-                    <div class="course-icon">📚</div>
+                    <div class="course-icon">ðŸ“š</div>
                     <div class="course-info">
                         <div class="course-name"><?php echo($dadosprofessor['nome']); ?></div>
                         <div class="course-meta"><?php echo($dadosprofessor['formacao']); ?></div>
                     </div>
 
                 </div>
-
-            </div>
             <?php 
                 $numteste++;
                 endwhile; 
             ?>
+            </div>
+            </div>
 
             <div class="content-card">
                 <div class="content-card-header">
                     <h3 class="content-card-title">Aulas</h3>
-                    <a href="aulasadm.php" class="view-all-link">Ver todos →</a>
+                    <a href="aulasadm.php" class="view-all-link">Ver todos â†’</a>
                 </div>
 
                 <?php 
@@ -316,7 +315,7 @@ $letras = strtoupper(
                 ?>
                 
                     <div class="course-list-item">
-                        <div class="course-icon">📚</div>
+                        <div class="course-icon">ðŸ“š</div>
                         <div class="course-info">
                             <div class="course-name">
                                 <?php echo $dadosaula['nome']; ?>
@@ -354,7 +353,7 @@ $letras = strtoupper(
                         <th>Email</th>
                         <th>Autenticado</th>
                         <th>Data Cadastro</th>
-                        <th>Ações</th>
+                        <th>AÃ§Ãµes</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -407,7 +406,7 @@ $letras = strtoupper(
 
     <!-- Footer -->
     <footer class="footer">
-        <p>GoStay � 2026 - Sistema de Gest�o Educacional - v2.1.4</p>
+        <p>GoStay ï¿½ 2026 - Sistema de Gestï¿½o Educacional - v2.1.4</p>
     </footer>
 
     <script>

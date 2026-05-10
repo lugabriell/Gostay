@@ -525,6 +525,22 @@
                     required
                 ><?php echo($dadoscurso['descricao']); ?></textarea>
             </div>
+            <div class="form-group">
+                <label>Tipo</label>
+                <div class="radio-group">
+                    <label class="radio-label">
+                        <input type="radio" name="tipo" value="pago"
+                        <?php if ($dadoscurso['tipo'] == 'pago') { echo 'checked'; } ?>
+                        required>
+                        <span>Pago</span>
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="tipo"
+                        <?php if ($dadoscurso['tipo'] == 'gratis') { echo 'checked'; } ?> value="gratis">
+                        <span>Gratuito</span>
+                    </label>
+                </div>
+            </div>
 
             <!-- Campo Status (Radio) -->
             <div class="form-group">

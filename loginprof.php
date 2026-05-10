@@ -14,7 +14,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - Ids Ead</title>
     <link rel="shortcut icon" href="assets/ACELERADOR DO POTENCIAL HUMANO (1).png" type="image">
-  <link rel="stylesheet" href="styleLogin.css">
+  <link rel="stylesheet" href="stylelogin.css">
 </head>
 <body>
   <div class="navbar">

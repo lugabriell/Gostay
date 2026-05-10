@@ -26,6 +26,7 @@ $stmt->bind_param(
     $idcurso,
     $status
 );
+$sucesso = true;
 $nao = "nao";
 if($stmt->execute()){
     $sqlaula = "SELECT * FROM aula WHERE idcurso = '$idcurso'";
@@ -43,13 +44,17 @@ if($stmt->execute()){
             $nao,
             $nao
         );
-        if($stmt2->execute()){
-            header("Location: ../curso.php?id=$idcurso");
+        if(!$stmt2->execute()){
+            $sucesso = false;
         }
-        else{
-            header("Location: ../curso.php?id=$idcurso?user=naoencontrado");
-        }
+
     }
+}
+if($sucesso){
+    header("Location:../curso.php?id=$idcurso");
+}
+else{
+    header("Location:../curso.php?id=$idcurso&user=naoencontrado");
 }
 $stmt->close();
 $conexao->close();
