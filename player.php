@@ -11,8 +11,8 @@ $dadosselect2 = mysqli_fetch_assoc($resultselect2);
 $caminho = $dadosselect['caminhovideo'];
 $idcurso = $dadosselect['idcurso'];
 $ordem = $dadosselect['ordem'];
-if($dadosselect2['ultimoacesso'] !== 'nao'){
-  $ultimaposicao = $dadosselect2['ultimoacesso'];
+if($dadosselect2['ultimaposicao'] !== 'nao'){
+  $ultimaposicao = $dadosselect2['ultimaposicao'];
 }
 else{
   $ultimaposicao = false;

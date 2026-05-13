@@ -1,5 +1,4 @@
 <?php  
-file_put_contents('../debug.txt', print_r($_POST, true));
 require_once("../connection.php");
 session_start();
 
@@ -8,7 +7,7 @@ if(isset($_POST['tempo_atual'])) {
   $tempo_total = floatval($_POST['tempo_total']);
   $trackid     = intval($_POST['trackid']);
 
-  $stmt = $conexao->prepare("UPDATE alunoaula SET ultimoacesso=? WHERE idaula=?");
+  $stmt = $conexao->prepare("UPDATE alunoaula SET ultimaposicao=? WHERE idaula=?");
   $stmt->bind_param("si", $tempo_atual, $trackid);
   $stmt->execute();
   exit;

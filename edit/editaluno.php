@@ -26,6 +26,7 @@ $email = $_POST['email'];
 $telefone = $_POST['telefone'];
 $senha = $_POST['senha'];
 $datanascimento = $_POST['datanas'];
+$senhacripto = password_hash($senha, PASSWORD_ARGON2ID);
 
 $sqlselect = "SELECT * From alunos where id = '$idaluno'";
 $result = mysqli_query($conexao, $sqlselect);
@@ -54,7 +55,7 @@ if(isset($_SESSION['nameadm'])){
             $formacao,
             $email,
             $telefone,
-            $senha,
+            $senhacripto,
             $datanascimento,
             $autenticado,
             $videobd,
@@ -84,7 +85,7 @@ if(isset($_SESSION['nameadm'])){
             $formacao,
             $email,
             $telefone,
-            $senha,
+            $senhacripto,
             $datanascimento,
             $autenticado,
             $idaluno
@@ -116,7 +117,7 @@ else{
             $formacao,
             $email,
             $telefone,
-            $senha,
+            $senhacripto,
             $datanascimento,
             $idaluno
             

@@ -50,6 +50,7 @@
     JOIN aula ON aula.id = alunoaula.idaula
     WHERE alunoaula.idaluno = '$idaluno'
     AND alunoaula.statusal = 'ativo'
+    AND aula.idcurso = '$idcurso'
     ORDER BY aula.ordem ASC
     ";
 
@@ -57,6 +58,7 @@
     $numrows = mysqli_num_rows($resultaula);
     $resultaula2 = mysqli_query($conexao, $sqlaula);
     $dadosaula2 = mysqli_fetch_assoc($resultaula2);
+    $idaula = $dadosaula2['id'];
 
     
 
@@ -160,11 +162,11 @@
             <?php } else { ?>
         
                 <div class="banner-actions">
-                    <a href="player.php?trackid=<?php echo($dadosaula2['id']); ?>" class="btn btn-primary">
+                    <a href="player.php?trackid=<?php echo($idaula); ?>" class="btn btn-primary">
                         Assistir a aula 
                     </a>
         
-                    <a href="media.php?trackid=<?php echo($dadosaula2['id']); ?>" class="btn btn-ghost">
+                    <a href="media.php?trackid=<?php echo($idaula); ?>" class="btn btn-ghost">
                         Baixar Conteúdo
                     </a>
                 </div>
