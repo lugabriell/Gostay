@@ -3,11 +3,22 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import sys
 import json
+import os
+from dotenv import load_dotenv
 
-smtp_server = 'smtp.gmail.com'
-smtp_port = 587
-sender_email = 'lucas74126@gmail.com'
-password = 'wejz quik hhih fuus'
+
+#configuracao de seguranca | migracao de senha para .env
+# load_dotenv('C:\xampp\htdocs\idsead\.env')
+#smtp_server = os.getenv('SMTP_SERVER')
+#smtp_port = os.loadenv('SMTP_PORT')
+#sender_email = os.getenv('SENDER_EMAIL')
+#password = os.getenv('PASSWORD')
+
+# configuração antiga | senhas cruas 
+# smtp_server = 'smtp.gmail.com'
+# smtp_port = 587
+# sender_email = 'lucas74126@gmail.com'
+# password = 'wejz quik hhih fuus'
 
 
 def enviodeemail(emails, chave):

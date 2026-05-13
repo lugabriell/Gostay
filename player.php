@@ -69,7 +69,7 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
       align-items: center;
       justify-content: center;
       background: #000;
-      cursor: none; /* custom cursor */
+      cursor: none;
     }
 
     #video {
@@ -651,6 +651,56 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
     }
     #player.is-paused .big-pause-icon { opacity: 1; }
 
+    /* ── Resume Toast ─────────────────────────────────────────────────────── */
+    .resume-toast {
+      position: absolute;
+      top: 90px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 30;
+      background: rgba(10,22,40,.92);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 10px;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: rgba(255,255,255,.85);
+      font-size: .82rem;
+      font-weight: 500;
+      backdrop-filter: blur(12px);
+      white-space: nowrap;
+      pointer-events: auto;
+      animation: toastIn .35s ease forwards;
+    }
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+      to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+    .resume-toast.hiding {
+      animation: toastOut .3s ease forwards;
+    }
+    @keyframes toastOut {
+      from { opacity: 1; transform: translateX(-50%) translateY(0); }
+      to   { opacity: 0; transform: translateX(-50%) translateY(-8px); }
+    }
+    .resume-toast strong {
+      color: var(--accent);
+    }
+    .resume-restart-btn {
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 6px;
+      color: white;
+      font-family: 'Outfit', sans-serif;
+      font-size: .75rem;
+      font-weight: 600;
+      padding: 5px 12px;
+      cursor: pointer;
+      transition: background .2s;
+      white-space: nowrap;
+    }
+    .resume-restart-btn:hover { background: rgba(255,255,255,.22); }
 
     @media (max-width: 600px) {
       .ctrl-btn { width: 36px; height: 36px; }
@@ -660,6 +710,7 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
       .ctrl-btn[data-tip]::after { display: none; }
       .back-btn span { display: none; }
       .top-lesson-name { font-size: .85rem; }
+      .resume-toast { font-size: .74rem; padding: 10px 14px; gap: 10px; }
     }
   </style>
 </head>
@@ -903,7 +954,6 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
     const tapLeft       = document.getElementById('tap-left');
     const tapRight      = document.getElementById('tap-right');
 
-   
     let controlsTimer  = null;
     let isDragging     = false;
     let captionsOn     = false;
@@ -912,8 +962,64 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
     let countdownSecs  = 10;
     let nextCardDismissed = false;
     const speeds = [0.5, 0.75, 1, 1.25, 1.5, 2];
-    let speedIdx = 2; // default 1×
+    let speedIdx = 2;
 
+    // ── Persistência de progresso ──────────────────────────────────────────
+    const STORAGE_KEY      = 'lesson_progress_<?php echo (int)$trackid; ?>';
+    const RESUME_THRESHOLD = 5;   // só retoma se já passou mais de 5 segundos
+    const SAVE_INTERVAL    = 2;   // salva a cada 2 segundos de variação
+    let   lastSaved        = 0;
+    let   toastDismissTimer = null;
+
+    function saveProgress() {
+      try {
+        localStorage.setItem(STORAGE_KEY, video.currentTime);
+      } catch(e) {}
+    }
+
+    function loadProgress() {
+      try {
+        return parseFloat(localStorage.getItem(STORAGE_KEY)) || 0;
+      } catch(e) { return 0; }
+    }
+
+    function clearProgress() {
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch(e) {}
+    }
+
+    function showResumeToast(seconds) {
+      // Evita duplicatas
+      const existing = document.getElementById('resume-toast');
+      if (existing) existing.remove();
+
+      const toast = document.createElement('div');
+      toast.id = 'resume-toast';
+      toast.className = 'resume-toast';
+      toast.innerHTML =
+        '<span>Continuando de <strong>' + fmtTime(seconds) + '</strong></span>' +
+        '<button class="resume-restart-btn" id="resume-restart-btn">Começar do início</button>';
+
+      player.appendChild(toast);
+
+      document.getElementById('resume-restart-btn').addEventListener('click', () => {
+        video.currentTime = 0;
+        clearProgress();
+        dismissToast(toast);
+      });
+
+      // Auto-dismiss após 6 segundos
+      toastDismissTimer = setTimeout(() => dismissToast(toast), 6000);
+    }
+
+    function dismissToast(toast) {
+      if (!toast || !toast.parentNode) return;
+      clearTimeout(toastDismissTimer);
+      toast.classList.add('hiding');
+      toast.addEventListener('animationend', () => toast.remove(), { once: true });
+    }
+    // ── Fim da persistência ────────────────────────────────────────────────
 
     function fmtTime(s) {
       if (isNaN(s)) return '0:00';
@@ -972,13 +1078,13 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
       player.classList.add('is-paused');
       showControls();
       pulseCenter('play');
+      // Salva imediatamente ao pausar
+      saveProgress();
     });
 
     playBtn.addEventListener('click', togglePlay);
 
-  
     video.addEventListener('click', e => {
-  
       togglePlay();
     });
 
@@ -988,7 +1094,7 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
         ? `<path d="M8 5v14l11-7z"/>`
         : `<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>`;
       centerFeedback.classList.remove('pop');
-      void centerFeedback.offsetWidth; // reflow
+      void centerFeedback.offsetWidth;
       centerFeedback.classList.add('pop');
     }
 
@@ -1003,7 +1109,6 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
 
     rewindBtn.addEventListener('click',  () => skipTime(-10));
     forwardBtn.addEventListener('click', () => skipTime(+10));
-
 
     tapLeft.addEventListener('click',  () => skipTime(-10));
     tapRight.addEventListener('click', () => skipTime(+10));
@@ -1033,7 +1138,6 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
       volSlider.style.background = `linear-gradient(to right, #38bdf8 ${pct}%, rgba(255,255,255,.25) ${pct}%)`;
     });
 
-
     volSlider.style.background = 'linear-gradient(to right, #38bdf8 100%, rgba(255,255,255,.25) 100%)';
 
     video.addEventListener('timeupdate', () => {
@@ -1043,6 +1147,12 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
       progressThumb.style.left  = pct + '%';
       currentTimeEl.textContent = fmtTime(video.currentTime);
       checkNextCard();
+
+      // Salva a cada SAVE_INTERVAL segundos de variação
+      if (Math.abs(video.currentTime - lastSaved) >= SAVE_INTERVAL) {
+        saveProgress();
+        lastSaved = video.currentTime;
+      }
     });
 
     video.addEventListener('progress', () => {
@@ -1052,11 +1162,38 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
       }
     });
 
+    // Carrega metadados e restaura posição salva
     video.addEventListener('loadedmetadata', () => {
       durationEl.textContent = fmtTime(video.duration);
+
+      const saved = loadProgress();
+      if (saved > RESUME_THRESHOLD && saved < video.duration - 3) {
+        video.currentTime = saved;
+        showResumeToast(saved);
+      }
     });
 
-  
+    // Ao terminar a aula, limpa o progresso salvo
+    video.addEventListener('ended', () => {
+      clearProgress();
+      if (autoplayOn && !nextCardDismissed) {
+        window.location.href = nextVideo;
+      }
+    });
+
+    // Salva ao fechar/trocar de aba
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') {
+        saveProgress();
+      }
+    });
+
+    // Salva ao fechar a janela
+    window.addEventListener('beforeunload', () => {
+      saveProgress();
+    });
+
+
     progressWrap.addEventListener('mousemove', e => {
       const rect = progressWrap.querySelector('.progress-track').getBoundingClientRect();
       const pct  = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
@@ -1088,6 +1225,7 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
       if (isDragging) {
         isDragging = false;
         progressWrap.classList.remove('dragging');
+        saveProgress(); // Salva após arrastar a barra
       }
     });
 
@@ -1099,7 +1237,12 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
       if (!isDragging) return;
       seekTo(e.touches[0]);
     }, { passive: true });
-    document.addEventListener('touchend', () => { isDragging = false; });
+    document.addEventListener('touchend', () => {
+      if (isDragging) {
+        isDragging = false;
+        saveProgress(); // Salva após arrastar no mobile
+      }
+    });
 
 
     video.addEventListener('waiting', () => spinner.classList.add('visible'));
@@ -1209,19 +1352,12 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
       nextCardDismissed = true;
       hideNextCard();
     });
-    const nextVideo = "player.php?trackid=<?php echo $dadosprox['id']; ?>";
+
+    const nextVideo = "player.php?trackid=<?php echo isset($dadosprox['id']) ? (int)$dadosprox['id'] : ''; ?>";
 
     nextPlayBtn.addEventListener('click', () => {
-
-       window.location.href = nextVideo;
+      window.location.href = nextVideo;
     });
-
-    video.addEventListener('ended', () => {
-      if (autoplayOn && !nextCardDismissed) {
-         window.location.href = nextVideo;
-      }
-    });
-
 
     document.addEventListener('keydown', e => {
       const tag = document.activeElement.tagName;
@@ -1276,11 +1412,8 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
 
     showControls();
 
-   
     video.muted = false;
-    video.play().catch(() => {
-
-    });
+    video.play().catch(() => {});
   </script>
 </body>
 </html>

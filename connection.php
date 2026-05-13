@@ -15,7 +15,7 @@
     $dbUsername = 'root';
     $dbPassword = '';
     $bancodedados = 'idsead';
-
-    $conexao = new mysqli($dbHost,$dbUsername,$dbPassword,$bancodedados, 3306) or die("not connected");
+ 
+    $conexao = new mysqli($dbHost,$dbUsername,$dbPassword,$bancodedados, 3307) or die("not connected");
 
 ?>
