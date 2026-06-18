@@ -25,6 +25,7 @@
     $qtdalunos = [];
     $idaluno = [];
     $statusa =[];
+    $idcurso = [];
 
     for($i = 0; $i< $qtdcurso; $i++){
         
