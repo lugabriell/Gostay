@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pós-Graduação | Imaginary LTDA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  :root{
+    --bg: #0b1e4d;
+    --bg2: #122a66;
+    --accent: #ffd23f;
+    --text: #f5f7ff;
+    --text-soft: rgba(245,247,255,0.7);
+    --card: rgba(255,255,255,0.05);
+    --card-border: rgba(255,255,255,0.12);
+    --glass-bg: rgba(11,30,77,0.45);
+    --glass-border: rgba(255,255,255,0.15);
+    --royal: #1a3fae;
+    --transition-speed: .4s;
+  }
+
+  [data-theme="light"]{
+    --bg: #f4f7ff;
+    --bg2: #e7edff;
+    --accent: #1a3fae;
+    --text: #0b1e4d;
+    --text-soft: rgba(11,30,77,0.65);
+    --card: rgba(26,63,174,0.05);
+    --card-border: rgba(26,63,174,0.12);
+    --glass-bg: rgba(255,255,255,0.55);
+    --glass-border: rgba(26,63,174,0.15);
+    --royal: #1a3fae;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+
+  body{
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(160deg, var(--bg) 0%, var(--bg2) 100%);
+    color: var(--text);
+    transition: background var(--transition-speed) ease, color var(--transition-speed) ease;
+    overflow-x:hidden;
+  }
+
+  /* ===================== NAVBAR ===================== */
+  .navbar{
+    position: fixed;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(92%, 900px);
+    z-index: 1000;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 1rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 100px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    transition: top .5s cubic-bezier(.4,0,.2,1);
+  }
+  .navbar.show{ top: 16px; }
+
+  .nav-logo{ display:flex; align-items:center; gap:.5rem; font-weight:700; font-size:1.05rem; white-space:nowrap; }
+  .nav-logo i{ color: var(--accent); }
+
+  .nav-links{ display:flex; gap: 1.2rem; list-style:none; flex-wrap:wrap; }
+  .nav-links a{
+    color: var(--text); text-decoration:none; font-size:.85rem; font-weight:500; opacity:.85;
+    position:relative; transition: opacity .25s, color .25s;
+  }
+  .nav-links a::after{
+    content:''; position:absolute; left:0; bottom:-4px; width:0; height:2px;
+    background: var(--accent); transition: width .3s ease;
+  }
+  .nav-links a:hover{ opacity:1; }
+  .nav-links a:hover::after{ width:100%; }
+
+  .nav-actions{ display:flex; align-items:center; gap:.7rem; }
+
+  .btn-saber-mais{
+    padding:.5rem 1.1rem; border-radius: 100px; border: 1px solid var(--accent);
+    background: transparent; color: var(--text); font-weight:600; font-size:.8rem;
+    cursor:pointer; text-decoration:none; white-space:nowrap; transition: all .3s ease;
+  }
+  .btn-saber-mais:hover{
+    background: var(--accent); color: var(--bg); box-shadow: 0 0 18px var(--accent); transform: translateY(-2px);
+  }
+
+  .theme-toggle{
+    position: relative; width: 46px; height: 26px; border-radius: 50px;
+    border: 1px solid var(--glass-border); background: rgba(255,255,255,0.08);
+    cursor: pointer; display:flex; align-items:center; padding: 2px;
+    transition: background .4s ease; flex-shrink:0;
+  }
+  .theme-toggle .knob{
+    width: 20px; height: 20px; border-radius:50%; background: var(--accent);
+    display:flex; align-items:center; justify-content:center; color: var(--bg);
+    font-size: .65rem; transition: transform .45s cubic-bezier(.68,-0.55,.27,1.55), background .4s;
+    transform: translateX(0);
+  }
+  [data-theme="light"] .theme-toggle .knob{ transform: translateX(20px); }
+
+  .nav-burger{ display:none; background:none; border:none; color: var(--text); font-size:1.2rem; cursor:pointer; }
+
+  @media (max-width: 760px){
+    .nav-links{
+      position:absolute; top: calc(100% + 10px); left:0; right:0; flex-direction:column;
+      background: var(--glass-bg); border:1px solid var(--glass-border); backdrop-filter: blur(16px);
+      border-radius: 20px; padding: 1rem 1.4rem; gap: .9rem; display:none;
+    }
+    .nav-links.open{display:flex;}
+    .nav-burger{display:block;}
+    .btn-saber-mais{display:none;}
+  }
+
+/* https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1600&auto=format&fit=crop */
+  
+/* ===================== HERO ===================== */
+.hero{
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    background-image: url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1600&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+  .hero::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background: linear-gradient(160deg, rgba(11,30,77,0.85) 0%, rgba(18,42,102,0.8) 100%);
+    z-index:0;
+  }
+  [data-theme="light"] .hero::before{
+    background: linear-gradient(160deg, rgba(244,247,255,0.88) 0%, rgba(231,237,255,0.85) 100%);
+  }
+
+  .hero-content{
+    position:relative; z-index:2; display:flex; flex-direction:column;
+    align-items:center; gap: 1.4rem; max-width: 720px;
+  }
+
+  .hero-tag{
+    display:flex; align-items:center; gap:.5rem; font-size:.8rem; letter-spacing:2px;
+    text-transform:uppercase; color: var(--accent); font-weight:700;
+    opacity:0; animation: fadeUp .8s ease forwards; animation-delay:.1s;
+  }
+  .hero-tag i{font-size:.7rem;}
+
+  .hero h1{
+    font-size: clamp(2.2rem, 6vw, 4rem); font-weight:800; line-height:1.15;
+    opacity:0; animation: fadeUp .8s ease forwards; animation-delay:.25s;
+  }
+  .hero h1 span{ color: var(--accent); }
+
+  /* SEARCH BAR - sempre branca */
+  .search-bar{
+    width: min(100%, 560px);
+    background: #ffffff;
+    border-radius: 100px;
+    padding: .35rem .35rem .35rem 1.4rem;
+    display:flex;
+    align-items:center;
+    gap:.8rem;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+    opacity:0; animation: fadeUp .8s ease forwards, floaty 6s ease-in-out infinite;
+    animation-delay:.4s, 1.2s;
+  }
+
+  .search-bar i.icon-search{ color:#1a3fae; font-size:1rem; }
+
+  .search-bar input{
+    flex:1;
+    border:none;
+    outline:none;
+    background:transparent;
+    color:#0b1e4d;
+    font-family:inherit;
+    font-size:1rem;
+    font-weight:500;
+    padding: .9rem 0;
+  }
+
+  .search-bar input::placeholder{
+    color:#0b1e4d;
+    opacity:.55;
+  }
+
+  .search-bar button{
+    width: 44px; height:44px; border-radius:50%; border:none;
+    background: var(--royal); color:#fff; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; transition: transform .3s, background .3s;
+    font-size:1rem;
+  }
+  .search-bar button:hover{ transform: scale(1.1) rotate(8deg); background:#ffd23f; color:#0b1e4d; }
+
+  @keyframes floaty{
+    0%, 100%{ transform: translateY(0); }
+    50%{ transform: translateY(-8px); }
+  }
+
+  .quick-actions{
+    display:flex; gap:.6rem; flex-wrap:wrap; justify-content:center;
+    opacity:0; animation: fadeUp .8s ease forwards; animation-delay:.6s;
+  }
+  .quick-actions .pill{
+    display:flex; align-items:center; gap:.4rem; font-size:.8rem; padding:.6rem 1.1rem;
+    border-radius: 100px; background: rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.18);
+    color: var(--text); cursor:pointer; transition: all .25s; backdrop-filter: blur(6px);
+  }
+  [data-theme="light"] .quick-actions .pill{ background: rgba(255,255,255,0.5); border-color: rgba(26,63,174,0.15); }
+  .quick-actions .pill:hover{
+    background: var(--accent); color: var(--bg); border-color: var(--accent); transform: translateY(-3px);
+  }
+
+  @keyframes fadeUp{
+    from{ opacity:0; transform: translateY(24px);}
+    to{ opacity:1; transform: translateY(0);}
+  }
+
+  .scroll-hint{
+    position:absolute; bottom: 2rem; left:50%; transform: translateX(-50%);
+    font-size: 1.4rem; color: var(--accent); animation: bounce 2s infinite; z-index:2;
+  }
+  @keyframes bounce{
+    0%,100%{transform: translate(-50%,0);}
+    50%{transform: translate(-50%,10px);}
+  }
+
+  /* ===================== SECTIONS ===================== */
+  section{ padding: 6rem 1.5rem; max-width: 1100px; margin: 0 auto; }
+
+  .section-head{ text-align:center; margin-bottom: 3rem; }
+  .section-head .tag{
+    color: var(--accent); text-transform:uppercase; letter-spacing:3px; font-size:.78rem;
+    font-weight:700; display:block; margin-bottom:.6rem;
+  }
+  .section-head h2{ font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight:800; }
+  .section-head p{
+    color: var(--text-soft); margin-top: .8rem; max-width: 600px; margin-left:auto; margin-right:auto; line-height:1.6;
+  }
+
+  .reveal{ opacity:0; transform: translateY(40px); transition: opacity .8s ease, transform .8s ease; }
+  .reveal.visible{ opacity:1; transform: translateY(0); }
+
+  /* ===================== PORQUE - CARROSSEL ===================== */
+  .carousel{
+    position:relative;
+    overflow:hidden;
+  }
+  .carousel-track{
+    display:flex;
+    gap: 1.5rem;
+    transition: transform .6s cubic-bezier(.4,0,.2,1);
+  }
+  .carousel-card{
+    flex: 0 0 100%;
+    background: var(--card);
+    border:1px solid var(--card-border);
+    border-radius: 22px;
+    padding: 2.4rem 2rem;
+    backdrop-filter: blur(10px);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    gap:1rem;
+  }
+  @media (min-width: 700px){
+    .carousel-card{ flex: 0 0 calc(50% - 0.75rem); }
+  }
+  @media (min-width: 1000px){
+    .carousel-card{ flex: 0 0 calc(33.333% - 1rem); }
+  }
+
+  .carousel-card i{
+    font-size: 2.2rem; color: var(--accent);
+    width: 70px; height:70px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background: rgba(255,210,63,0.12);
+  }
+  [data-theme="light"] .carousel-card i{ background: rgba(26,63,174,0.08); }
+
+  .carousel-card h3{ font-size:1.15rem; }
+  .carousel-card p{ color: var(--text-soft); font-size:.92rem; line-height:1.6; }
+
+  .carousel-controls{
+    display:flex; justify-content:center; align-items:center; gap:1.2rem; margin-top:2rem;
+  }
+  .carousel-btn{
+    width: 44px; height:44px; border-radius:50%;
+    border: 1px solid var(--card-border); background: var(--card); color: var(--text);
+    cursor:pointer; font-size:1rem; transition: all .3s;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .carousel-btn:hover{ background: var(--accent); color: var(--bg); border-color: var(--accent); transform: scale(1.08); }
+
+  .carousel-dots{ display:flex; gap:.5rem; }
+  .carousel-dots span{
+    width: 9px; height:9px; border-radius:50%; background: var(--card-border); cursor:pointer; transition: all .3s;
+  }
+  .carousel-dots span.active{ background: var(--accent); width: 26px; border-radius:5px; }
+
+  /* ===================== PUBLICO ALVO - ASIDE COM VIDEO GRID ===================== */
+  .publico-layout{
+    display:grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    align-items:center;
+  }
+  @media (min-width: 880px){
+    .publico-layout{ grid-template-columns: 1.05fr 1fr; }
+  }
+
+  /* mosaico de "videos" */
+  .video-mosaic{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 70px);
+    gap: .7rem;
+    width:100%;
+  }
+  @media (min-width:600px){
+    .video-mosaic{ grid-template-rows: repeat(4, 90px); }
+  }
+
+  .video-block{
+    border-radius: 16px;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    overflow:hidden;
+    transition: transform .4s ease, border-color .4s;
+  }
+  .video-block:hover{ transform: scale(0.97); border-color: var(--accent); }
+
+  .video-block i{
+    color: var(--accent);
+    font-size:1.4rem;
+    z-index:2;
+    opacity:.9;
+  }
+
+  .video-block::after{
+    content:'';
+    position:absolute; inset:0;
+    background: linear-gradient(135deg, rgba(255,210,63,0.10), rgba(26,63,174,0.18));
+  }
+
+  /* Mosaico: retângulo deitado em cima (1x2), retângulo em pé à direita (2x1 vertical), e blocos menores preenchendo */
+  .vb-1{ grid-column: 1 / 3; grid-row: 1 / 2; }            /* deitado topo esquerda */
+  .vb-2{ grid-column: 3 / 5; grid-row: 1 / 3; }            /* em pé direita */
+  .vb-3{ grid-column: 1 / 2; grid-row: 2 / 4; }            /* em pé esquerda */
+  .vb-4{ grid-column: 2 / 3; grid-row: 2 / 3; }            /* quadrado pequeno */
+  .vb-5{ grid-column: 2 / 4; grid-row: 3 / 4; }            /* deitado meio */
+  .vb-6{ grid-column: 4 / 5; grid-row: 3 / 5; }            /* em pé direita baixo */
+  .vb-7{ grid-column: 1 / 3; grid-row: 4 / 5; }            /* deitado base esquerda */
+  .vb-8{ grid-column: 3 / 4; grid-row: 4 / 5; }            /* quadrado pequeno base */
+
+  .publico-text .tag{
+    color: var(--accent); text-transform:uppercase; letter-spacing:3px; font-size:.78rem; font-weight:700; display:block; margin-bottom:.6rem;
+  }
+  .publico-text h2{ font-size: clamp(1.8rem,4vw,2.4rem); font-weight:800; margin-bottom:1rem; }
+  .publico-text p{ color: var(--text-soft); line-height:1.7; margin-bottom:1.4rem; }
+
+  .publico-list{ display:flex; flex-direction:column; gap:.9rem; }
+  .publico-list li{
+    list-style:none; display:flex; align-items:flex-start; gap:.8rem; font-size:.95rem; color: var(--text);
+  }
+  .publico-list li i{ color: var(--accent); margin-top:.2rem; }
+
+  /* ===================== CONTEUDO - lista de blocos ===================== */
+  .conteudo-list{ display:flex; flex-direction:column; gap: 1rem; }
+
+  .conteudo-item{
+    display:flex; align-items:center; gap: 1.2rem; background: var(--card);
+    border: 1px solid var(--card-border); border-radius: 16px; padding: 1.2rem 1.6rem;
+    transition: transform .35s ease, border-color .35s, background .35s; cursor:default;
+  }
+  .conteudo-item:hover{ transform: translateX(10px); border-color: var(--accent); background: rgba(255,210,63,0.07); }
+
+  .conteudo-num{
+    flex-shrink:0; width: 44px;height:44px; border-radius: 12px; background: var(--accent); color: var(--bg);
+    display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1rem;
+  }
+  .conteudo-text h4{ font-size: 1rem; margin-bottom:.2rem; }
+  .conteudo-text p{ font-size:.85rem; color: var(--text-soft); }
+
+  /* ===================== CONTATO ===================== */
+  .contato-grid{
+    display:grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  @media (min-width: 880px){
+    .contato-grid{ grid-template-columns: 1.1fr 1fr; }
+  }
+
+  .contato-box{
+    background: var(--card); border:1px solid var(--card-border); border-radius: 24px;
+    padding: 2.5rem; backdrop-filter: blur(10px);
+    display:flex; flex-direction:column; gap:1.4rem; justify-content:center;
+  }
+  .contato-box h3{ font-size: 1.6rem; }
+  .contato-box p{ color: var(--text-soft); line-height:1.7; }
+
+  .contato-actions{ display:flex; gap: 1rem; flex-wrap:wrap; }
+  .btn-contato{
+    display:flex; align-items:center; gap:.6rem; padding: .8rem 1.6rem; border-radius: 100px;
+    text-decoration:none; font-weight:600; font-size:.9rem; transition: all .3s; border: 1px solid var(--accent); color: var(--text);
+  }
+  .btn-contato.solid{ background: var(--accent); color: var(--bg); }
+  .btn-contato:hover{ transform: translateY(-4px); box-shadow: 0 10px 28px rgba(255,210,63,0.25); }
+
+  .contato-info-grid{
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  .contato-info-card{
+    background: var(--card); border: 1px solid var(--card-border); border-radius: 18px;
+    padding: 1.4rem; display:flex; flex-direction:column; gap:.6rem;
+    transition: transform .35s, border-color .35s;
+  }
+  .contato-info-card:hover{ transform: translateY(-6px); border-color: var(--accent); }
+  .contato-info-card i{ color: var(--accent); font-size:1.4rem; }
+  .contato-info-card h4{ font-size: .95rem; }
+  .contato-info-card p{ font-size:.8rem; color: var(--text-soft); line-height:1.5; }
+
+  /* form */
+  .contato-form{
+    display:flex; flex-direction:column; gap:.9rem;
+  }
+  .contato-form input, .contato-form textarea{
+    width:100%;
+    padding: .9rem 1.1rem;
+    border-radius: 12px;
+    border: 1px solid var(--card-border);
+    background: rgba(255,255,255,0.05);
+    color: var(--text);
+    font-family:inherit;
+    font-size:.9rem;
+    outline:none;
+    transition: border-color .3s, background .3s;
+  }
+  [data-theme="light"] .contato-form input, [data-theme="light"] .contato-form textarea{
+    background: rgba(26,63,174,0.04);
+  }
+  .contato-form input::placeholder, .contato-form textarea::placeholder{ color: var(--text-soft); }
+  .contato-form input:focus, .contato-form textarea:focus{ border-color: var(--accent); }
+  .contato-form textarea{ resize: vertical; min-height: 100px; }
+
+  .contato-form button{
+    align-self:flex-start;
+    padding: .9rem 2rem;
+    border-radius: 100px;
+    border:none;
+    background: var(--accent);
+    color: var(--bg);
+    font-weight:700;
+    font-size:.9rem;
+    cursor:pointer;
+    transition: transform .3s, box-shadow .3s;
+  }
+  .contato-form button:hover{ transform: translateY(-3px); box-shadow: 0 10px 28px rgba(255,210,63,0.3); }
+
+  /* ===================== FOOTER ===================== */
+  footer{
+    border-top: 1px solid var(--card-border);
+    padding: 4rem 1.5rem 2rem;
+  }
+  .footer-grid{
+    max-width: 1100px;
+    margin: 0 auto;
+    display:grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    margin-bottom: 2.5rem;
+  }
+  @media (min-width: 760px){
+    .footer-grid{ grid-template-columns: 1.4fr 1fr 1fr 1fr; }
+  }
+
+  .footer-logo{ font-weight:800; font-size:1.3rem; margin-bottom: .8rem; display:flex; align-items:center; gap:.5rem; }
+  .footer-logo i{ color: var(--accent); }
+  .footer-col p{ color: var(--text-soft); font-size:.88rem; line-height:1.7; }
+
+  .footer-col h5{
+    font-size:.85rem; text-transform:uppercase; letter-spacing:2px; color: var(--accent); margin-bottom:1rem;
+  }
+  .footer-col ul{ list-style:none; display:flex; flex-direction:column; gap:.7rem; }
+  .footer-col ul li a{
+    color: var(--text-soft); text-decoration:none; font-size:.9rem; transition: color .25s, padding-left .25s;
+    display:inline-block;
+  }
+  .footer-col ul li a:hover{ color: var(--accent); padding-left:.3rem; }
+
+  .footer-col ul li i{ margin-right:.5rem; color: var(--accent); width:14px; }
+
+  .social-links{ display:flex; gap: .8rem; margin-top: 1rem; }
+  .social-links a{
+    width: 42px; height:42px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    background: var(--card); border: 1px solid var(--card-border); color: var(--text);
+    text-decoration:none; font-size:1.05rem; transition: all .3s;
+  }
+  .social-links a:hover{
+    background: var(--accent); color: var(--bg); transform: translateY(-5px) rotate(8deg); border-color: var(--accent);
+  }
+
+  .footer-bottom{
+    max-width:1100px; margin:0 auto; padding-top:2rem; border-top: 1px solid var(--card-border);
+    display:flex; flex-wrap:wrap; justify-content:space-between; gap:1rem;
+    font-size:.78rem; color: var(--text-soft); opacity:.8;
+  }
+  .footer-bottom a{ color: var(--text-soft); text-decoration:none; }
+  .footer-bottom a:hover{ color: var(--accent); }
+
+</style>
+</head>
+<body data-theme="dark">
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-logo"><i class="fa-solid fa-graduation-cap"></i> Imaginary Pós</div>
+    <button class="nav-burger" id="burger"><i class="fa-solid fa-bars"></i></button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#porque">Por Que Fazer</a></li>
+      <li><a href="#publico">Público Alvo</a></li>
+      <li><a href="#conteudo">Conteúdo</a></li>
+      <li><a href="#contato">Contato</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="#porque" class="btn-saber-mais">Saber mais</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema">
+        <span class="knob"><i class="fa-solid fa-moon"></i></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-content">
+      <span class="hero-tag"><i class="fa-solid fa-sparkles"></i> Pós-Graduação 2026</span>
+      <h1>Transforme sua carreira com a <span>melhor pós-graduação</span> do mercado</h1>
+
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass icon-search"></i>
+        <input type="text" id="rotatingInput" readonly>
+        <button><i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+
+      <div class="quick-actions">
+        <div class="pill"><i class="fa-solid fa-user-graduate"></i> Falar com orientador</div>
+        <div class="pill"><i class="fa-solid fa-magnifying-glass"></i> Explorar cursos</div>
+        <div class="pill"><i class="fa-solid fa-file-pen"></i> Fazer inscrição</div>
+      </div>
+    </div>
+
+    <div class="scroll-hint"><i class="fa-solid fa-chevron-down"></i></div>
+  </section>
+
+  <!-- POR QUE FAZER - CARROSSEL -->
+  <section id="porque">
+    <div class="section-head reveal">
+      <span class="tag">Por que fazer</span>
+      <h2>Por que escolher nossa Pós-Graduação?</h2>
+      <p>Mais do que um diploma, entregamos ferramentas reais para o seu crescimento profissional.</p>
+    </div>
+
+    <div class="carousel reveal">
+      <div class="carousel-track" id="carouselTrack">
+        <div class="carousel-card">
+          <i class="fa-solid fa-chart-line"></i>
+          <h3>Crescimento Acelerado</h3>
+          <p>Conteúdo direto ao ponto, focado em aplicação prática para destravar sua carreira rapidamente.</p>
+        </div>
+        <div class="carousel-card">
+          <i class="fa-solid fa-certificate"></i>
+          <h3>Certificação Reconhecida</h3>
+          <p>Diploma com validade nacional, reconhecido pelo mercado e por instituições parceiras.</p>
+        </div>
+        <div class="carousel-card">
+          <i class="fa-solid fa-people-group"></i>
+          <h3>Networking Real</h3>
+          <p>Conecte-se com profissionais e mentores que vão além da sala de aula.</p>
+        </div>
+        <div class="carousel-card">
+          <i class="fa-solid fa-laptop-code"></i>
+          <h3>Flexibilidade Total</h3>
+          <p>Estude no seu ritmo, de onde estiver, sem abrir mão da qualidade do ensino.</p>
+        </div>
+        <div class="carousel-card">
+          <i class="fa-solid fa-coins"></i>
+          <h3>Investimento Acessível</h3>
+          <p>Planos de pagamento flexíveis e bolsas de estudo para quem se destaca.</p>
+        </div>
+        <div class="carousel-card">
+          <i class="fa-solid fa-headset"></i>
+          <h3>Suporte Dedicado</h3>
+          <p>Equipe pedagógica disponível para tirar dúvidas durante toda sua jornada.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="carousel-controls reveal">
+      <button class="carousel-btn" id="prevBtn"><i class="fa-solid fa-chevron-left"></i></button>
+      <div class="carousel-dots" id="carouselDots"></div>
+      <button class="carousel-btn" id="nextBtn"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+  </section>
+
+  <!-- PUBLICO ALVO - ASIDE COM MOSAICO -->
+  <section id="publico">
+    <div class="publico-layout">
+      <div class="video-mosaic reveal">
+        <div class="video-block vb-1"><i class="fa-solid fa-play"></i></div>
+        <div class="video-block vb-2"><i class="fa-solid fa-play"></i></div>
+        <div class="video-block vb-3"><i class="fa-solid fa-play"></i></div>
+        <div class="video-block vb-4"><i class="fa-solid fa-circle-play"></i></div>
+        <div class="video-block vb-5"><i class="fa-solid fa-play"></i></div>
+        <div class="video-block vb-6"><i class="fa-solid fa-play"></i></div>
+        <div class="video-block vb-7"><i class="fa-solid fa-play"></i></div>
+        <div class="video-block vb-8"><i class="fa-solid fa-circle-play"></i></div>
+      </div>
+
+      <aside class="publico-text reveal">
+        <span class="tag">Público Alvo</span>
+        <h2>Para quem é essa pós?</h2>
+        <p>Pensada para profissionais que querem dar o próximo passo, seja lá onde estiverem hoje. Conteúdo em vídeo, ao vivo e material de apoio para todos os perfis.</p>
+        <ul class="publico-list">
+          <li><i class="fa-solid fa-briefcase"></i> Profissionais atuantes que buscam se especializar e se destacar no mercado de trabalho.</li>
+          <li><i class="fa-solid fa-user-graduate"></i> Recém-formados que querem sair na frente com uma especialização desde o início da carreira.</li>
+          <li><i class="fa-solid fa-rocket"></i> Empreendedores que precisam de conhecimento estratégico para escalar seus negócios.</li>
+          <li><i class="fa-solid fa-arrows-rotate"></i> Profissionais em transição de carreira que precisam de uma base sólida e atualizada.</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <!-- CONTEUDO -->
+  <section id="conteudo">
+    <div class="section-head reveal">
+      <span class="tag">Conteúdo</span>
+      <h2>O que você vai aprender</h2>
+      <p>Uma grade pensada do básico ao avançado, sempre com foco prático e atualizada com as demandas do mercado.</p>
+    </div>
+    <div class="conteudo-list">
+      <div class="conteudo-item reveal">
+        <div class="conteudo-num">01</div>
+        <div class="conteudo-text">
+          <h4>Fundamentos Estratégicos</h4>
+          <p>Base sólida para entender o cenário atual do mercado e suas oportunidades.</p>
+        </div>
+      </div>
+      <div class="conteudo-item reveal">
+        <div class="conteudo-num">02</div>
+        <div class="conteudo-text">
+          <h4>Ferramentas e Tecnologias</h4>
+          <p>Domínio das principais ferramentas utilizadas pelas empresas hoje.</p>
+        </div>
+      </div>
+      <div class="conteudo-item reveal">
+        <div class="conteudo-num">03</div>
+        <div class="conteudo-text">
+          <h4>Gestão de Projetos</h4>
+          <p>Metodologias ágeis e tradicionais aplicadas a casos reais.</p>
+        </div>
+      </div>
+      <div class="conteudo-item reveal">
+        <div class="conteudo-num">04</div>
+        <div class="conteudo-text">
+          <h4>Liderança e Pessoas</h4>
+          <p>Desenvolvimento de soft skills essenciais para posições de liderança.</p>
+        </div>
+      </div>
+      <div class="conteudo-item reveal">
+        <div class="conteudo-num">05</div>
+        <div class="conteudo-text">
+          <h4>Análise de Dados e BI</h4>
+          <p>Leitura de indicadores e tomada de decisão orientada por dados.</p>
+        </div>
+      </div>
+      <div class="conteudo-item reveal">
+        <div class="conteudo-num">06</div>
+        <div class="conteudo-text">
+          <h4>Marketing e Posicionamento</h4>
+          <p>Estratégias para construir marca pessoal e posicionar produtos no mercado.</p>
+        </div>
+      </div>
+      <div class="conteudo-item reveal">
+        <div class="conteudo-num">07</div>
+        <div class="conteudo-text">
+          <h4>Finanças e Investimentos</h4>
+          <p>Planejamento financeiro estratégico para projetos e carreiras.</p>
+        </div>
+      </div>
+      <div class="conteudo-item reveal">
+        <div class="conteudo-num">08</div>
+        <div class="conteudo-text">
+          <h4>Inovação e Tecnologia Emergente</h4>
+          <p>Tendências como IA, automação e novas tecnologias aplicadas ao seu setor.</p>
+        </div>
+      </div>
+      <div class="conteudo-item reveal">
+        <div class="conteudo-num">09</div>
+        <div class="conteudo-text">
+          <h4>Comunicação e Oratória</h4>
+          <p>Técnicas para apresentações, negociações e comunicação assertiva.</p>
+        </div>
+      </div>
+      <div class="conteudo-item reveal">
+        <div class="conteudo-num">10</div>
+        <div class="conteudo-text">
+          <h4>Projeto Final Aplicado</h4>
+          <p>Desenvolva um projeto real, supervisionado por especialistas da área.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTATO -->
+  <section id="contato">
+    <div class="section-head reveal">
+      <span class="tag">Contato</span>
+      <h2>Vamos conversar?</h2>
+      <p>Escolha o canal que preferir ou preencha o formulário e nossa equipe responde rapidinho.</p>
+    </div>
+
+    <div class="contato-grid">
+      <div class="contato-box reveal">
+        <h3>Fale com a gente</h3>
+        <p>Preencha o formulário abaixo com seus dados e dúvidas. Retornamos em até 24h úteis com todas as informações sobre turmas, valores e formas de pagamento.</p>
+        <form class="contato-form" onsubmit="event.preventDefault();">
+          <input type="text" placeholder="Seu nome completo" required>
+          <input type="email" placeholder="Seu melhor e-mail" required>
+          <input type="tel" placeholder="WhatsApp (com DDD)" required>
+          <textarea placeholder="Como podemos te ajudar?"></textarea>
+          <button type="submit">Enviar mensagem <i class="fa-solid fa-paper-plane"></i></button>
+        </form>
+      </div>
+
+      <div class="contato-box reveal">
+        <h3>Outros canais</h3>
+        <div class="contato-info-grid">
+          <div class="contato-info-card">
+            <i class="fa-brands fa-whatsapp"></i>
+            <h4>WhatsApp</h4>
+            <p>Atendimento rápido para dúvidas sobre matrícula e cursos.</p>
+          </div>
+          <div class="contato-info-card">
+            <i class="fa-solid fa-envelope"></i>
+            <h4>E-mail</h4>
+            <p>contato@imaginarypos.com.br</p>
+          </div>
+          <div class="contato-info-card">
+            <i class="fa-solid fa-location-dot"></i>
+            <h4>Unidade</h4>
+            <p>Centro-Oeste · Atendimento presencial e online</p>
+          </div>
+          <div class="contato-info-card">
+            <i class="fa-solid fa-clock"></i>
+            <h4>Horário</h4>
+            <p>Seg a Sex · 08h às 18h</p>
+          </div>
+        </div>
+        <div class="contato-actions">
+          <a href="https://wa.me/5500000000000" target="_blank" class="btn-contato solid"><i class="fa-brands fa-whatsapp"></i> Falar no WhatsApp</a>
+          <a href="https://instagram.com/" target="_blank" class="btn-contato"><i class="fa-brands fa-instagram"></i> Seguir no Instagram</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="footer-logo"><i class="fa-solid fa-graduation-cap"></i> Imaginary Pós</div>
+        <p>Instituição referência no Centro-Oeste, formando profissionais preparados para os desafios reais do mercado de trabalho através de uma pós-graduação prática, atualizada e flexível.</p>
+        <div class="social-links">
+          <a href="https://wa.me/5500000000000" target="_blank" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+          <a href="https://instagram.com/" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+          <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h5>Navegação</h5>
+        <ul>
+          <li><a href="#home"><i class="fa-solid fa-chevron-right"></i>Início</a></li>
+          <li><a href="#porque"><i class="fa-solid fa-chevron-right"></i>Por Que Fazer</a></li>
+          <li><a href="#publico"><i class="fa-solid fa-chevron-right"></i>Público Alvo</a></li>
+          <li><a href="#conteudo"><i class="fa-solid fa-chevron-right"></i>Conteúdo</a></li>
+          <li><a href="#contato"><i class="fa-solid fa-chevron-right"></i>Contato</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>Cursos</h5>
+        <ul>
+          <li><a href="#conteudo"><i class="fa-solid fa-chevron-right"></i>Gestão Estratégica</a></li>
+          <li><a href="#conteudo"><i class="fa-solid fa-chevron-right"></i>Marketing Digital</a></li>
+          <li><a href="#conteudo"><i class="fa-solid fa-chevron-right"></i>Tecnologia e Inovação</a></li>
+          <li><a href="#conteudo"><i class="fa-solid fa-chevron-right"></i>Finanças Corporativas</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>Contato</h5>
+        <ul>
+          <li><a href="https://wa.me/5500000000000" target="_blank"><i class="fa-brands fa-whatsapp"></i>(00) 00000-0000</a></li>
+          <li><a href="mailto:contato@imaginarypos.com.br"><i class="fa-solid fa-envelope"></i>contato@imaginarypos.com.br</a></li>
+          <li><a href="https://instagram.com/" target="_blank"><i class="fa-brands fa-instagram"></i>@imaginarypos</a></li>
+          <li><a href="#"><i class="fa-solid fa-location-dot"></i>Centro-Oeste, Brasil</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>&copy; 2026 Imaginary LTDA. Todos os direitos reservados.</span>
+      <span><a href="#">Política de Privacidade</a> · <a href="#">Termos de Uso</a></span>
+    </div>
+  </footer>
+
+<script>
+  // Navbar show/hide on scroll
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('show', window.scrollY > 120);
+  });
+
+  // Mobile burger
+  const burger = document.getElementById('burger');
+  const navLinks = document.getElementById('navLinks');
+  burger.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+  // Theme toggle
+  const themeToggle = document.getElementById('themeToggle');
+  const knobIcon = themeToggle.querySelector('.knob i');
+  const body = document.body;
+  themeToggle.addEventListener('click', () => {
+    const isLight = body.getAttribute('data-theme') === 'light';
+    body.setAttribute('data-theme', isLight ? 'dark' : 'light');
+    knobIcon.className = isLight ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
+  });
+
+  // Reveal on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('visible'); });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Rotating text in search bar
+  const phrases = [
+    "Melhor pós do mercado",
+    "O curso que irá alavancar a minha carreira",
+    "A melhor instituição do centro-oeste"
+  ];
+  const input = document.getElementById('rotatingInput');
+  let pIndex = 0, charIndex = 0, typing = true;
+
+  function typeLoop(){
+    const current = phrases[pIndex];
+    if(typing){
+      charIndex++;
+      input.placeholder = current.slice(0, charIndex);
+      if(charIndex === current.length){
+        typing = false;
+        setTimeout(typeLoop, 1800);
+        return;
+      }
+    } else {
+      charIndex--;
+      input.placeholder = current.slice(0, charIndex);
+      if(charIndex === 0){
+        typing = true;
+        pIndex = (pIndex + 1) % phrases.length;
+      }
+    }
+    setTimeout(typeLoop, typing ? 60 : 30);
+  }
+  typeLoop();
+
+  // Carousel
+  const track = document.getElementById('carouselTrack');
+  const dotsWrap = document.getElementById('carouselDots');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const cards = track.children.length;
+
+  function getPerView(){
+    const w = window.innerWidth;
+    if(w >= 1000) return 3;
+    if(w >= 700) return 2;
+    return 1;
+  }
+
+  let perView = getPerView();
+  let totalPages = Math.ceil(cards / perView);
+  let current = 0;
+
+  function buildDots(){
+    dotsWrap.innerHTML = '';
+    for(let i=0;i<totalPages;i++){
+      const dot = document.createElement('span');
+      if(i===current) dot.classList.add('active');
+      dot.addEventListener('click', () => { current = i; update(); });
+      dotsWrap.appendChild(dot);
+    }
+  }
+
+  function update(){
+    const offset = current * perView * (100/perView);
+    track.style.transform = `translateX(-${current * 100}%)`;
+    [...dotsWrap.children].forEach((d,i) => d.classList.toggle('active', i===current));
+  }
+
+  prevBtn.addEventListener('click', () => { current = (current - 1 + totalPages) % totalPages; update(); });
+  nextBtn.addEventListener('click', () => { current = (current + 1) % totalPages; update(); });
+
+  window.addEventListener('resize', () => {
+    const newPerView = getPerView();
+    if(newPerView !== perView){
+      perView = newPerView;
+      totalPages = Math.ceil(cards / perView);
+      current = 0;
+      buildDots();
+      update();
+    }
+  });
+
+  buildDots();
+  update();
+
+  // autoplay carousel
+  setInterval(() => { current = (current + 1) % totalPages; update(); }, 5000);
+</script>
+
+</body>
+</html>
