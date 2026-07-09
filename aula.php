@@ -73,6 +73,7 @@ $dadosinfo = mysqli_fetch_assoc($resultinfo);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GoStay - Dashboard de Cursos</title>
+    <?php require_once __DIR__ . '/functions/analytics.php'; ?>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:wght@600;700&display=swap" rel="stylesheet">
@@ -344,7 +345,7 @@ $dadosinfo = mysqli_fetch_assoc($resultinfo);
                                     </svg>
                                 </a>
                                <form method="POST" action="delete/deletealunoaula.php" style="display:inline;">
-                                <input type="hidden" name="id" value="<?= $dadosaluno['id'] ?>">
+                                <input type="hidden" name="id" value="<?= $idalunos; ?>">
                                 <input type="hidden" name="idaula" value="<?php echo($idinfo); ?>">
                                 <input type="hidden" name="token" value="<?= $_SESSION['tokenadm'] ?>">
                                 

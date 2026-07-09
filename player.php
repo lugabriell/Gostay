@@ -45,6 +45,7 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>GoStay</title>
+   <?php require_once __DIR__ . '/functions/analytics.php'; ?>
     <link rel="shortcut icon" href="assets/ACELERADOR DO POTENCIAL HUMANO (1).png" type="image">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
   <style>

@@ -34,6 +34,7 @@ while(($row = $result->fetch_assoc()) && $i<9){
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GoStay Educação – Educação Que Transforma Carreiras</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
+   <?php require_once __DIR__ . '/functions/analytics.php'; ?>
   <link rel="shortcut icon" href="assets/ACELERADOR DO POTENCIAL HUMANO (1).png" type="image">
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
   <style>

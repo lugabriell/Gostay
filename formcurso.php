@@ -56,6 +56,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Formulário de contato moderno e responsivo">
     <title>Formulário de Contato</title>
+     <?php require_once __DIR__ . '/functions/analytics.php'; ?>
     <link rel="shortcut icon" href="assets/ACELERADOR DO POTENCIAL HUMANO (1).png" type="image">
     <style>
         /* ===================================

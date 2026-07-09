@@ -15,6 +15,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - GoStay</title>
+   <?php require_once __DIR__ . '/functions/analytics.php'; ?>
     <link rel="shortcut icon" href="assets/ACELERADOR DO POTENCIAL HUMANO (1).png" type="image">
   <link rel="stylesheet" href="stylelogin.css">
 </head>

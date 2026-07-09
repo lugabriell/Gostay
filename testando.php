@@ -21,6 +21,7 @@ $resultcategoria = mysqli_query($conexao, $sqlcategoria);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GoStay - Lista de Cursos</title>
+     <?php require_once __DIR__ . '/functions/analytics.php'; ?>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="dash.css">

@@ -1,5 +1,4 @@
 <?php
-    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'");
     header("X-Content-Type-Options: nosniff");
     header("X-Frame-Options: DENY");
     header("X-XSS-Protection: 1; mode=block");
@@ -11,11 +10,15 @@
   $idaluno = $_SESSION['id'];
   if(!isset($_SESSION['email'])|| !isset($_SESSION['nome'])){
     header("Location:login.php");
+    exit;
   }
   $idcurso = $_GET['trackid'];
 
-  $sqlcurso = "SELECT * FROM curso WHERE id = '$idcurso'";
-  $resultcurso = mysqli_query($conexao,$sqlcurso);
+  $sqlcurso = "SELECT * FROM curso WHERE id = ?";
+  $stmtcurso = $conexao->prepare($sqlcurso);
+  $stmtcurso->bind_param("i", $idcurso);
+  $stmtcurso->execute();
+  $resultcurso = $stmtcurso->get_result();
   $dadoscurso = mysqli_fetch_assoc($resultcurso);
   $tipo = $dadoscurso['tipo'];
   $sqlalunocurso = "SELECT * FROM cursoaluno WHERE idcurso = '$idcurso' AND idaluno = '$idaluno'";
@@ -51,20 +54,55 @@
     WHERE alunoaula.idaluno = '$idaluno'
     AND alunoaula.statusal = 'ativo'
     AND aula.idcurso = '$idcurso'
-    ORDER BY aula.ordem ASC
+    ORDER BY aula.ordem DESC
     ";
 
     $resultaula = mysqli_query($conexao, $sqlaula);
     $numrows = mysqli_num_rows($resultaula);
     $resultaula2 = mysqli_query($conexao, $sqlaula);
-    $dadosaula2 = mysqli_fetch_assoc($resultaula2);
-    $idaula = $dadosaula2['id'];
-
-    
+    $numrowsaula = mysqli_num_rows($resultaula2);
+    if($numrowsaula > 0){
+        $dadosaula2 = mysqli_fetch_assoc($resultaula2);
+        $idaula = $dadosaula2['id'];
+    }
+    else{
+        $sqlaulanao = "SELECT id
+            FROM aula
+            WHERE idcurso = '$idcurso'
+            ORDER BY ordem DESC";
+        $resultaulanao = mysqli_query($conexao, $sqlaulanao);
+        $dadosaulanao = mysqli_fetch_assoc($resultaulanao);
+        $idaula = $dadosaulanao['id'] ?? null;
+        $insertaulanao = "INSERT INTO alunoaula
+        (idaula, idaluno, statusal, progresso, ultimaposicao, datainicio, datafim)
+        VALUES (?, ?, ?, ?, ?, ?, ?)";
+        
+        $stmtaulanao = $conexao->prepare($insertaulanao);
+        $statusal = "nao";
+        $progresso = "nao";
+        $ultimaposicao = "nao";
+        $datainicio = "nao";
+        $datafim = "nao";
+        
+        $stmtaulanao->bind_param(
+            "iisdsss",
+            $idaula,
+            $idaluno,
+            $statusal,
+            $progresso,
+            $ultimaposicao,
+            $datainicio,
+            $datafim
+        );
+        
+        $stmtaulanao->execute();
+        $stmtaulanao->close();
+    }
 
   }
   else{
     header("Location: homepage.php");
+    exit;
   }
 
   
@@ -81,6 +119,7 @@
   <title>GoStay</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="styleinfos.css">
+  <?php require_once __DIR__ . '/functions/analytics.php'; ?>
     <link rel="shortcut icon" href="assets/ACELERADOR DO POTENCIAL HUMANO (1).png" type="image">
   <style>
         .banner-bg {

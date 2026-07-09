@@ -29,6 +29,7 @@ if(isset($_SESSION['emailadm']) && isset($_SESSION['nameadm'])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acesso Pendente - Aguardando Validação</title>
+     <?php require_once __DIR__ . '/functions/analytics.php'; ?>
         <link rel="shortcut icon" href="assets/ACELERADOR DO POTENCIAL HUMANO (1).png" type="image">
     <style>
         /* ===== RESET E CONFIGURAÇÕES GLOBAIS ===== */

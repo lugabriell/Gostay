@@ -73,6 +73,7 @@
     <meta name="description" content="Formulário de contato moderno e responsivo">
     <title>Formulário de Contato</title>
     <link rel="shortcut icon" href="assets/ACELERADOR DO POTENCIAL HUMANO (1).png" type="image">
+     <?php require_once __DIR__ . '/functions/analytics.php'; ?>
 
     <link rel="stylesheet" href="styleform.css">
 </head>
