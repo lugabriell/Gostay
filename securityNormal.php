@@ -37,12 +37,12 @@ if($_SESSION['tentativas'] < $_SESSION['maxtentativas']){
                 
             } else {
                 $_SESSION['tentativas']++;
-                header("Location: login.php?error=senha_incorreta");
+                header("Location: login.php?error=nao_foi_possivel_encontrar_o_usuario");
 
             }
         } else {
             $_SESSION['tentativas']++;
-            header("Location: login.php?error=usuario_nao_encontrado");
+            header("Location: login.php?error=nao_foi_possivel_encontrar_o_usuario");
 
         }
     } else {
