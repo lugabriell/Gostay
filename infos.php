@@ -72,7 +72,7 @@
             ORDER BY ordem DESC";
         $resultaulanao = mysqli_query($conexao, $sqlaulanao);
         $dadosaulanao = mysqli_fetch_assoc($resultaulanao);
-        $idaula = $dadosaulanao['id'] ?? null;
+        $idaula = $dadosaulanao['id'] ?? 99999;
         $insertaulanao = "INSERT INTO alunoaula
         (idaula, idaluno, statusal, progresso, ultimaposicao, datainicio, datafim)
         VALUES (?, ?, ?, ?, ?, ?, ?)";
