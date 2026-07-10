@@ -963,8 +963,7 @@ while(($row = $result->fetch_assoc()) && $i<9){
     <div class="container hero-content">
       
       <h1 class="hero-heading"> 
-        Educação<br>
-        <em>Que Transforma<br>Carreiras</em>
+        teste
       </h1>
       <p class="hero-desc">
         Cursos práticos com metodologia dedicada, tecnologia de ponta e suporte ao seu aprendizado em cada etapa.
