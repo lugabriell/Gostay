@@ -244,7 +244,7 @@ while(($row = $result->fetch_assoc()) && $i<9){
     }
 
     .hero-heading {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Arial', sans-serif;
       font-weight: 800;
       font-size: /*clamp(2.6rem, 6vw, 4.8rem)*/ 5rem;
       line-height: 1.08;
