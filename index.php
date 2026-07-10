@@ -950,7 +950,7 @@ while(($row = $result->fetch_assoc()) && $i<9){
       </nav>
       <div class="nav-actions">
         <a href="login.php" class="btn btn-outline" style="padding:10px 22px;font-size:.85rem;">Entrar</a>
-        <a href="login.php" class="btn btn-gold" style="padding:10px 22px;font-size:.85rem;">Registro</a>
+        <a href="formAluno.php" class="btn btn-gold" style="padding:10px 22px;font-size:.85rem;">Registro</a>
       </div>
       <div class="hamburger" id="hamburger" aria-label="Menu" role="button" tabindex="0">
         <span></span><span></span><span></span>
