@@ -207,7 +207,9 @@ while(($row = $result->fetch_assoc()) && $i<9){
       align-items: center;
       padding-top: 80px;
       overflow: hidden;
-      background-image: url('assets/fundo.png');
+      background-image: url('assets/fundoCorrigido.png');
+      background-size: cover;
+      background-position: center;
     }
 
     /* Bottom fade */
