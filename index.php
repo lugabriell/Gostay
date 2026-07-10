@@ -246,7 +246,7 @@ while(($row = $result->fetch_assoc()) && $i<9){
     .hero-heading {
       font-family: 'Syne', sans-serif;
       font-weight: 800;
-      font-size: clamp(2.6rem, 6vw, 4.8rem);
+      font-size: /*clamp(2.6rem, 6vw, 4.8rem)*/ 5rem;
       line-height: 1.08;
       letter-spacing: -0.03em;
       margin-bottom: 20px;
@@ -660,6 +660,7 @@ while(($row = $result->fetch_assoc()) && $i<9){
       overflow: hidden;
       height: 140px;   
     }
+    
     .porque-img-card img {
       width: 100%;
       height: 100%;
@@ -963,7 +964,8 @@ while(($row = $result->fetch_assoc()) && $i<9){
     <div class="container hero-content">
       
       <h1 class="hero-heading"> 
-        teste
+        Educação<br>
+        <em>Que Transforma<br>Carreiras</em>
       </h1>
       <p class="hero-desc">
         Cursos práticos com metodologia dedicada, tecnologia de ponta e suporte ao seu aprendizado em cada etapa.
