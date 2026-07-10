@@ -36,7 +36,7 @@ while(($row = $result->fetch_assoc()) && $i<9){
   <link rel="preconnect" href="https://fonts.googleapis.com" />
    <?php require_once __DIR__ . '/functions/analytics.php'; ?>
   <link rel="shortcut icon" href="assets/ACELERADOR DO POTENCIAL HUMANO (1).png" type="image">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Josefin Sans:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
   <style>
     :root {
       --navy-deep:   #050d1a;
@@ -78,7 +78,7 @@ while(($row = $result->fetch_assoc()) && $i<9){
     }
 
     .section-label {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Josefin Sans', sans-serif;
       font-size: 0.7rem;
       letter-spacing: 0.18em;
       text-transform: uppercase;
@@ -87,7 +87,7 @@ while(($row = $result->fetch_assoc()) && $i<9){
     }
 
     .section-title {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Josefin Sans', sans-serif;
       font-weight: 800;
       font-size: clamp(1.8rem, 4vw, 3rem);
       line-height: 1.15;
@@ -161,7 +161,7 @@ while(($row = $result->fetch_assoc()) && $i<9){
     }
 
     .nav-logo {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Josefin Sans', sans-serif;
       font-weight: 800;
       font-size: 1.45rem;
       letter-spacing: -0.02em;
@@ -244,7 +244,7 @@ while(($row = $result->fetch_assoc()) && $i<9){
     }
 
     .hero-heading {
-      font-family: 'Arial', sans-serif;
+      font-family: 'Josefin Sans', sans-serif;
       font-weight: 800;
       font-size: /*clamp(2.6rem, 6vw, 4.8rem)*/ 5rem;
       line-height: 1.08;
@@ -348,7 +348,7 @@ while(($row = $result->fetch_assoc()) && $i<9){
     .badge-pro    { background: rgba(26,92,255,0.15); color: #7aabff; border: 1px solid rgba(26,92,255,0.3); }
 
     .plan-name {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Josefin Sans', sans-serif;
       font-weight: 700;
       font-size: 1.4rem;
     }
@@ -564,7 +564,7 @@ while(($row = $result->fetch_assoc()) && $i<9){
     }
 
     .curso-name {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Josefin Sans', sans-serif;
       font-weight: 700;
       font-size: 1rem;
       line-height: 1.3;
@@ -636,7 +636,7 @@ while(($row = $result->fetch_assoc()) && $i<9){
     }
 
     .porque-card-title {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Josefin Sans', sans-serif;
       font-weight: 700;
       font-size: 1rem;
       margin-bottom: 10px;
@@ -714,7 +714,7 @@ while(($row = $result->fetch_assoc()) && $i<9){
     .faq-left .section-title { margin-bottom: 16px; }
 
     .faq-logo {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Josefin Sans', sans-serif;
       font-weight: 800;
       font-size: 2.8rem;
       letter-spacing: -0.03em;
@@ -806,7 +806,7 @@ while(($row = $result->fetch_assoc()) && $i<9){
     }
 
     .footer-brand .logo {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Josefin Sans', sans-serif;
       font-weight: 800;
       font-size: 1.6rem;
       margin-bottom: 14px;
@@ -848,7 +848,7 @@ while(($row = $result->fetch_assoc()) && $i<9){
     }
 
     .footer-col h4 {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Josefin Sans', sans-serif;
       font-weight: 600;
       font-size: 0.85rem;
       letter-spacing: 0.05em;
