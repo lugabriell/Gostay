@@ -131,7 +131,7 @@
     .hero-content { position: relative; z-index: 2; max-width: 700px; }
     .hero h1 {
       font-size: 3.5rem; font-weight: 900; color: #fff;
-      line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -2px;
+      line-height: 1.1; margin-bottom: 1.5rem; /*letter-spacing: -2px;*/
     }
     .hero h1 span { color: #ffd31d; display: block; }
     .hero p { font-size: 1.25rem; color: rgba(255,255,255,0.9); margin-bottom: 2.5rem; }
