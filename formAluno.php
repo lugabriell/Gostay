@@ -50,6 +50,7 @@
         radial-gradient(ellipse 80% 60% at 20% 10%, rgba(30,80,160,0.55) 0%, transparent 60%),
         radial-gradient(ellipse 60% 50% at 80% 80%, rgba(10,40,100,0.7) 0%, transparent 60%),
         radial-gradient(ellipse 40% 30% at 60% 20%, rgba(250,200,0,0.07) 0%, transparent 50%);
+      
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -126,6 +127,7 @@
       overflow: hidden;
       display: grid;
       grid-template-columns: 1fr 460px;
+      height: calc(100vh - 80px);
     }
 
     /* ── Hero ── */
@@ -186,9 +188,10 @@
       display: flex;
       flex-direction: column;
       gap: 14px;
+      overflow-y: auto;
     }
     .form-title { font-size: 16px; font-weight: 600; color: #fff; }
-    .form-sub   { font-size: 12.5px; color: rgba(255,255,255,0.45); margin-top: -8px; margin-bottom: 4px; }
+    .form-sub   { font-size: 12.5px; color: rgba(255,255,255,0.45); margin-bottom: 4px; }
 
     label {
       display: block;
@@ -337,6 +340,9 @@
     .flash-error   { background: rgba(255,107,107,0.12); border: 1px solid rgba(255,107,107,0.3); color: #ff9a9a; }
     .flash-success { background: rgba(80,200,120,0.10); border: 1px solid rgba(80,200,120,0.25); color: #7de8a0; }
 
+    .hero-p{
+      margin-top: 10px;
+    }
     @media (max-width: 780px) {
       .card { grid-template-columns: 1fr; }
       .hero { display: none; }
