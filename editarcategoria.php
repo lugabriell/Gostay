@@ -1,39 +1,21 @@
 <?php
-    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'");
-    header("X-Content-Type-Options: nosniff");
-    header("X-Frame-Options: DENY");
-    header("X-XSS-Protection: 1; mode=block");
-    header("Referrer-Policy: strict-origin-when-cross-origin");
-    header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
-    header("Permissions-Policy: geolocation=(), camera=(), microphone=()");
-    include_once('connection.php');
-    session_start();
-    $idcategoria = $_GET['id'];
+require_once __DIR__ . "/functions/headers.php";
+require_once __DIR__ . "/functions/sessions.php";
+include_once('connection.php');
+require_once __DIR__ . "/functions/validationadm.php";
 
-    if(!isset($_SESSION['emailadm']) && !isset($_SESSION['nameadm'])){
-        header('Location: nonvalidated.php');
+    //Puxando o id da categoria do banco de dados, além de puxar todas as categorias do banco de dados + qtd de categorias
+    $idcategoria = isset($_GET['id']) ? (int) $_GET['id'] : null;
+    $sqlcategoria = 'SELECT * from categoria';
+    $resultcategoria =mysqli_query($conexao, $sqlcategoria);
+    $qtdcategoria = mysqli_num_rows($resultcategoria);
+
+    if($idcategoria === null) {
+        header("Location: dashadm.php");
+        exit();
     }
-    else{
-        $email = $_SESSION['emailadm'];
-        $nome = $_SESSION['nameadm'];
-        $sql = "SELECT autenticado FROM adms WHERE email = '$email' AND nome = '$nome' ";
-        $result = mysqli_query($conexao, $sql);
-        $dados = mysqli_fetch_assoc($result);
-        $sqlcategoria = 'SELECT * from categoria';
-        $resultcategoria =mysqli_query($conexao, $sqlcategoria);
-        $qtdcategoria = mysqli_num_rows($resultcategoria);
-        if(empty($dados)){
-            header('Location: nonvalidated.php');
-        }
-        else{
-            if($dados['autenticado'] == 'nao'){
-                header('Location: nonvalidated.php');
-            }
-        }
-
-
-    }
-
+    
+    //Verificação se a categoria existe no banco de dados
     if(!empty($idcategoria)){
         $sqlSelect = "SELECT * FROM categoria WHERE id = '$idcategoria'";
         $result = $conexao->query($sqlSelect);
@@ -41,24 +23,21 @@
         {
             while($user_data = mysqli_fetch_assoc($result))
             {
-                $nome = $user_data['nome'];
-                $descricao = $user_data['descricao'];
+                $nome = htmlspecialchars($user_data['nome']) ?? 'invalido';
+                $descricao = htmlspecialchars($user_data['descricao']) ?? 'invalido';
 
             }
         }
+        else{
+            header("Location: dashadm.php");
+            exit();
+        }
+    }
+    else{
+        header("Location: dashadm.php");
+        exit();
     }
 
-
-    // if((!isset($_SESSION['email']) == true) and (!isset($_SESSION['senha']) == true)){
-    //     header('Location: index.html');
-    //     session_unset();
-    //     session_destroy();
-    // }
-    
-    // else{
-    //   $_SESSION['verificação'] = 'Ativo';
-          
-    // }
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -85,8 +64,8 @@
 
         <!-- Formulário -->
         <form action="edit/editcategoria.php" method="POST">
-            <input type="hidden" name="idedit" id="idedit" value="<?php echo($idcategoria); ?>" >
-            
+            <input type="hidden" name="idedit" id="idedit" value="<?php echo htmlspecialchars($idcategoria); ?>" >
+            <input type="hidden" name="token" value="<?php echo htmlspecialchars($_SESSION['tokenadm']); ?>">
             <!-- Campo Nome do Curso -->
             <div class="form-group">
                 <label for="nome">Nome da Categoria</label>
@@ -96,7 +75,7 @@
                     name="nome" 
                     placeholder="Digite o nome do curso"
                     required
-                    value="<?php echo($nome); ?>"
+                    value="<?php echo htmlspecialchars($nome); ?>"
                 >
             </div>
             <div class="form-group">
@@ -107,7 +86,7 @@
                     name="descricao" 
                     placeholder="Descrição da Categoria"
                     required
-                    value="<?php echo($descricao); ?>"
+                    value="<?php echo htmlspecialchars($descricao); ?>"
                 >
             </div>
 

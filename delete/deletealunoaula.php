@@ -1,16 +1,19 @@
 <?php
 include_once('../connection.php');
-    session_start();
+require_once __DIR__ . "/../functions/sessions.php";
+require_once __DIR__ . "/../functions/headers.php";
+
+if (!hash_equals($_SESSION['tokenadm'], $_POST['token'])) {
+    header('Location: dashadm.php');
+    exit;
+}
     if($_SERVER['REQUEST_METHOD']!== 'POST'){
         exit("Método Inválido");
     }
-    if (!isset($_POST['token']) ||
-        !hash_equals($_SESSION['tokenadm'], $_POST['token'])) {
-        echo($_SESSION['tokenadm']);
-    }
+
     $idaluno = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     $idaula =filter_input(INPUT_POST, 'idcurso', FILTER_VALIDATE_INT);
-    if (!$id || !$idaula) {
+    if (!$idaluno || !$idaula) {
         exit("ID inválido");
     }
 
@@ -26,10 +29,11 @@ include_once('../connection.php');
         {
             $sqlDelete= "DELETE FROM alunoaula WHERE idaluno = '$idaluno' AND idaula ='$idaula'";
             $resultDelete = $conexao->query($sqlDelete);
-            echo('bom bom');
+            
         }
     }
     header("Location: ../aluno?id=$idaluno");
+    exit;
     
 
 

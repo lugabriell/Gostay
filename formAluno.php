@@ -1,13 +1,7 @@
 <?php
-    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'");
-    header("X-Content-Type-Options: nosniff");
-    header("X-Frame-Options: DENY");
-    header("X-XSS-Protection: 1; mode=block");
-    header("Referrer-Policy: strict-origin-when-cross-origin");
-    header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
-    header("Permissions-Policy: geolocation=(), camera=(), microphone=()");
-    include_once('connection.php');
-    session_start();
+require_once __DIR__ . "/functions/headers.php";
+require_once __DIR__ . "/functions/sessions.php";
+include_once('connection.php');
 
     // if((!isset($_SESSION['email']) == true) and (!isset($_SESSION['senha']) == true)){
     //     header('Location: index.html');
@@ -450,6 +444,7 @@
           />
         </div>
       </div>
+      <input type="hidden" name="token" value="<?php echo htmlspecialchars($_SESSION['tokenn1']); ?>">
 
       <!-- Senha + Data de nascimento -->
       <div class="row">

@@ -1,65 +1,37 @@
 <?php
-    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'");
-    header("X-Content-Type-Options: nosniff");
-    header("X-Frame-Options: DENY");
-    header("X-XSS-Protection: 1; mode=block");
-    header("Referrer-Policy: strict-origin-when-cross-origin");
-    header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
-    header("Permissions-Policy: geolocation=(), camera=(), microphone=()");
 require_once __DIR__ . "/connection.php";
-session_start();
-if(!isset($_SESSION['emailadm']) && !isset($_SESSION['nameadm'])){
-    header('Location: nonvalidated.php');
+require_once __DIR__ . "/functions/headers.php";
+require_once __DIR__ . "/functions/sessions.php";
+require_once __DIR__ . "/functions/validationadm.php";
+
+//Puxando a qtd de categorias
+$sqlcategoria = 'SELECT * from categoria';
+$resultcategoria =mysqli_query($conexao, $sqlcategoria);
+$qtdcategoria = mysqli_num_rows($resultcategoria);
+
+//Puxando os caminhos e id das aulas
+$idcurso = isset($_GET['id']) ? (int) $_GET['id'] : null;
+
+if(!isset($idinfo) || empty($idinfo)) {
+    header("Location: dashadm.php?error=invalid_id");
+    exit("ID do aluno inválido.");
 }
-else{
-    $email = $_SESSION['emailadm'];
-    $nome = $_SESSION['nameadm'];
-    $sql = "SELECT autenticado FROM adms WHERE email = '$email' AND nome = '$nome' ";
-    $result = mysqli_query($conexao, $sql);
-    $dados = mysqli_fetch_assoc($result);
-    $sqlcategoria = 'SELECT * from categoria';
-    $resultcategoria =mysqli_query($conexao, $sqlcategoria);
 
-    $qtdcategoria = mysqli_num_rows($resultcategoria);
-    if(empty($dados)){
-        header('Location: nonvalidated.php');
-    }
-    else{
-        if($dados['autenticado'] == 'nao'){
-            header('Location: nonvalidated.php');
-        }
-    }
-
-
-
-}
-$idinfo = $_GET['id'];
 $sqlvideo = $conexao->prepare("SELECT caminhovideo, caminhoconteudo, id FROM aula WHERE id = ?");
 $sqlvideo->bind_param("i", $idinfo);
 $sqlvideo->execute();
 $resultvideo = $sqlvideo->get_result();
 $dadosvideo = mysqli_fetch_assoc($resultvideo);
-$sql2 = "SELECT nome FROM adms WHERE email = '$email' AND nome = '$nome' ";
-$result2 = mysqli_query($conexao, $sql2);
-$dados2 = mysqli_fetch_assoc($result2);
-$nomeCompleto = $dados2['nome'];
 
+//Puxando os dados da aula
 $sqlalunoaula = "SELECT * FROM aula WHERE id = '$idinfo'";
 $resultalunoaula = mysqli_query($conexao, $sqlalunoaula);
 $resultalunoaula2 = mysqli_query($conexao, $sqlalunoaula);
+
+//Puxando os alunos dessa aula
 $sqlcursoaluno = "SELECT * FROM alunoaula WHERE idaula = '$idinfo'";
 
-
-
-
-$partesNome = explode(' ', trim($nomeCompleto));
-$nomePrincipal = $partesNome[0] . ' ' . ($partesNome[1] ?? '');
-
-$letras = strtoupper(
-    substr($partesNome[0], 0, 1) .
-    (isset($partesNome[1]) ? substr($partesNome[1], 0, 1) : '')
-);
-
+//Puxando os dados da aula
 $sqlinfo = "SELECT * FROM aula WHERE id = '$idinfo'";
 $resultinfo = mysqli_query($conexao, $sqlinfo);
 $dadosinfo = mysqli_fetch_assoc($resultinfo);
@@ -96,9 +68,9 @@ $dadosinfo = mysqli_fetch_assoc($resultinfo);
         </div>
         <div class="user-profile">
             <button class="user-button" id="userButton">
-                <div class="user-avatar"><?php echo($letras); ?></div>
+                <div class="user-avatar"><?php echo htmlspecialchars($letras); ?></div>
 
-                <span class="user-name"><?php echo($nomePrincipal); ?></span>
+                <span class="user-name"><?php echo htmlspecialchars($nomePrincipal); ?></span>
                 <svg class="dropdown-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
@@ -217,21 +189,21 @@ $dadosinfo = mysqli_fetch_assoc($resultinfo);
 
             <div>
                 <div class="kpi-value">
-                    <?php echo($dadosinfo['nome']); ?>
+                    <?php echo htmlspecialchars($dadosinfo['nome']); ?>
                 </div>
 
                 <div class="kpi-label" style="margin-top:8px;">
-                    <strong>Qtd alunos:</strong> <?php echo($dadosinfo['qtdalunos']); ?>
+                    <strong>Qtd alunos:</strong> <?php echo htmlspecialchars($dadosinfo['qtdalunos']); ?>
                 </div>
 
                 <div class="kpi-label" style="margin-top:4px;">
-                    <strong>Ordem da aula:</strong> <?php echo($dadosinfo['ordem']); ?>
+                    <strong>Ordem da aula:</strong> <?php echo htmlspecialchars($dadosinfo['ordem']); ?>
                 </div>
                 <div class="kpi-label" style="margin-top:4px;">
-                    <strong>Descrição:</strong> <?php echo($dadosinfo['descricao']); ?>
+                    <strong>Descrição:</strong> <?php echo htmlspecialchars($dadosinfo['descricao']); ?>
                 </div>
                 <div class="kpi-label" style="margin-top:4px;">
-                    <strong>Status:</strong> <?php echo($dadosinfo['statusaula']); ?>
+                    <strong>Status:</strong> <?php echo htmlspecialchars($dadosinfo['statusaula']); ?>
                 </div>
                 
             </div>
@@ -254,7 +226,7 @@ $dadosinfo = mysqli_fetch_assoc($resultinfo);
         <div class="action-buttons">
             <form action="admre8.php" method="post">
             
-                <button type="submit" name="aulaaluno" value="<?php echo($idinfo); ?>" class="btn btn-primary">
+                <button type="submit" name="aulaaluno" value="<?php echo htmlspecialchars($idinfo); ?>" class="btn btn-primary">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="12" y1="5" x2="12" y2="19"></line>
                         <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -263,21 +235,21 @@ $dadosinfo = mysqli_fetch_assoc($resultinfo);
                 </button>
                 
         
-                <button type="submit" name="aula" value="<?php echo($idinfo); ?>" class="btn btn-secondary">
+                <button type="submit" name="aula" value="<?php echo htmlspecialchars($idinfo); ?>" class="btn btn-secondary">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                         <polyline points="22 4 12 14.01 9 11.01"></polyline>
                     </svg>
                     Gerenciar Aula
                 </button>
-                    <button type="submit" name="video" value="<?php echo($dadosvideo['id']); ?>" class="btn btn-secondary">
+                    <button type="submit" name="video" value="<?php echo htmlspecialchars($dadosvideo['id']); ?>" class="btn btn-secondary">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                             <circle cx="12" cy="12" r="3"></circle>
                         </svg>
                     Assistir a Aula
                 </button>
-                <button type="submit" name="conteudo" value="<?php echo($dadosvideo['caminhoconteudo']); ?>" class="btn btn-secondary">
+                <button type="submit" name="conteudo" value="<?php echo htmlspecialchars($dadosvideo['caminhoconteudo']); ?>" class="btn btn-secondary">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                             <circle cx="12" cy="12" r="3"></circle>
@@ -316,7 +288,7 @@ $dadosinfo = mysqli_fetch_assoc($resultinfo);
 
                     $resultcursoaluno = mysqli_query($conexao, $sqlcursoaluno);
                     while($dadoscursoaluno = mysqli_fetch_assoc($resultcursoaluno)):
-                        $idalunos = $dadoscursoaluno['idaluno'];
+                        $idalunos =(int) $dadoscursoaluno['idaluno'];
                         $sqlcursos = "SELECT * from alunos WHERE id = '$idalunos'";
                         $resultcurso =mysqli_query($conexao, $sqlcursos);
     
@@ -332,22 +304,22 @@ $dadosinfo = mysqli_fetch_assoc($resultinfo);
                     <tr>
                         
                         <!-- //$dadoscursos = mysqli_fetch_assoc($resultcurso); -->
-                        <td><strong><?php echo($dadoscursos['nome']);?></strong></td>
-                        <td><?php echo($dadoscursos['cadastradodata']);  ?></td>
-                        <td><span class="badge <?php echo($badgeclass); ?>"><?php echo($dadoscursos['autenticado']);?></span></td>
-                        <td><?php echo($dadoscursos['telefone']);?></td>
+                        <td><strong><?php echo htmlspecialchars($dadoscursos['nome']);?></strong></td>
+                        <td><?php echo htmlspecialchars($dadoscursos['cadastradodata']);  ?></td>
+                        <td><span class="badge <?php echo($badgeclass); ?>"><?php echo htmlspecialchars($dadoscursos['autenticado']);?></span></td>
+                        <td><?php echo htmlspecialchars($dadoscursos['telefone']);?></td>
                         <td>
                             <div class="table-actions">
-                                <a href='editaralunoaula.php?id=<?= $dadoscursos['id'] ?>&idaula=<?php echo($idinfo); ?>' class="action-btn" title="Editar">
+                                <a href='editaralunoaula.php?id=<?php echo htmlspecialchars($dadoscursos['id']); ?>&idaula=<?php echo htmlspecialchars($idinfo); ?>' class="action-btn" title="Editar">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                     </svg>
                                 </a>
                                <form method="POST" action="delete/deletealunoaula.php" style="display:inline;">
-                                <input type="hidden" name="id" value="<?= $idalunos; ?>">
-                                <input type="hidden" name="idaula" value="<?php echo($idinfo); ?>">
-                                <input type="hidden" name="token" value="<?= $_SESSION['tokenadm'] ?>">
+                                <input type="hidden" name="id" value="<?php echo htmlspecialchars($idalunos); ?>">
+                                <input type="hidden" name="idaula" value="<?php echo htmlspecialchars($idinfo); ?>">
+                                <input type="hidden" name="token" value="<?php echo htmlspecialchars($_SESSION['tokenadm']); ?>">
                                 
                                 <button type="submit" class="action-btn" title="Excluir">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

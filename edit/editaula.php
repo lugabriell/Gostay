@@ -2,7 +2,13 @@
 require_once __DIR__ . "/../connection.php";
 require_once __DIR__ . "/../codehex.php";
 require_once __DIR__ . "/../functions/savemedia.php";
-session_start();
+require_once __DIR__ . "/../functions/sessions.php";
+require_once __DIR__ . "/../functions/headers.php";
+
+if (!hash_equals($_SESSION['tokenadm'], $_POST['token'])) {
+    header('Location: dashadm.php');
+    exit;
+}
 if(isset($_POST['submit'])){
     if (    !empty($_FILES['video']['name']) && !empty($_FILES['media']['name'])) {
         $videooriginal = $_FILES['video'];
@@ -17,9 +23,9 @@ if(isset($_POST['submit'])){
 else{
     header('Location: ../nonvalidated.php');
 }
-$idaula = $_POST['idaula'];
-$idcurso = $_POST['idcurso'];
-$idprofessor = $_POST['professor'];
+$idaula = (int) $_POST['idaula'];
+$idcurso = (int) $_POST['idcurso'];
+$idprofessor = (int) $_POST['professor'];
 $nome         = $_POST['nome'];
 $duracao         = $_POST['duracao'];
 $qtdalunos = $_POST['qtd-alunos'];
@@ -137,15 +143,15 @@ if($numrows > 0){
 if ($stmt->execute() and $alteração == 1) {
     if($stmtmedia->execute()){
         if($stmtvideo->execute()){
-            var_dump($idcurso);
             header("Location: ../curso.php?id=$idcurso");
+            exit;
         }
         else{
-            echo("<script>alert('Não foi possível salvar o vídeo');</script>");
+            exit;
         }
     }
     else{
-         echo("<script>alert('Não foi possível salvar a média');</script>");
+         exit;
     }
     
     
@@ -153,9 +159,10 @@ if ($stmt->execute() and $alteração == 1) {
 }  
 elseif($stmt->execute() and $alteração == 0){
         header("Location: ../curso.php?id=$idcurso");
+        exit;
 }
 else{
-    echo("<script>alert('Não foi possível atualizar a aula Erro:". $stmt->error ." ');</script>");
+    exit;
 }
 
  $stmt->close();

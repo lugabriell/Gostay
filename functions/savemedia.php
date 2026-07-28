@@ -56,7 +56,6 @@ function salvarvideo($arquivooriginal, $conexao){
 
             return($caminhoFinal);
         } else {
-            echo "Erro ao enviar o arquivo.";
             $erro = 'erro';
             return($erro);
         }
@@ -87,7 +86,6 @@ function salvarconteudo($arquivooriginal, $conexao){
 
             return($caminhoFinal);
         } else {
-            echo "Erro ao enviar o arquivo.";
             $erro = 'erro';
             return($erro);
         }

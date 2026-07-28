@@ -1,14 +1,9 @@
 <?php
-    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'");
-    header("X-Content-Type-Options: nosniff");
-    header("X-Frame-Options: DENY");
-    header("X-XSS-Protection: 1; mode=block");
-    header("Referrer-Policy: strict-origin-when-cross-origin");
-    header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
-    header("Permissions-Policy: geolocation=(), camera=(), microphone=()");
-include_once('connection.php');
-session_start();
 
+include_once('connection.php');
+require_once __DIR__ . "/functions/headers.php";
+require_once __DIR__ . "/functions/sessions.php";
+require_once __DIR__ . "/functions/validationadm.php";
 
 $sqlcategoria = 'SELECT * From categoria';
 $resultcategoria = mysqli_query($conexao, $sqlcategoria);
@@ -46,7 +41,7 @@ $resultcategoria = mysqli_query($conexao, $sqlcategoria);
         <div class="user-profile">
             <button class="user-button" id="userButton">
                 <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='38' height='38' viewBox='0 0 38 38'%3E%3Crect width='38' height='38' fill='%23fbbf24'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='16' fill='%231e3a8a' font-weight='600'%3EAD%3C/text%3E%3C/svg%3E" alt="Admin" class="user-avatar">
-                <span class="user-name"><?php echo($_SESSION['nameadm']); ?></span>
+                <span class="user-name"><?php echo htmlspecialchars($_SESSION['nameadm']); ?></span>
                 <svg class="dropdown-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
@@ -202,8 +197,8 @@ $resultcategoria = mysqli_query($conexao, $sqlcategoria);
                                             <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001"/>
                                             </svg></a>
                                             <form method="POST" action="delete/deletecategoria.php" style="display:inline;">
-                                                <input type="hidden" name="id" value="<?= $row['id'] ?>">
-                                                <input type="hidden" name="token" value="<?= $_SESSION['tokenadm'] ?>">
+                                                <input type="hidden" name="id" value="<?= htmlspecialchars($row['id']); ?>">
+                                                <input type="hidden" name="token" value="<?= htmlspecialchars($_SESSION['tokenadm']); ?>">
                                                 
                                                 <button type="submit" class="action-btn" title="Excluir">
                                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -225,7 +220,7 @@ $resultcategoria = mysqli_query($conexao, $sqlcategoria);
             <!-- Pagination -->
             <div class="pagination">
                 <div class="pagination-info">
-                    Mostrando <?php echo($numrows); ?> 
+                    Mostrando <?php echo htmlspecialchars($numrows); ?> 
                 </div>
 
             </div>

@@ -1,7 +1,13 @@
 <?php
 include_once('../connection.php');
-    session_start();
-    $idmodulo = $_GET['id'];
+require_once __DIR__ . "/../functions/sessions.php";
+require_once __DIR__ . "/../functions/headers.php";
+
+if (!hash_equals($_SESSION['tokenadm'], $_POST['token'])) {
+    header('Location: dashadm.php');
+    exit;
+}
+    $idmodulo = (int) $_GET['id'];
   
     if(!empty($id))
     {
@@ -15,10 +21,11 @@ include_once('../connection.php');
         {
             $sqlDelete= "DELETE FROM modulo WHERE id = '$idmodulo' ";
             $resultDelete = $conexao->query($sqlDelete);
-            echo('bom bom');
+           
         }
     }
     header("Location: ../dashadm.php");
+    exit;
     
 
 

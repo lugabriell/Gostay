@@ -1,67 +1,39 @@
 <?php
-    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'");
-    header("X-Content-Type-Options: nosniff");
-    header("X-Frame-Options: DENY");
-    header("X-XSS-Protection: 1; mode=block");
-    header("Referrer-Policy: strict-origin-when-cross-origin");
-    header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
-    header("Permissions-Policy: geolocation=(), camera=(), microphone=()"); 
+require_once __DIR__ . "/functions/headers.php";
+require_once __DIR__ . "/functions/sessions.php";
 require_once __DIR__ . "/connection.php";
-session_start();
-if(!isset($_SESSION['emailadm']) && !isset($_SESSION['nameadm'])){
-    header('Location: nonvalidated.php');
+require_once __DIR__ . "/functions/validationadm.php";
+
+
+$sqlcategoria = 'SELECT * from categoria';
+$resultcategoria =mysqli_query($conexao, $sqlcategoria);
+
+//Verificando se o ID do curso foi fornecido e é válido + dados do curso
+$idcurso = (int) $_GET['id'] ?? null;
+if(!isset($idcurso) || empty($idcurso)) {
+    header("Location: dashadm.php?error=invalid_id");
+    exit("ID do curso inválido.");
 }
-else{
-    $email = $_SESSION['emailadm'];
-    $nome = $_SESSION['nameadm'];
-    $sql = "SELECT autenticado FROM adms WHERE email = '$email' AND nome = '$nome' ";
-    $result = mysqli_query($conexao, $sql);
-    $dados = mysqli_fetch_assoc($result);
-    $sqlcategoria = 'SELECT * from categoria';
-    $resultcategoria =mysqli_query($conexao, $sqlcategoria);
-    $idcurso = $_GET['id'];
-    $sqlcurso = "SELECT * from curso WHERE id = '$idcurso'";
-    $resultcursosp = mysqli_query($conexao, $sqlcurso);
-    $resultcursospp = mysqli_query($conexao, $sqlcurso);
-    $dadoscursopp = mysqli_fetch_assoc($resultcursospp);
-    $sqlalunocurso = "SELECT idaluno, statusa FROM cursoaluno WHERE idcurso = '$idcurso'";
-    $resultalunocurso = mysqli_query($conexao, $sqlalunocurso);
-    $idprofessor = $dadoscursopp['idprofessor'];
-    $sqlprofessor = "SELECT nome FROM professor WHERE id = '$idprofessor'";
-    $resultprofessor = mysqli_query($conexao, $sqlprofessor);
-    $dadosprof = mysqli_fetch_assoc($resultprofessor);
-    $sqlmodulo = "SELECT * FROM modulo WHERE idcurso = '$idcurso'";
-    $resultmodulo = mysqli_query($conexao, $sqlmodulo);
-    //$dadosmodulo = mysqli_fetch_assoc($resultmodulo);
-    $sqlaula = "SELECT * From aula WHERE idcurso = '$idcurso'";
-    $resultaula = mysqli_query($conexao, $sqlaula);
-
-    
+$sqlcurso = "SELECT * from curso WHERE id = '$idcurso'";
+$resultcursosp = mysqli_query($conexao, $sqlcurso);
+$resultcursospp = mysqli_query($conexao, $sqlcurso);
+$dadoscursopp = mysqli_fetch_assoc($resultcursospp);
 
 
-    if(empty($dados)){
-        header('Location: nonvalidated.php');
-    }
-    else{
-        if($dados['autenticado'] == 'nao'){
-            header('Location: nonvalidated.php');
-        }
-    }
 
+//puxando os alunos do curso + status de cada um
+$sqlalunocurso = "SELECT idaluno, statusa FROM cursoaluno WHERE idcurso = '$idcurso'";
+$resultalunocurso = mysqli_query($conexao, $sqlalunocurso);
 
-}
-$sql2 = "SELECT nome FROM adms WHERE email = '$email' AND nome = '$nome' ";
-$result2 = mysqli_query($conexao, $sql2);
-$dados2 = mysqli_fetch_assoc($result2);
-$nomeCompleto = $dados2['nome'];
+//puxando o professor do curso
+$idprofessor = (int) $dadoscursopp['idprofessor'];
+$sqlprofessor = "SELECT nome FROM professor WHERE id = '$idprofessor'";
+$resultprofessor = mysqli_query($conexao, $sqlprofessor);
+$dadosprof = mysqli_fetch_assoc($resultprofessor);
 
-$partesNome = explode(' ', trim($nomeCompleto));
-$nomePrincipal = $partesNome[0] . ' ' . ($partesNome[1] ?? '');
-
-$letras = strtoupper(
-    substr($partesNome[0], 0, 1) .
-    (isset($partesNome[1]) ? substr($partesNome[1], 0, 1) : '')
-);
+//puxando as aulas do curso
+$sqlaula = "SELECT * From aula WHERE idcurso = '$idcurso'";
+$resultaula = mysqli_query($conexao, $sqlaula);
 
 
 
@@ -95,9 +67,9 @@ $letras = strtoupper(
         </div>
         <div class="user-profile">
             <button class="user-button" id="userButton">
-                <div class="user-avatar"><?php echo($letras); ?></div>
+                <div class="user-avatar"><?php echo htmlspecialchars($letras); ?></div>
 
-                <span class="user-name"><?php echo($nomePrincipal); ?></span>
+                <span class="user-name"><?php echo htmlspecialchars($nomePrincipal); ?></span>
                 <svg class="dropdown-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
@@ -203,9 +175,9 @@ $letras = strtoupper(
     <main class="main-content">
         <!-- Page Header -->
         <div class="page-header">
-            <h2 class="page-title"><?php echo($dadoscursopp['nome']); ?></h2>
-            <p class="page-subtitle"><?php echo($dadoscursopp['descricao']); ?></p>
-            <p class="page-subtitle">Responsável pelo Curso:  <?php echo($dadosprof['nome']); ?></p>
+            <h2 class="page-title"><?php echo htmlspecialchars($dadoscursopp['nome']); ?></h2>
+            <p class="page-subtitle"><?php echo htmlspecialchars($dadoscursopp['descricao']); ?></p>
+            <p class="page-subtitle">Responsável pelo Curso:  <?php echo htmlspecialchars($dadosprof['nome']); ?></p>
             <p class="page-subtitle">Gerencie Este Curso</p>
         </div>
 
@@ -214,7 +186,7 @@ $letras = strtoupper(
             <div class="kpi-card">
                 <div class="kpi-header">
                     <div>
-                        <div class="kpi-value"><?php echo($dadoscursopp['cargahoraria']); ?></div>
+                        <div class="kpi-value"><?php echo htmlspecialchars($dadoscursopp['cargahoraria']); ?></div>
                         <div class="kpi-label">Carga Horária</div>
                         <span class="kpi-trend positive">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -235,7 +207,7 @@ $letras = strtoupper(
             <div class="kpi-card">
                 <div class="kpi-header">
                     <div>
-                        <div class="kpi-value"><?php echo($dadoscursopp['qtdal']); ?></div>
+                        <div class="kpi-value"><?php echo htmlspecialchars($dadoscursopp['qtdal']); ?></div>
                         <div class="kpi-label">Quantidade de alunos</div>
                         <span class="kpi-trend positive">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -257,21 +229,21 @@ $letras = strtoupper(
         <!-- Action Buttons -->
         <div class="action-buttons">
             <form action="admre2.php" method="post">
-                <button type="submit" name="modulo" value='<?php echo($idcurso); ?>' class="btn btn-primary">
+                <button type="submit" name="modulo" value='<?php echo htmlspecialchars($idcurso); ?>' class="btn btn-primary">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="12" y1="5" x2="12" y2="19"></line>
                         <line x1="5" y1="12" x2="19" y2="12"></line>
                     </svg>
                      Módulo
                 </button>
-                <button type="submit" name="alunos" value="<?php echo($idcurso); ?>" class="btn btn-primary">
+                <button type="submit" name="alunos" value="<?php echo htmlspecialchars($idcurso); ?>" class="btn btn-primary">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4169E1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="12" y1="5" x2="12" y2="19"></line>
                         <line x1="5" y1="12" x2="19" y2="12"></line>
                     </svg>
                     Aluno neste curso
                 </button>
-                <button type="submit" name="aula" value="<?php echo($idcurso); ?>" class="btn btn-primary">
+                <button type="submit" name="aula" value="<?php echo htmlspecialchars($idcurso); ?>" class="btn btn-primary">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4169E1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="12" y1="5" x2="12" y2="19"></line>
                         <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -279,7 +251,7 @@ $letras = strtoupper(
                     Aula
                 </button>
         
-                <button type="submit" name="curso" value="<?php echo($idcurso); ?>" class="btn btn-secondary">
+                <button type="submit" name="curso" value="<?php echo htmlspecialchars($idcurso); ?>" class="btn btn-secondary">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                         <polyline points="22 4 12 14.01 9 11.01"></polyline>
@@ -319,7 +291,7 @@ $letras = strtoupper(
                     <?php
 
                         while($dadoscursos = mysqli_fetch_assoc($resultaula)):
-                            $idprofessoraula = $dadoscursos['idprofessor'];
+                            $idprofessoraula = (int) $dadoscursos['idprofessor'];
                             $sqlprofessoraula = "SELECT nome FROM professor WHERE id = '$idprofessoraula'";
                             $resultprofessoraula = mysqli_query($conexao, $sqlprofessoraula);
                             $dadosprofessor = mysqli_fetch_assoc($resultprofessoraula);
@@ -329,21 +301,21 @@ $letras = strtoupper(
                     <tr>
                         
                         <!-- //$dadoscursos = mysqli_fetch_assoc($resultcurso); -->
-                        <td><strong><?php echo($dadoscursos['nome']);?></strong></td>
-                        <td><?php echo($nomeprof);  ?></td>
-                        <td><span class="badge"><?php echo($dadoscursos['duracao']);?></span></td>
-                        <td><?php echo($dadoscursos['qtdalunos']);?></td>
+                        <td><strong><?php echo htmlspecialchars($dadoscursos['nome']);?></strong></td>
+                        <td><?php echo htmlspecialchars($nomeprof);  ?></td>
+                        <td><span class="badge"><?php echo htmlspecialchars($dadoscursos['duracao']);?></span></td>
+                        <td><?php echo htmlspecialchars($dadoscursos['qtdalunos']);?></td>
                         <td>
                             <div class="table-actions">
-                                <a href='editaraula.php?id=<?= $dadoscursos['id'] ?>' class="action-btn" title="Editar">
+                                <a href='editaraula.php?id=<?php echo htmlspecialchars($dadoscursos['id']); ?>' class="action-btn" title="Editar">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                     </svg>
                                 </a>
                                <form method="POST" action="delete/deleteaula.php" style="display:inline;">
-                                <input type="hidden" name="id" value="<?= $dadoscursos['id'] ?>">
-                                <input type="hidden" name="token" value="<?= $_SESSION['tokenadm'] ?>">
+                                <input type="hidden" name="id" value="<?= htmlspecialchars($dadoscursos['id']) ?>">
+                                <input type="hidden" name="token" value="<?= htmlspecialchars($_SESSION['tokenadm']) ?>">
                                
                                 
                                 
@@ -380,7 +352,7 @@ $letras = strtoupper(
                 <tbody>
                     <?php
                         while($dadosalunocurso = mysqli_fetch_assoc($resultalunocurso)):
-                            $idaluno = $dadosalunocurso['idaluno'];
+                            $idaluno = (int) $dadosalunocurso['idaluno'];
                             $alunopesquisa = "SELECT * FROM alunos WHERE id = '$idaluno'";
                             $resultaluno = mysqli_query($conexao, $alunopesquisa);
                             while($dadosaluno = mysqli_fetch_assoc($resultaluno)):
@@ -388,8 +360,8 @@ $letras = strtoupper(
                     <tr>
                         
                         <!-- //$dadoscursos = mysqli_fetch_assoc($resultcurso); -->
-                        <td><strong><?php echo($dadosaluno['nome']);?></strong></td>
-                        <td><?php echo($dadosaluno['formacao']);?></td>
+                        <td><strong><?php echo htmlspecialchars($dadosaluno['nome']);?></strong></td>
+                        <td><?php echo htmlspecialchars($dadosaluno['formacao']);?></td>
                         <?php
                     
                         if($dadosalunocurso['statusa'] === 'ativo'){
@@ -399,20 +371,20 @@ $letras = strtoupper(
                                 $badgeclass = 'badge-pending';
                         }
                         ?>
-                        <td><span class="badge <?php echo($badgeclass); ?>"><?php echo($dadosalunocurso['statusa']);?></span></td>
+                        <td><span class="badge <?php echo htmlspecialchars($badgeclass); ?>"><?php echo htmlspecialchars($dadosalunocurso['statusa']);?></span></td>
                         <td>
                             <div class="table-actions">
-                                <a href='editaralunocurso.php?id=<?= $dadosaluno['id'] ?>&idcurso=<?=$idcurso?>' class="action-btn" title="Editar">
+                                <a href='editaralunocurso.php?id=<?= htmlspecialchars($dadosaluno['id']) ?>&idcurso=<?= htmlspecialchars($idcurso) ?>' class="action-btn" title="Editar">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                     </svg>
                                 </a>
                                 <form method="POST" action="delete/deletealunocurso.php" style="display:inline;">
-                                <input type="hidden" name="id" value="<?= $dadosaluno['id'] ?>">
-                                <input type="hidden" name="idcurso" value="<?php echo($idcurso); ?>">
-                                <input type="hidden" name="token" value="<?= $_SESSION['tokenadm'] ?>">
-                                
+                                <input type="hidden" name="id" value="<?= htmlspecialchars($dadosaluno['id']) ?>">
+                                <input type="hidden" name="idcurso" value="<?= htmlspecialchars($idcurso) ?>">
+                                <input type="hidden" name="token" value="<?= htmlspecialchars($_SESSION['tokenadm']) ?>">
+
                                 <button type="submit" class="action-btn" title="Excluir">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <polyline points="3 6 5 6 21 6"></polyline>

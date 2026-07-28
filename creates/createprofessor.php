@@ -1,7 +1,12 @@
 <?php
 require_once __DIR__ . "/../connection.php";
+require_once __DIR__ . "/../functions/sessions.php";
+require_once __DIR__ . "/../functions/headers.php";
 
-session_start();
+if (!hash_equals($_SESSION['tokenadm'], $_POST['token'])) {
+    header('Location: dashadm.php');
+    exit;
+}
 
 $nome         = $_POST['nome'];
 $email        = $_POST['email'];

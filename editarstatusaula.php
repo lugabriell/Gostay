@@ -1,22 +1,22 @@
 <?php
-    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'");
-    header("X-Content-Type-Options: nosniff");
-    header("X-Frame-Options: DENY");
-    header("X-XSS-Protection: 1; mode=block");
-    header("Referrer-Policy: strict-origin-when-cross-origin");
-    header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
-    header("Permissions-Policy: geolocation=(), camera=(), microphone=()");
-    include_once('connection.php');
-    session_start();
-        if(!isset($_SESSION['emailprof']) && !isset($_SESSION['nameprof']) && !isset($_SESSION['idprof'])){
-            header('Location: nonvalidated.php');
-        }
-        $idaula = $_GET['id'];
-        $stmt = $conexao->prepare("SELECT * FROM aula WHERE id = ?");
-        $stmt->bind_param("i", $idaula);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $dadosaula = $result->fetch_assoc();
+require_once __DIR__ . "/functions/headers.php";
+require_once __DIR__ . "/functions/sessions.php";
+include_once('connection.php');
+require_once __DIR__ . "/functions/validationadm.php";
+
+    //Puxando o id da aula do banco de dados, e verificando se ele existe, caso não exista, redireciona para dashadm.php
+    $idaula = isset($_GET['id']) ? (int) $_GET['id'] : null;
+    if( $idaula === null ) {
+        header("Location: dashadm.php");
+        exit();
+    }
+
+    //Puxando os dados da aula do banco de dados
+    $stmt = $conexao->prepare("SELECT * FROM aula WHERE id = ?");
+    $stmt->bind_param("i", $idaula);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $dadosaula = $result->fetch_assoc();
        
     
 
@@ -50,7 +50,7 @@
         
         <!-- Cabeçalho do formulário -->
         <div class="form-header">
-            <h1>Editar <?php echo($dadosaula['nome']) ?></h1>
+            <h1>Editar <?php echo htmlspecialchars($dadosaula['nome']) ?></h1>
             <p>Preencha as informações abaixo</p>
         </div>
 
@@ -58,10 +58,10 @@
         <form action="edit/editstatusaula.php" method="POST"  enctype="multipart/form-data">
             
             <!-- Campo Nome do Curso -->
-            <input type="hidden" name="token" value="<?php echo($_SESSION['tokenprof']); ?>">
-            <input type="hidden" name="idaula" value="<?php echo($idaula); ?>">
+            <input type="hidden" name="token" value="<?php echo htmlspecialchars($_SESSION['tokenadm']); ?>">
+            <input type="hidden" name="idaula" value="<?php echo htmlspecialchars($idaula); ?>">
             <div class="form-group">
-                <input type="text" name="nome" id="nome" value="<?php echo($dadosaula['nome']); ?>">
+                <input type="text" name="nome" id="nome" value="<?php echo htmlspecialchars($dadosaula['nome']); ?>">
                 <label>Status</label>
                 <div class="radio-group">
                     <label class="radio-label">

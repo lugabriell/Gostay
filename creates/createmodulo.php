@@ -1,8 +1,13 @@
 <?php
 require_once __DIR__ . "/../connection.php";
+require_once __DIR__ . "/../functions/sessions.php";
 
-session_start();
-$idcurso = $_POST['idcurso'];
+if (!hash_equals($_SESSION['tokenadm'], $_POST['token'])) {
+    header('Location: dashadm.php');
+    exit;
+}
+
+$idcurso = (int) $_POST['idcurso'];
 $nome          = $_POST['nome'];
 $ordem        = $_POST['ordem'];
 
@@ -25,6 +30,9 @@ $stmt->bind_param(
 if ($stmt->execute()) {
     
     header("Location: ../curso.php?id=$idcurso");
+    $stmt->close();
+    $conexao->close();
+    exit;
     // $result = mysqli_query($conexao, $sqlautenticado);
     // $dados = mysqli_fetch_assoc($result);
     
@@ -37,7 +45,9 @@ if ($stmt->execute()) {
         
     // }
 } else {
-    echo "Erro: " . $stmt->error;
+    $stmt->close();
+    $conexao->close();
+    exit;
 }
 
 $stmt->close();

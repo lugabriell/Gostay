@@ -1,18 +1,14 @@
 <?php
-    header("X-Content-Type-Options: nosniff");
-    header("X-Frame-Options: DENY");
-    header("X-XSS-Protection: 1; mode=block");
-    header("Referrer-Policy: strict-origin-when-cross-origin");
-    header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
-    header("Permissions-Policy: geolocation=(), camera=(), microphone=()");
-  session_start();
+require_once __DIR__ . "/functions/headers.php";
+
+require_once __DIR__ . "/functions/sessions.php";
   include_once("connection.php");
   $idaluno = $_SESSION['id'];
   if(!isset($_SESSION['email'])|| !isset($_SESSION['nome'])){
     header("Location:login.php");
     exit;
   }
-  $idcurso = $_GET['trackid'];
+  $idcurso = (int) $_GET['trackid'];
 
   $sqlcurso = "SELECT * FROM curso WHERE id = ?";
   $stmtcurso = $conexao->prepare($sqlcurso);
@@ -171,25 +167,29 @@
         <span>›</span>
         <a href="homepage.php#cursos">Cursos</a>
         <span>›</span>
-        <span style="color:rgba(255,255,255,.7)"><?php echo($dadosinfo['nome']); ?></span>
+        <span style="color:rgba(255,255,255,.7)"><?php echo htmlspecialchars($dadosinfo['nome']); ?></span>
       </div>
-      <div class="banner-category"><?php echo($dadoscategoria['nome']); ?></div>
-      <h1 class="banner-title"><?php echo($dadosinfo['nome']); ?></h1>
+      <div class="banner-category"><?php echo htmlspecialchars($dadoscategoria['nome']); ?></div>
+      <h1 class="banner-title"><?php echo htmlspecialchars($dadosinfo['nome']); ?></h1>
       <div class="banner-meta">
         <span class="banner-tag">
           <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-          <?php echo($dadosinfo['cargahoraria']); ?>H
+          <?php echo htmlspecialchars($dadosinfo['cargahoraria']); ?>H
         </span>-
         <span class="banner-tag"> 
-        <?php echo($dadosinfo['descricao']); ?>
+        <?php echo htmlspecialchars($dadosinfo['descricao']); ?>
         </span>
       </div>
       <?php if($numrowsaluno < 1){ ?>
         
             <div class="banner-actions">
-                <a href="creates/autocreate.php?trackid=<?php echo($dadosinfo['id']); ?>" class="btn btn-ghost">
-                    Adicionar aos meus Cursos
-                </a>
+                <form action="creates/autocreate.php" method="POST" style="display:inline;">
+                    <input type="hidden" name="trackid" value="<?= htmlspecialchars($dadosinfo['id']) ?>">
+                    <input type="hidden" name="token" value="<?= htmlspecialchars($_SESSION['tokenuser']) ?>">
+                    <button type="submit" class="btn btn-ghost">
+                        Adicionar aos meus Cursos
+                    </button>
+                </form>
             </div>
         
         <?php } else { ?>
@@ -229,11 +229,11 @@
         <!-- Description card -->
         <div class="info-desc-card">
           <div class="section-label">Sobre o curso</div>
-          <h2 class="info-title"><?php echo($dadosinfo['nome']); ?></h2>
+          <h2 class="info-title"><?php echo htmlspecialchars($dadosinfo['nome']); ?></h2>
           <div class="info-description">
             <p>
-              <?php echo($dadosinfo['descricao']); ?>    
-          </p>
+              <?php echo htmlspecialchars($dadosinfo['descricao']); ?>    
+            </p>
           </div>
         </div>
 
@@ -241,23 +241,23 @@
         <div class="lessons-section">
           <div class="lessons-header">
             <div class="section-label" style="margin-bottom:0">Aulas do curso</div>
-            <span class="lessons-count"><?php $numrowsaula = mysqli_num_rows($resultaula); echo($numrowsaula); ?> aulas · <?php echo($dadosinfo['cargahoraria']); ?>h </span>
+            <span class="lessons-count"><?php $numrowsaula = mysqli_num_rows($resultaula); echo htmlspecialchars($numrowsaula); ?> aulas · <?php echo htmlspecialchars($dadosinfo['cargahoraria']); ?>h </span>
           </div>
           <?php 
           $i = 1;
           while($dadosaula = mysqli_fetch_assoc($resultaula)): ?>
           <!-- Lessons list -->
           <a class="lesson-item" href="player.php?trackid=<?php echo($dadosaula['id']); ?>">
-            <div class="lesson-number"><?php echo($i); ?></div>
+            <div class="lesson-number"><?php echo htmlspecialchars($i); ?></div>
             <div class="lesson-info">
-              <div class="lesson-name"><?php echo($dadosaula['nome']); ?></div>
-              <div class="lesson-subtitle"><?php echo($dadosaula['descricao']); ?></div>
+              <div class="lesson-name"><?php echo htmlspecialchars($dadosaula['nome']); ?></div>
+              <div class="lesson-subtitle"><?php echo htmlspecialchars($dadosaula['descricao']); ?></div>
             </div>
             <div class="lesson-duration">
               <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-              <?php echo($dadosaula['duracao']); ?>M
+              <?php echo htmlspecialchars($dadosaula['duracao']); ?>
             </div>
-            <a href="player.php?trackid=<?php echo($dadosaula['id']); ?>" class="lesson-play-btn" aria-label="Assistir">
+            <a href="player.php?trackid=<?php echo htmlspecialchars($dadosaula['id']); ?>" class="lesson-play-btn" aria-label="Assistir">
               <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
             </a>
           </a>
@@ -281,7 +281,7 @@
             </div>
             <div class="stat-info">
               <div class="stat-label">Professor</div>
-              <div class="stat-value"><?php echo($dadosprofessor['nome']); ?></div>
+              <div class="stat-value"><?php echo htmlspecialchars($dadosprofessor['nome']); ?></div>
             </div>
           </div>
 
@@ -291,7 +291,7 @@
             </div>
             <div class="stat-info">
               <div class="stat-label">Carga horária</div>
-              <div class="stat-value"><?php echo($dadosinfo['cargahoraria']); ?>H</div>
+              <div class="stat-value"><?php echo htmlspecialchars($dadosinfo['cargahoraria']); ?>H</div>
             </div>
           </div>
 
@@ -301,7 +301,7 @@
             </div>
             <div class="stat-info">
               <div class="stat-label">Quantidade de aulas</div>
-              <div class="stat-value"><?php  echo($numrowsaula); ?></div>
+              <div class="stat-value"><?php  echo htmlspecialchars($numrowsaula); ?></div>
             </div>
           </div>
 
@@ -311,7 +311,7 @@
             </div>
             <div class="stat-info">
               <div class="stat-label">Nível</div>
-              <div class="stat-value"><?php echo($dadosinfo['nivel']); ?></div>
+              <div class="stat-value"><?php echo htmlspecialchars($dadosinfo['nivel']); ?></div>
             </div>
           </div>
 
@@ -361,10 +361,10 @@
             <a class="rel-card" href="infos.php?trackid=<?php echo $idnovidade; ?>">
               <img class="rel-card-img" src="<?php echo("creates/". $dadosnovidades['posterft']); ?>" alt="Curso"/>
               <div class="rel-card-body">
-                <div class="rel-card-category"><?php echo($dadosnovidades['nome']); ?></div>
-                <div class="rel-card-title"><?php echo($dadosnovidades['descricao']); ?></div>
+                <div class="rel-card-category"><?php echo htmlspecialchars($dadosnovidades['nome']); ?></div>
+                <div class="rel-card-title"><?php echo htmlspecialchars($dadosnovidades['descricao']); ?></div>
                 <div class="rel-card-meta">>
-                  <span><?php echo($dadosnovidades['cargahoraria']); ?>H</span>
+                  <span><?php echo htmlspecialchars($dadosnovidades['cargahoraria']); ?>H</span>
                   <span class="rel-card-dot"></span>
                 </div>
               </div>

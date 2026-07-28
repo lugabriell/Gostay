@@ -1,63 +1,32 @@
 <?php
-    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'");
-    header("X-Content-Type-Options: nosniff");
-    header("X-Frame-Options: DENY");
-    header("X-XSS-Protection: 1; mode=block");
-    header("Referrer-Policy: strict-origin-when-cross-origin");
-    header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
-    header("Permissions-Policy: geolocation=(), camera=(), microphone=()");
 require_once __DIR__ . "/connection.php";
-session_start();
-if(!isset($_SESSION['emailadm']) && !isset($_SESSION['nameadm'])){
-    header('Location: nonvalidated.php');
-}
-else{
-    $email = $_SESSION['emailadm'];
-    $nome = $_SESSION['nameadm'];
-    $sql = "SELECT autenticado FROM adms WHERE email = '$email' AND nome = '$nome' ";
-    $result = mysqli_query($conexao, $sql);
-    $dados = mysqli_fetch_assoc($result);
-    $sqlcategoria = 'SELECT * from alunos';
-    $resultcategoria =mysqli_query($conexao, $sqlcategoria);
-    $sqlcursos = 'SELECT * from alunos';
-    $resultcurso =mysqli_query($conexao, $sqlcursos);
-    $sqlcurso = 'SELECT * FROM curso';
-    $resultcursoo = mysqli_query($conexao, $sqlcurso);
-    $qtdcurso = mysqli_num_rows($resultcursoo);
+require_once __DIR__ . "/functions/headers.php";
+require_once __DIR__ . "/functions/sessions.php";
+require_once __DIR__ . "/functions/validationadm.php";
 
-    $qtdcategoria = mysqli_num_rows($resultcategoria);
+//Puxando no banco as categorias 
+$sqlcategoria = 'SELECT * from alunos';
+$resultcategoria =mysqli_query($conexao, $sqlcategoria);
 
+//Puxando no banco os alunos
+$sqlcursos = 'SELECT * from alunos';
+$resultcurso =mysqli_query($conexao, $sqlcursos);
 
-    if(empty($dados)){
-        header('Location: nonvalidated.php');
-    }
-    else{
-        if($dados['autenticado'] == 'nao'){
-            header('Location: nonvalidated.php');
-        }
-    }
+//Puxando no banco os cursos + a qtd de cursos do sistema
+$sqlcurso = 'SELECT * FROM curso';
+$resultcursoo = mysqli_query($conexao, $sqlcurso);
+$qtdcurso = mysqli_num_rows($resultcursoo);
 
+//Puxando a qtd de categorias
+$qtdcategoria = mysqli_num_rows($resultcategoria);
 
-
-}
-$sql2 = "SELECT nome FROM adms WHERE email = '$email' AND nome = '$nome' ";
-$result2 = mysqli_query($conexao, $sql2);
-$dados2 = mysqli_fetch_assoc($result2);
-$nomeCompleto = $dados2['nome'];
+//Puxando no banco os professores
 $sqlprofessor = "SELECT * FROM professor";
 $resultprofessor = mysqli_query($conexao, $sqlprofessor);
+
+//Puxando no banco as aulas
 $sqlaula = "SELECT * FROM aula";
 $resultaula = mysqli_query($conexao, $sqlaula);
-
-$partesNome = explode(' ', trim($nomeCompleto));
-$nomePrincipal = $partesNome[0] . ' ' . ($partesNome[1] ?? '');
-
-$letras = strtoupper(
-    substr($partesNome[0], 0, 1) .
-    (isset($partesNome[1]) ? substr($partesNome[1], 0, 1) : '')
-);
-
-
 
 ?>
 <!DOCTYPE html>
@@ -89,9 +58,9 @@ $letras = strtoupper(
         </div>
         <div class="user-profile">
             <button class="user-button" id="userButton">
-                <div class="user-avatar"><?php echo($letras); ?></div>
+                <div class="user-avatar"><?php echo htmlspecialchars($letras); ?></div>
 
-                <span class="user-name"><?php echo($nomePrincipal); ?></span>
+                <span class="user-name"><?php echo htmlspecialchars($nomePrincipal); ?></span>
                 <svg class="dropdown-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
@@ -187,7 +156,7 @@ $letras = strtoupper(
                             <circle cx="12" cy="12" r="3"></circle>
                             <path d="M12 1v6m0 6v6m5.196-15.196l-4.242 4.242m0 5.656l-4.242 4.242M23 12h-6m-6 0H1m18.196-5.196l-4.242 4.242m0 5.656l4.242 4.242"></path>
                         </svg>
-                        <span class="nav-text">ConfiguraÃ§Ãµes</span>
+                        <span class="nav-text">Configurações</span>
                     </a>
                 </li>
             </ul>
@@ -207,7 +176,7 @@ $letras = strtoupper(
             <div class="kpi-card">
                 <div class="kpi-header">
                     <div>
-                        <div class="kpi-value"><?php echo($qtdcurso); ?></div>
+                        <div class="kpi-value"><?php echo htmlspecialchars($qtdcurso); ?></div>
                         <div class="kpi-label">Total de Cursos</div>
                         <span class="kpi-trend positive">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -290,10 +259,10 @@ $letras = strtoupper(
 
                 <div class="course-list-item">
 
-                    <div class="course-icon">ðŸ“š</div>
+                    <div class="course-icon"></div>
                     <div class="course-info">
-                        <div class="course-name"><?php echo($dadosprofessor['nome']); ?></div>
-                        <div class="course-meta"><?php echo($dadosprofessor['formacao']); ?></div>
+                        <div class="course-name"><?php echo htmlspecialchars($dadosprofessor['nome']); ?></div>
+                        <div class="course-meta"><?php echo htmlspecialchars($dadosprofessor['formacao']); ?></div>
                     </div>
 
                 </div>
@@ -319,10 +288,10 @@ $letras = strtoupper(
                         <div class="course-icon">ðŸ“š</div>
                         <div class="course-info">
                             <div class="course-name">
-                                <?php echo $dadosaula['nome']; ?>
+                                <?php echo htmlspecialchars($dadosaula['nome']); ?>
                             </div>
                             <div class="course-meta">
-                                <?php echo $dadosaula['duracao']; ?>
+                                <?php echo htmlspecialchars($dadosaula['duracao']); ?>
                             </div>
                         </div>
                     </div>
@@ -354,7 +323,7 @@ $letras = strtoupper(
                         <th>Email</th>
                         <th>Autenticado</th>
                         <th>Data Cadastro</th>
-                        <th>AÃ§Ãµes</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -371,11 +340,11 @@ $letras = strtoupper(
                     ?>
                     <tr>
                         
-                        <!-- //$dadoscursos = mysqli_fetch_assoc($resultcurso); -->
-                        <td><strong><?php echo($dadoscursos['nome']);?></strong></td>
-                        <td><?php echo($dadoscursos['email']);  ?></td>
-                        <td><span class="badge <?php echo($badgeclass); ?>"><?php echo($dadoscursos['autenticado']);?></span></td>
-                        <td><?php echo($dadoscursos['cadastradodata']);?></td>
+                        
+                        <td><strong><?php echo htmlspecialchars($dadoscursos['nome']);?></strong></td>
+                        <td><?php echo htmlspecialchars($dadoscursos['email']);  ?></td>
+                        <td><span class="badge <?php echo htmlspecialchars($badgeclass); ?>"><?php echo htmlspecialchars($dadoscursos['autenticado']);?></span></td>
+                        <td><?php echo htmlspecialchars($dadoscursos['cadastradodata']);?></td>
                         <td>
                             <div class="table-actions">
                                 <a href='aluno.php?id=<?= $dadoscursos['id'] ?>' class="action-btn" title="Editar">
@@ -407,7 +376,7 @@ $letras = strtoupper(
 
     <!-- Footer -->
     <footer class="footer">
-        <p>GoStay ï¿½ 2026 - Sistema de Gestï¿½o Educacional - v2.1.4</p>
+        <p>GoStay @ 2026 - Sistema de Gestão Educacional - v2.1.4</p>
     </footer>
 
     <script>

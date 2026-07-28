@@ -1,11 +1,16 @@
 <?php
 require_once __DIR__ . "/connection.php";
-session_start();
-$trackid = $_GET['trackid'];
-$sqlselect = "SELECT * FROM aula WHERE id = '$trackid' ORDER BY ordem DESC";
+require_once __DIR__ . "/functions/headers.php";
+require_once __DIR__ . "/functions/sessions.php";
+  if(!isset($_SESSION['email'])|| !isset($_SESSION['nome'])){
+    header("Location:login.php");
+    exit;
+  }
+$trackid = (int) $_GET['trackid'];
+$sqlselect = "SELECT * FROM aula WHERE id = $trackid ORDER BY ordem DESC";
 $resultselect = mysqli_query($conexao, $sqlselect);
 $dadosselect = mysqli_fetch_assoc($resultselect);
-$sqlselect2 = "SELECT * FROM alunoaula WHERE idaula = '$trackid'";
+$sqlselect2 = "SELECT * FROM alunoaula WHERE idaula = $trackid";
 $resultselect2 = mysqli_query($conexao, $sqlselect2);
 $dadosselect2 = mysqli_fetch_assoc($resultselect2);
 $caminho = $dadosselect['caminhovideo'];
@@ -743,8 +748,8 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
         <span>Voltar ao curso</span>
       </a>
       <div class="top-titles">
-        <div class="top-course-name"><?php  echo($dadoscurso['nome']);?></div>
-        <div class="top-lesson-name">Aula <?php echo($dadosselect['ordem']) ?> — <?php echo($dadosselect['nome']); ?></div>
+        <div class="top-course-name"><?php  echo htmlspecialchars($dadoscurso['nome']);?></div>
+        <div class="top-lesson-name">Aula <?php echo htmlspecialchars($dadosselect['ordem']) ?> — <?php echo htmlspecialchars($dadosselect['nome']); ?></div>
       </div>
     </div>
 
@@ -758,14 +763,14 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
       </svg>
       <div class="countdown-num" id="countdown-num">10</div>
 
-      <img class="next-card-thumb" src="<?php echo($dadosprox['posteraula']); ?>" alt="Próxima aula"/>
+      <img class="next-card-thumb" src="<?php echo htmlspecialchars($dadosprox['posteraula']); ?>" alt="Próxima aula"/>
       <div class="next-card-body">
         <div class="next-card-label">
           <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
           Próxima aula
         </div>
-        <div class="next-card-title"><?php echo($dadosprox['nome']); ?></div>
-        <div class="next-card-sub">Módulo <?php echo($dadosprox['ordem']); ?> · <?php echo($dadosprox['duracao']); ?>min</div>
+        <div class="next-card-title"><?php echo htmlspecialchars($dadosprox['nome']); ?></div>
+        <div class="next-card-sub">Módulo <?php echo htmlspecialchars($dadosprox['ordem']); ?> · <?php echo htmlspecialchars($dadosprox['duracao']); ?>min</div>
         <div class="next-card-actions">
           <a href="player.php?trackid=<?php echo($dadosprox['id']); ?>" class="next-play-btn" id="next-play-btn">
             <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
@@ -1263,7 +1268,7 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
       });
     }
 
-    const nextVideo = "player.php?trackid=<?php echo isset($dadosprox['id']) ? $dadosprox['id'] : ''; ?>";
+    const nextVideo = "player.php?trackid=<?php  echo htmlspecialchars(isset($dadosprox['id']) ? $dadosprox['id'] : ''); ?>";
 
     if (nextPlayBtn) {
       nextPlayBtn.addEventListener('click', e => {
@@ -1344,7 +1349,7 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
       const dados = new FormData();
         dados.append('tempo_atual', video.currentTime);
         dados.append('tempo_total', video.duration || 0);
-        dados.append('trackid', <?php echo $trackid?>);
+        dados.append('trackid', <?php echo json_encode($trackid); ?>);
         const ok = navigator.sendBeacon('functions/savetime.php', dados);
         console.log('sendBeacon enviou:', ok);
       }

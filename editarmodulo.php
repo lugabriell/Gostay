@@ -1,41 +1,31 @@
 <?php
-    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'");
-    header("X-Content-Type-Options: nosniff");
-    header("X-Frame-Options: DENY");
-    header("X-XSS-Protection: 1; mode=block");
-    header("Referrer-Policy: strict-origin-when-cross-origin");
-    header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
-    header("Permissions-Policy: geolocation=(), camera=(), microphone=()");
-    include_once('connection.php');
-    session_start();
-        if(!isset($_SESSION['emailadm']) && !isset($_SESSION['nameadm'])){
-            header('Location: nonvalidated.php');
-        }
-        else{
-            $email = $_SESSION['emailadm'];
-            $nome = $_SESSION['nameadm'];
-            $sql = "SELECT autenticado FROM adms WHERE email = '$email' AND nome = '$nome' ";
-            $result = mysqli_query($conexao, $sql);
-            $dados = mysqli_fetch_assoc($result);
-            $sqlcategoria = 'SELECT * from categoria';
-            $resultcategoria =mysqli_query($conexao, $sqlcategoria);
-            $qtdcategoria = mysqli_num_rows($resultcategoria);
-            if(empty($dados)){
-                header('Location: nonvalidated.php');
-            }
-            else{
-                if($dados['autenticado'] == 'nao'){
-                    header('Location: nonvalidated.php');
-                }
-            }
+require_once __DIR__ . "/functions/headers.php";
+require_once __DIR__ . "/functions/sessions.php";
+include_once('connection.php');
+require_once __DIR__ . "/functions/validationadm.php";
 
+    //Puxando as categorias do banco de dados + qtd de categorias
+    $sqlcategoria = 'SELECT * from categoria';
+    $resultcategoria =mysqli_query($conexao, $sqlcategoria);
+    $qtdcategoria = mysqli_num_rows($resultcategoria);
 
-        }
-
-        $idmodulo = $_GET['id'];
-        $sqlmodulo = "SELECT * From modulo where id = '$idmodulo'" ;   
-        $resultmodulo = mysqli_query($conexao, $sqlmodulo);
+    //Puxando o id do módulo do banco de dados + dados do módulo
+    $idmodulo = isset($_GET['id']) ? (int) $_GET['id'] : null;
+    if($idmodulo === null) {
+        header("Location: dashadm.php");
+        exit();
+    }
+    $sqlmodulo = "SELECT * From modulo where id = '$idmodulo'" ;   
+    $resultmodulo = mysqli_query($conexao, $sqlmodulo);
+    $qtdmodulo = mysqli_num_rows($resultmodulo);
+    if($qtdmodulo === 0) {
+        header("Location: dashadm.php");
+        exit();
+    }
+    else{
         $dadosmodulo = mysqli_fetch_assoc($resultmodulo);
+    }
+    
 
     // if((!isset($_SESSION['email']) == true) and (!isset($_SESSION['senha']) == true)){
     //     header('Location: index.html');
@@ -82,14 +72,15 @@
                     name="nome" 
                     placeholder="Digite o nome do Módulo"
                     required
-                    value="<?php echo($dadosmodulo['nome']); ?>"
+                    value="<?php echo htmlspecialchars($dadosmodulo['nome']); ?>"
                 >
             </div>
-            <input type="hidden" name="idmodulo" id="idmodulo" value="<?php echo($dadosmodulo['id']); ?>">
-            <input type="hidden" name="idcurso" id="idcurso" value="<?php echo($dadosmodulo['idcurso']); ?>">
+            <input type="hidden" name="token" value="<?php echo htmlspecialchars($_SESSION['tokenadm']); ?>">
+            <input type="hidden" name="idmodulo" id="idmodulo" value="<?php echo htmlspecialchars($dadosmodulo['id']); ?>">
+            <input type="hidden" name="idcurso" id="idcurso" value="<?php echo htmlspecialchars($dadosmodulo['idcurso']); ?>">
             <div class="form-group">
                 <label for="ordem">Número do Módulo</label>
-                <input type="number" value="<?php echo($dadosmodulo['ordem']); ?>" name="ordem" id="ordem" required placeholder="0">
+                <input type="number" value="<?php echo htmlspecialchars($dadosmodulo['ordem']); ?>" name="ordem" id="ordem" required placeholder="0">
             </div>
 
 

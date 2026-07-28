@@ -1,5 +1,6 @@
 <?php
-
+require_once __DIR__ . "/functions/headers.php";
+require_once __DIR__ . "/functions/sessions.php";
 include_once 'functions/gerarcodigo.php';
 
 function enviaremail($email){

@@ -1,9 +1,17 @@
 <?php
 require_once __DIR__ . "/../connection.php";
+require_once __DIR__ . "/../functions/sessions.php";
 
-session_start();
+if (!hash_equals($_SESSION['tokenadm'], $_POST['token'])) {
+    header('Location: dashadm.php');
+    exit;
+}
+
+
 $nome          = $_POST['nome'];
 $descricao        = $_POST['descricao'];
+
+
 
 $stmt = $conexao->prepare("
     INSERT INTO categoria 

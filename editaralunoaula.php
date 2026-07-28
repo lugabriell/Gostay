@@ -1,72 +1,45 @@
 <?php
-    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'");
-    header("X-Content-Type-Options: nosniff");
-    header("X-Frame-Options: DENY");
-    header("X-XSS-Protection: 1; mode=block");
-    header("Referrer-Policy: strict-origin-when-cross-origin");
-    header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
-    header("Permissions-Policy: geolocation=(), camera=(), microphone=()");
-    include_once('connection.php');
-    session_start();
-        if(!isset($_SESSION['emailadm']) && !isset($_SESSION['nameadm'])){
-           header('Location: nonvalidated.php');
-        }
-        else{
-            $email = $_SESSION['emailadm'];
-            $nome = $_SESSION['nameadm'];
-            $sql = "SELECT autenticado FROM adms WHERE email = '$email' AND nome = '$nome' ";
-            $result = mysqli_query($conexao, $sql);
-            $dados = mysqli_fetch_assoc($result);
-            $sqlcategoria = 'SELECT * from categoria';
-            $resultcategoria =mysqli_query($conexao, $sqlcategoria);
-            $qtdcategoria = mysqli_num_rows($resultcategoria);
-            if(empty($dados)){
-                header('Location: nonvalidated.php');
-            }
-            else{
-                if($dados['autenticado'] == 'nao'){
-                    header('Location: nonvalidated.php');
-                }
-            }
+require_once __DIR__ . "/functions/headers.php";
+require_once __DIR__ . "/functions/sessions.php";
+require_once __DIR__ . "/connection.php";
+require_once __DIR__ . "/functions/validationadm.php";
+
+    //Puxando as categorias do banco de dados + qtd de categorias
+    $sqlcategoria = 'SELECT * from categoria';
+    $resultcategoria =mysqli_query($conexao, $sqlcategoria);
+    $qtdcategoria = mysqli_num_rows($resultcategoria);
 
 
-        }
 
-    
+    //Puxando os ids do aluno e da aula do banco de dados
+    $idaluno = isset($_GET['id']) ? (int) $_GET['id'] : null;
+    $idaula = isset($_GET['idaula']) ? (int) $_GET['idaula'] : null;
+    if($idaluno === null || $idaula === null) {
+        header("Location: dashadm.php");
+        exit();
+    }  
+    //Puxando os dados do aluno e da aula do banco de dados
+    $selectcurso = "SELECT * FROM alunoaula WHERE idaluno = $idaluno AND idaula = $idaula";
+    $resultcurso = mysqli_query($conexao, $selectcurso);
+    $dadoscurso = mysqli_fetch_assoc($resultcurso);
 
-    if(isset($_GET['idaula']) && isset($_GET['id'])){
-        $idaluno = $_GET['id'];
-        $idaula = $_GET['idaula'];
-        $selectcurso = "SELECT * from alunoaula WHere idaluno = '$idaluno' AND idaula = '$idaula'";
-        $resultcurso = mysqli_query($conexao, $selectcurso);
-        $dadoscurso = mysqli_fetch_assoc($resultcurso);
-        $sqlaulanome = "SELECT * FROM aula WHERE id = '$idaula'";
-        $resultaulanome = mysqli_query($conexao, $sqlaulanome);
-        $dadosaulanome = mysqli_fetch_assoc($resultaulanome);
-        $sqlalunonome = "SELECT * FROM alunos WHERE id = '$idaluno'";
-        $resultalunonome = mysqli_query($conexao, $sqlalunonome);
-        $dadosalunonome = mysqli_fetch_assoc($resultalunonome);
-        $selectalunos = "SELECT * from aula";
-        $resultalunos = mysqli_query($conexao, $selectalunos);
-    }
-    else{
-        //header("Location: aluno.php?id=$idaluno");
-    
-    }
+    //Puxando os dados da aula 
+    $sqlaulanome = "SELECT * FROM aula WHERE id = '$idaula'";
+    $resultaulanome = mysqli_query($conexao, $sqlaulanome);
+    $dadosaulanome = mysqli_fetch_assoc($resultaulanome);
+
+    //Puxando os dados do aluno
+    $sqlalunonome = "SELECT * FROM alunos WHERE id = '$idaluno'";
+    $resultalunonome = mysqli_query($conexao, $sqlalunonome);
+    $dadosalunonome = mysqli_fetch_assoc($resultalunonome);
+
+    //Puxando todas as aulas do banco de dados
+    $selectalunos = "SELECT * from aula";
+    $resultalunos = mysqli_query($conexao, $selectalunos);
+
+
         
 
-    
-
-    // if((!isset($_SESSION['email']) == true) and (!isset($_SESSION['senha']) == true)){
-    //     header('Location: index.html');
-    //     session_unset();
-    //     session_destroy();
-    // }
-    
-    // else{
-    //   $_SESSION['verificação'] = 'Ativo';
-          
-    // }
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -86,7 +59,7 @@
         
         <!-- Cabeçalho do formulário -->
         <div class="form-header">
-            <h1>Edit Aula <?php echo($dadosaulanome['nome']); ?> <br>Aluno: <?php echo($dadosalunonome['nome']); ?></h1>
+            <h1>Edit Aula <?php echo htmlspecialchars($dadosaulanome['nome']); ?> <br>Aluno: <?php echo htmlspecialchars($dadosalunonome['nome']); ?></h1>
             <p>Preencha as informações abaixo</p>
         </div>
 
@@ -95,8 +68,9 @@
             
             <!-- Campo Nome do Curso -->
 
-            <input type="hidden" name="idaluno" value="<?php  echo($idaluno);?>">
-            <input type="hidden" name="idaula" value="<?php echo($idaula); ?>">
+            <input type="hidden" name="idaluno" value="<?php  echo htmlspecialchars($idaluno);?>">
+            <input type="hidden" name="idaula" value="<?php echo htmlspecialchars($idaula); ?>">
+            <input type="hidden" name="token" value="<?php echo htmlspecialchars($_SESSION['tokenadm']); ?>">
             <div class="form-group">
                 <label>Status</label>
                 <div class="radio-group">

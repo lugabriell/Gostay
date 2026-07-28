@@ -1,41 +1,19 @@
 <?php
-    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'");
-    header("X-Content-Type-Options: nosniff");
-    header("X-Frame-Options: DENY");
-    header("X-XSS-Protection: 1; mode=block");
-    header("Referrer-Policy: strict-origin-when-cross-origin");
-    header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
-    header("Permissions-Policy: geolocation=(), camera=(), microphone=()");
-    include_once('connection.php');
-    session_start();
+
+include_once('connection.php');
+require_once __DIR__ . "/functions/headers.php";
+require_once __DIR__ . "/functions/sessions.php";
+require_once __DIR__ . "/functions/validationadm.php";
 
 
     $sql = "SELECT nome, id From professor ";
     $resultprof = mysqli_query($conexao, $sql);
-
-    if(!isset($_SESSION['emailadm']) && !isset($_SESSION['nameadm'])){
-        header('Location: nonvalidated.php');
+    $qtdprof = mysqli_num_rows($resultprof);
+    if($qtdprof === 0) {
+        header("Location: dashadm.php");
+        exit();
     }
-    else{
-        $email = $_SESSION['emailadm'];
-        $nome = $_SESSION['nameadm'];
-        $sql = "SELECT autenticado FROM adms WHERE email = '$email' AND nome = '$nome' ";
-        $result = mysqli_query($conexao, $sql);
-        $dados = mysqli_fetch_assoc($result);
-        $sqlcategoria = 'SELECT * from categoria';
-        $resultcategoria =mysqli_query($conexao, $sqlcategoria);
-        $qtdcategoria = mysqli_num_rows($resultcategoria);
-        if(empty($dados)){
-            header('Location: nonvalidated.php');
-        }
-        else{
-            if($dados['autenticado'] == 'nao'){
-                header('Location: nonvalidated.php');
-            }
-        }
 
-
-    }
 
 ?>
 <!DOCTYPE html>
@@ -97,7 +75,7 @@
                               <input
                                   type="radio"
                                   name="professor"
-                                  value="<?= $dadosprof['id'] ?>"
+                                  value="<?= htmlspecialchars($dadosprof['id']) ?>"
                                   required
                               >
                               <span><?= htmlspecialchars($dadosprof['nome']) ?></span>
@@ -118,7 +96,7 @@
                         <input
                             type="radio"
                             name="curso"
-                            value="<?= $dadoscursos2['id'] ?>"
+                            value="<?= htmlspecialchars($dadoscursos2['id']) ?>"
                             required
                         >
                 <span><?= htmlspecialchars($dadoscursos2['nome']) ?></span>
@@ -131,7 +109,7 @@
                     $sqlmodulo = "SELECT * From modulo WHERE idcurso = '$idcurso'";
                     $resultmodulo = mysqli_query($conexao, $sqlmodulo);
                     ?>
-                    <input type="hidden" name="curso" id="curso" value="<?php echo($idcurso); ?>">
+                    <input type="hidden" name="curso" id="curso" value="<?php echo htmlspecialchars($idcurso); ?>">
                     <?php 
                     
                 }?>
@@ -150,7 +128,7 @@
                     required
                 >
             </div>
-
+            <input type="hidden" name="token" value="<?php echo htmlspecialchars($_SESSION['tokenadm']); ?>">
             <!-- Campo Quantidade de Aulas -->
             <div class="form-group">
                 <label for="ordem">Número da Aula</label>

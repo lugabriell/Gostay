@@ -1,13 +1,18 @@
 <?php
 require_once __DIR__ . "/../connection.php";
 require_once __DIR__ . "/../functions/savemedia.php";
+require_once __DIR__ ."/../functions/headers.php";
+require_once __DIR__ . "/../functions/sessions.php";
 
-session_start();
 
+if (!hash_equals($_SESSION['tokenadm'], $_POST['token'])) {
+    header('Location: dashadm.php');
+    exit;
+}
 
 $nome          = $_POST['nome'];
 $qtdal        = $_POST['qtd-alunos'];
-$professor         = $_POST['professor'];
+$professor         = (int) $_POST['professor'];
 $qtdm      = $_POST['qtd-modulos'];
 $qtda = $_POST['qtd-aulas'];
 $cargahoraria = $_POST['carga-horaria'];

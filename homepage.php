@@ -1,11 +1,5 @@
 <?php
-    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'");
-    header("X-Content-Type-Options: nosniff");
-    header("X-Frame-Options: DENY");
-    header("X-XSS-Protection: 1; mode=block");
-    header("Referrer-Policy: strict-origin-when-cross-origin");
-    header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
-    header("Permissions-Policy: geolocation=(), camera=(), microphone=()");
+require_once __DIR__ . "/functions/headers.php";
   session_start();
   include_once("connection.php");
   $idaluno = $_SESSION['id'];
@@ -222,7 +216,7 @@
           rgba(5,13,26,.92) 0%,
           rgba(7,20,40,.7) 45%,
           rgba(5,13,26,.35) 100%),
-        url('<?php echo("creates/" . $dadosfreecourse['posterft']); ?>') center/cover no-repeat;
+        url('<?php echo htmlspecialchars("creates/" . $dadosfreecourse['posterft']); ?>') center/cover no-repeat;
       transform: scale(1.04);
       animation: hero-zoom 18s ease-in-out infinite alternate;
     }
@@ -645,21 +639,21 @@
     <div class="hero-gradient-bottom"></div>
     <div class="hero-content">
       <div class="hero-badge">Em destaque agora</div>
-      <h1 class="hero-title"><span><?php echo($dadosfreecourse['nome']); ?></span></h1>
+      <h1 class="hero-title"><span><?php echo htmlspecialchars($dadosfreecourse['nome']); ?></span></h1>
       <div class="hero-meta">
-        <span class="hero-genre"><?php echo($dadoscategoria['nome']); ?></span>
+        <span class="hero-genre"><?php echo htmlspecialchars($dadoscategoria['nome']); ?></span>
         <span class="hero-sep">·</span>
-        <span class="hero-duration"><?php echo($dadosfreecourse['cargahoraria']); ?>H</span>
+        <span class="hero-duration"><?php echo htmlspecialchars($dadosfreecourse['cargahoraria']); ?>H</span>
       </div>
       <p class="hero-desc">
-        <?php echo($dadosfreecourse['descricao']); ?>
+        <?php echo htmlspecialchars($dadosfreecourse['descricao']); ?>
       </p>
       <div class="hero-actions">
-        <a href="infos.php?trackid=<?php echo($dadosfreecourse['id']); ?>" class="btn-primary">
+        <a href="infos.php?trackid=<?php echo htmlspecialchars($dadosfreecourse['id']); ?>" class="btn-primary">
           <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
           Assistir
         </a>
-        <a href="infos.php?trackid=<?php echo($dadosfreecourse['id']); ?>" class="btn-ghost">
+        <a href="infos.php?trackid=<?php echo htmlspecialchars($dadosfreecourse['id']); ?>" class="btn-ghost">
           <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
           Mais Informações
         </a>
@@ -684,11 +678,11 @@
             <?php
               while($dadosfreecourse2 = mysqli_fetch_assoc($resultfreecourse)):
             ?>
-              <a class="card-link" href="infos.php?trackid=<?php echo($dadosfreecourse2['id']); ?>">
+              <a class="card-link" href="infos.php?trackid=<?php echo htmlspecialchars($dadosfreecourse2['id']); ?>">
                 <div class="card">
                   <div class="card-poster">
-                    <img src="<?php echo("creates/". $dadosfreecourse2['ftcurso']); ?>" alt="imagem do curso" loading="lazy"/>
-                    <div class="card-title-overlay"><span><?php echo($dadosfreecourse2['nome']); ?></span></div>
+                    <img src="<?php echo htmlspecialchars("creates/". $dadosfreecourse2['ftcurso']); ?>" alt="imagem do curso" loading="lazy"/>
+                    <div class="card-title-overlay"><span><?php echo htmlspecialchars($dadosfreecourse2['nome']); ?></span></div>
                   </div>
                 </div>
               </a>
@@ -717,11 +711,11 @@
             <?php
               while($dadosfreecourse3 = mysqli_fetch_assoc($resultfreecourse3)):
             ?>
-              <a class="card-link" href="infos.php?trackid=<?php echo($dadosfreecourse3['id']); ?>">
+              <a class="card-link" href="infos.php?trackid=<?php echo htmlspecialchars($dadosfreecourse3['id']); ?>">
                 <div class="card">
                   <div class="card-poster">
-                    <img src="<?php echo("creates/". $dadosfreecourse3['ftcurso']); ?>" alt="imagem do curso" loading="lazy"/>
-                    <div class="card-title-overlay"><span><?php echo($dadosfreecourse3['nome']); ?></span></div>
+                    <img src="<?php echo htmlspecialchars("creates/". $dadosfreecourse3['ftcurso']); ?>" alt="imagem do curso" loading="lazy"/>
+                    <div class="card-title-overlay"><span><?php echo htmlspecialchars($dadosfreecourse3['nome']); ?></span></div>
                   </div>
                 </div>
               </a>
@@ -753,15 +747,15 @@
                         $resultcategoria2 = mysqli_query($conexao, $sqlcategoria2);
                         $dadoscategoria2 = mysqli_fetch_assoc($resultcategoria2);
               ?>
-              <a class="card-link" href="infos.php?trackid=<?php echo($dadosnovidades['id']); ?>">
+              <a class="card-link" href="infos.php?trackid=<?php echo htmlspecialchars($dadosnovidades['id']); ?>">
                 <div class="card-wide">
                   <div style="position:relative;overflow:hidden;">
                     <span class="card-badge new" style="position:absolute;top:8px;left:8px;z-index:2">Novo</span>
-                    <img class="card-wide-img" src="<?php echo("creates/". $dadosnovidades['posterft']) ?>" alt="imagem do curso" loading="lazy"/>
-                    <div class="card-wide-title-overlay"><span><?php echo($dadosnovidades['nome']); ?></span></div>
+                    <img class="card-wide-img" src="<?php echo htmlspecialchars("creates/". $dadosnovidades['posterft']) ?>" alt="imagem do curso" loading="lazy"/>
+                    <div class="card-wide-title-overlay"><span><?php echo htmlspecialchars($dadosnovidades['nome']); ?></span></div>
                   </div>
                   <div class="card-wide-body">
-                    <div class="card-wide-meta"><?php echo($dadosnovidades['cargahoraria']) ?>H · <?php echo($dadoscategoria2['nome']); ?></div>
+                    <div class="card-wide-meta"><?php echo htmlspecialchars($dadosnovidades['cargahoraria']); ?>H · <?php echo htmlspecialchars($dadoscategoria2['nome']); ?></div>
                   </div>
                 </div>
               </a>
@@ -790,7 +784,7 @@
             <?php
               $numrows = mysqli_num_rows($resultmycourse);
               if($numrows == 0){
-                echo('<span class="empty-msg">Você não tem nenhum curso</span>');
+                echo ('<span class="empty-msg">Você não tem nenhum curso</span>');
               }
               while($dadosmycourse = mysqli_fetch_assoc($resultmycourse)):
                 $idcurso = $dadosmycourse['idcurso'];
@@ -799,11 +793,11 @@
 
                 while($dadosmycourse2 = mysqli_fetch_assoc($resultmycourse2)):
             ?>
-              <a class="card-link" href="infos.php?trackid=<?php echo($dadosmycourse2['id']); ?>">
+              <a class="card-link" href="infos.php?trackid=<?php echo htmlspecialchars($dadosmycourse2['id']); ?>">
                 <div class="card">
                   <div class="card-poster">
                     <img src="<?php echo("creates/".$dadosmycourse2['ftcurso']); ?>" alt="imagem do curso" loading="lazy"/>
-                    <div class="card-title-overlay"><span><?php echo($dadosmycourse2['nome']); ?></span></div>
+                    <div class="card-title-overlay"><span><?php echo htmlspecialchars($dadosmycourse2['nome']); ?></span></div>
                   </div>
                 </div>
               </a>

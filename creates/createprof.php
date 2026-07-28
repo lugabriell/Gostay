@@ -2,7 +2,15 @@
 require_once __DIR__ . "/../connection.php";
 require_once __DIR__ . "/../codehex.php";
 require_once __DIR__ . "/../functions/savemedia.php";
-session_start();
+require_once __DIR__ . "/../functions/sessions.php";
+require_once __DIR__ . "/../functions/headers.php";
+
+
+if (!hash_equals($_SESSION['tokenn1'], $_POST['token'])) {
+    header('Location: index.php');
+    exit;
+}
+
 
 if (isset($_FILES['arquivo'])) {
     $arquivooriginal = $_FILES['arquivo'];

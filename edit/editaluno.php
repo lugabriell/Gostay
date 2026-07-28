@@ -2,7 +2,14 @@
 require_once __DIR__ . "/../connection.php";
 require_once __DIR__ . "/../codehex.php";
 require_once __DIR__ . "/../functions/savemedia.php";
-session_start();
+require_once __DIR__ . "/../functions/sessions.php";
+require_once __DIR__ . "/../functions/headers.php";
+
+if (!hash_equals($_SESSION['tokenadm'], $_POST['token'])) {
+    header('Location: dashadm.php');
+    exit;
+}
+
 if(isset($_POST)){
     if (  !empty($_FILES['arquivo']['name']) ) {
         $arquivooriginal = $_FILES['arquivo'];
@@ -19,7 +26,7 @@ if(isset($_POST)){
 // else{
 //     header('Location: ../nonvalidated.php');
 // }
-$idaluno = $_POST['id'];
+$idaluno =(int) $_POST['id'];
 $nome         = $_POST['nome'];
 $formacao         = $_POST['formacao'];
 $email = $_POST['email'];
@@ -127,10 +134,15 @@ else{
 
  if ($stmt->execute()) {
     header("Location: ../aluno.php?id=$idaluno");
+    $stmt->close();
+    $conexao->close();
+    exit;
  }  
 
  else{
-     echo("<script>alert('Não foi possível atualizar a aula Erro:". $stmt->error ." ');</script>");
+    $stmt->close();
+    $conexao->close();
+    exit("Não deu certo");
  }
 
  $stmt->close();

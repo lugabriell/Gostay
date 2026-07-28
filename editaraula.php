@@ -1,62 +1,32 @@
 <?php
-    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'");
-    header("X-Content-Type-Options: nosniff");
-    header("X-Frame-Options: DENY");
-    header("X-XSS-Protection: 1; mode=block");
-    header("Referrer-Policy: strict-origin-when-cross-origin");
-    header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
-    header("Permissions-Policy: geolocation=(), camera=(), microphone=()");
-    include_once('connection.php');
-    session_start();
+require_once __DIR__ . "/functions/headers.php";
+require_once __DIR__ . "/functions/sessions.php";
+include_once('connection.php');
+require_once __DIR__ . "/functions/validationadm.php";
 
-
+    //Puxando os dados do professor, categoria, aula e modulo  do banco de dados respectivamente
     $sql = "SELECT nome, id From professor ";
     $resultprof = mysqli_query($conexao, $sql);
 
-    if(!isset($_SESSION['emailadm']) && !isset($_SESSION['nameadm'])){
-        header('Location: nonvalidated.php');
-    }
-    else{
-        $email = $_SESSION['emailadm'];
-        $nome = $_SESSION['nameadm'];
-        $sql = "SELECT autenticado FROM adms WHERE email = '$email' AND nome = '$nome' ";
-        $result = mysqli_query($conexao, $sql);
-        $dados = mysqli_fetch_assoc($result);
-        $sqlcategoria = 'SELECT * from categoria';
-        $resultcategoria =mysqli_query($conexao, $sqlcategoria);
-        $qtdcategoria = mysqli_num_rows($resultcategoria);
-        if(empty($dados)){
-            header('Location: nonvalidated.php');
-        }
-        else{
-            if($dados['autenticado'] == 'nao'){
-                header('Location: nonvalidated.php');
-            }
-        }
+    $sqlcategoria = 'SELECT * from categoria';
+    $resultcategoria =mysqli_query($conexao, $sqlcategoria);
+    $qtdcategoria = mysqli_num_rows($resultcategoria);
 
-
+    $idaula = isset($_GET['id']) ? (int) $_GET['id'] : null;
+    if($idaula === null){
+        header("Location: dashadm.php");
+        exit();
     }
-    $idaula = $_GET['id'];
     $sqlaula = "SELECT * From aula WHERE id = '$idaula'";
     $resultaula = mysqli_query($conexao, $sqlaula);
     $dadosaula = mysqli_fetch_assoc($resultaula);
-    $idcurso = $dadosaula['idcurso'];
-    $idmodulo2 = $dadosaula['idmodulo'];
+
+    $idcurso = (int) $dadosaula['idcurso'];
+    $idmodulo2 = (int) $dadosaula['idmodulo'];
+
     $sqlmodulo= "SELECT * FRom modulo where idcurso='$idcurso'";
     $resultmodulo = mysqli_query($conexao, $sqlmodulo);
 
-    
-
-    // if((!isset($_SESSION['email']) == true) and (!isset($_SESSION['senha']) == true)){
-    //     header('Location: index.html');
-    //     session_unset();
-    //     session_destroy();
-    // }
-    
-    // else{
-    //   $_SESSION['verificação'] = 'Ativo';
-          
-    // }
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -90,13 +60,14 @@
                     id="nome" 
                     name="nome" 
                     placeholder="Digite o nome do curso"
-                    value="<?php echo($dadosaula['nome']); ?>"
+                    value="<?php echo htmlspecialchars($dadosaula['nome']); ?>"
                     required
                 >
             </div>
-            <input type="hidden" name="idcurso" id="idcurso" value="<?php echo($idcurso); ?>">
+            <input type="hidden" name="idcurso" id="idcurso" value="<?php echo htmlspecialchars($idcurso); ?>">
+            <input type="hidden" name="token" value="<?php echo htmlspecialchars($_SESSION['tokenadm']); ?>">
             <!-- Campo Quantidade de Alunos -->
-             <input type="hidden" name="idaula" id="idaula" value="<?php echo($idaula); ?>">
+             <input type="hidden" name="idaula" id="idaula" value="<?php echo htmlspecialchars($idaula); ?>">
             <div class="form-group">
                 <label for="duracao">Duração em horas</label>
                 <input 
@@ -105,7 +76,7 @@
                     name="duracao" 
                     placeholder="0"
                     min="0"
-                    value="<?php echo($dadosaula['duracao']); ?>"
+                    value="<?php echo htmlspecialchars($dadosaula['duracao']); ?>"
                     required
                 >
             </div>
@@ -120,7 +91,7 @@
                               <input
                                   type="radio"
                                   name="professor"
-                                  value="<?= $dadosprof['id'] ?>"
+                                  value="<?= htmlspecialchars($dadosprof['id']) ?>"
                                     <?= ($dadosprof['id'] == $dadosaula['idprofessor']) ? 'checked' : '' ?>
                                   required
                               >
@@ -139,7 +110,7 @@
                               <input
                                   type="radio"
                                   name="modulo"
-                                  value="<?= $dadosmodulo['id'] ?>"
+                                  value="<?= htmlspecialchars($dadosmodulo['id']) ?>"
                                 <?= ($dadosmodulo['id'] == $idmodulo2) ? 'checked' : '' ?>
                                   required
                               >
@@ -159,7 +130,7 @@
                     id="qtd-alunos" 
                     name="qtd-alunos" 
                     placeholder="0"
-                    value="<?php echo($dadosaula['qtdalunos']); ?>"
+                    value="<?php echo htmlspecialchars($dadosaula['qtdalunos']); ?>"
                     min="1"
                     required
                 >
@@ -172,7 +143,7 @@
                     type="number" 
                     id="ordem" 
                     name="ordem" 
-                    value="<?php echo($dadosaula['ordem']); ?>"
+                    value="<?php echo htmlspecialchars($dadosaula['ordem']); ?>"
                     placeholder="0"
                     min="1"
                     required

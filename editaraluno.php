@@ -1,13 +1,8 @@
 <?php
-    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'");
-    header("X-Content-Type-Options: nosniff");
-    header("X-Frame-Options: DENY");
-    header("X-XSS-Protection: 1; mode=block");
-    header("Referrer-Policy: strict-origin-when-cross-origin");
-    header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
-    header("Permissions-Policy: geolocation=(), camera=(), microphone=()");
-    include_once('connection.php');
-    session_start();
+require_once __DIR__ . "/functions/headers.php";
+require_once __DIR__ . "/functions/sessions.php";
+require_once __DIR__ . "/connection.php";
+
 
     // if((!isset($_SESSION['email']) == true) and (!isset($_SESSION['senha']) == true)){
     //     header('Location: index.html');
@@ -19,10 +14,17 @@
     //   $_SESSION['verificação'] = 'Ativo';
           
     // }
-    $idaluno = $_GET['idaluno'];
-    $sql = "SELECT * FROM alunos WHERE id = '$idaluno'";
-    $result = mysqli_query($conexao, $sql);
-    $dados = mysqli_fetch_assoc($result);
+    $idaluno = isset($_GET['idaluno']) ? (int) $_GET['idaluno'] : null;
+    if($idaluno === null) {
+        header("Location: index.php");
+        exit();
+    }
+
+    $stmt = $conexao->prepare("SELECT * FROM alunos WHERE id = ?");
+    $stmt->bind_param("i", $idaluno);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $dados = $result->fetch_assoc();
 
 
 ?>
@@ -59,20 +61,21 @@
     <form enctype="multipart/form-data" class="side" action="edit/editaluno.php" method="POST" id="contactForm" novalidate>
       <div>
         <label for="nome">Nome completo </label>
-        <input id="nome" name="nome" value="<?php echo($dados['nome']); ?>"  minlength="1" maxlength="250" type="text" required placeholder="Seu nome" />
+        <input id="nome" name="nome" value="<?php echo  htmlspecialchars($dados['nome']); ?>"  minlength="1" maxlength="250" type="text" required placeholder="Seu nome" />
       </div>
-      <input type="hidden" name="id" id="id" value="<?php echo($idaluno); ?>">
+      <input type="hidden" name="id" id="id" value="<?php echo htmlspecialchars($idaluno); ?>">
+      <input type="hidden" name="token" value="<?php echo htmlspecialchars($_SESSION['tokenadm']); ?>">
 
 
 
       <div class="row">
         <div class="field">
           <label for="email">E-mail *</label>
-          <input id="email" name="email" value="<?php echo($dados['email']); ?>"   minlength="1" maxlength="250" type="email" required placeholder="seu@exemplo.com" />
+          <input id="email" name="email" value="<?php echo htmlspecialchars($dados['email']); ?>"   minlength="1" maxlength="250" type="email" required placeholder="seu@exemplo.com" />
         </div>
         <div class="field">
           <label for="telefone">Telefone</label>
-          <input id="telefone" name="telefone" value="<?php echo($dados['telefone']); ?>"   minlength="1" maxlength="250" type="tel" required placeholder="(XX) XXXXX-XXXX" />
+          <input id="telefone" name="telefone" value="<?php echo htmlspecialchars($dados['telefone']); ?>"   minlength="1" maxlength="250" type="tel" required placeholder="(XX) XXXXX-XXXX" />
         </div>
       </div>
       <div>
@@ -88,7 +91,7 @@
       <div>
         <div>
           <label for="formacao">Formação</label>
-          <input type="text" name="formacao" value="<?php echo($dados['formacao']); ?>"   minlength="1" maxlength="250" id="formacao" required placeholder="Sua formação aqui" />
+          <input type="text" name="formacao" value="<?php echo htmlspecialchars($dados['formacao']); ?>"   minlength="1" maxlength="250" id="formacao" required placeholder="Sua formação aqui" />
         </div>
 
         <?php 
@@ -99,7 +102,7 @@
         } ?>
         <br>
         <label>
-          <input type="<?php echo($tipo); ?>" name="autenticado" id="autenticado" <?php if($dados['autenticado'] == 'sim') echo 'checked'; ?> value="sim" required>
+          <input type="<?php echo htmlspecialchars($tipo); ?>" name="autenticado" id="autenticado" <?php if($dados['autenticado'] == 'sim') echo 'checked'; ?> value="sim" required>
           Autenticado
       </label>
 

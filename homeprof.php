@@ -1,13 +1,7 @@
 <?php
     require_once("connection.php");
-    session_start();
-    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'");
-    header("X-Content-Type-Options: nosniff");
-    header("X-Frame-Options: DENY");
-    header("X-XSS-Protection: 1; mode=block");
-    header("Referrer-Policy: strict-origin-when-cross-origin");
-    header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
-    header("Permissions-Policy: geolocation=(), camera=(), microphone=()");
+require_once __DIR__ . "/functions/headers.php";
+require_once __DIR__ . "/functions/sessions.php";
 
 
     $idprof = $_SESSION['idprof'];
@@ -88,9 +82,9 @@
         </div>
         <div class="user-profile">
             <button class="user-button" id="userButton">
-                <div class="user-avatar"><?php echo($letras); ?></div>
+                <div class="user-avatar"><?php echo htmlspecialchars($letras); ?></div>
 
-                <span class="user-name"><?php echo($nomePrincipal); ?></span>
+                <span class="user-name"><?php echo htmlspecialchars($nomePrincipal); ?></span>
                 <svg class="dropdown-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
@@ -166,7 +160,7 @@
             <div class="kpi-card">
                 <div class="kpi-header">
                     <div>
-                        <div class="kpi-value"><?php echo($qtdcurso); ?></div>
+                        <div class="kpi-value"><?php echo htmlspecialchars($qtdcurso); ?></div>
                         <div class="kpi-label">Total de Cursos</div>
                         <span class="kpi-trend positive">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -187,7 +181,7 @@
             <div class="kpi-card">
                 <div class="kpi-header">
                     <div>
-                        <div class="kpi-value"><?php echo($totalalunos); ?></div>
+                        <div class="kpi-value"><?php echo htmlspecialchars($totalalunos); ?></div>
                         <div class="kpi-label">N째 de alunos</div>
                         <span class="kpi-trend positive">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -253,9 +247,9 @@
                         <tr>
                             
                             
-                            <td><strong><?php echo($dadosalunos['nome']);?></strong></td>
-                            <td><span class="badge <?php echo($badgeclass); ?>"><?php echo($statusa[$l]);?></span></td>
-                            <td><strong><?php echo($cursos['nome']); ?></strong></td>
+                            <td><strong><?php echo htmlspecialchars($dadosalunos['nome']); ?></strong></td>
+                            <td><span class="badge <?php echo htmlspecialchars($badgeclass); ?>"><?php echo htmlspecialchars($statusa[$l]); ?></span></td>
+                            <td><strong><?php echo htmlspecialchars($cursos['nome']); ?></strong></td>
                         </tr>
                     <?php endwhile;
                     endfor; ?>

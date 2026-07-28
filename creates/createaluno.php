@@ -2,15 +2,18 @@
 require_once __DIR__ . "/../connection.php";
 require_once __DIR__ . "/../codehex.php";
 require_once __DIR__ . "/../functions/savemedia.php";
-session_start();
+require_once __DIR__ . "/../functions/sessions.php";
 
 if (isset($_FILES['arquivo']) && $_FILES['arquivo']['error'] === 0) {
     $arquivooriginal = $_FILES['arquivo'];
     $arquivobd = salvarft($arquivooriginal, $conexao);
 } else {
-    $arquivobd = null; // ou define uma imagem padrão
+    $arquivobd = null;
 }
-
+if (!hash_equals($_SESSION['tokenadm'], $_POST['token'])) {
+    header('Location: dashadm.php');
+    exit;
+}
 
 $nome        = $_POST['nome'] ?? null;
 $email       = $_POST['email'] ?? null;
@@ -75,22 +78,23 @@ if ($stmt->execute()) {
 
     if (!isset($_SESSION['nameadm']) && !isset($_SESSION['emailadm'])) {
 
-        $_SESSION['emailaluno'] = $email;
-        $_SESSION['nomealuno'] = $nome;
-        $_SESSION['idaluno'] = $idaluno;
+        $_SESSION['email'] = $email;
+        $_SESSION['nome'] = $nome;
+        $_SESSION['id'] = $idaluno;
         $_SESSION['autenticado'] = 'nao';
-
         header('Location: ../homepage.php');
         exit;
 
     } else {
 
         header('Location: ../alunosadm.php');
+        $stmt->close();
+        $conexao->close();
         exit;
     }
 // $result = mysqli_query($conexao, $sqlautenticado); // $dados = mysqli_fetch_assoc($result); // if(empty($dados['autenticado'])){ // $_SESSION['idaluno'] = $dados['id']; // header('Location: ../autenticacao.php'); // } // else{ // header('Location: ../homepage.php'); // }
 } else {
-    echo "Erro: " . $stmt->error;
+    exit("Deu errado");
 }
 
 $stmt->close();

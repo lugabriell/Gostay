@@ -1,59 +1,77 @@
 <?php
-    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'");
-    header("X-Content-Type-Options: nosniff");
-    header("X-Frame-Options: DENY");
-    header("X-XSS-Protection: 1; mode=block");
-    header("Referrer-Policy: strict-origin-when-cross-origin");
-    header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
-    header("Permissions-Policy: geolocation=(), camera=(), microphone=()");
-    include_once('connection.php');
-    session_start();
-        if(!isset($_SESSION['emailadm']) && !isset($_SESSION['nameadm'])){
-           header('Location: nonvalidated.php');
-        }
-        else{
-            $email = $_SESSION['emailadm'];
-            $nome = $_SESSION['nameadm'];
-            $sql = "SELECT autenticado FROM adms WHERE email = '$email' AND nome = '$nome' ";
-            $result = mysqli_query($conexao, $sql);
-            $dados = mysqli_fetch_assoc($result);
-            $sqlcategoria = 'SELECT * from categoria';
-            $resultcategoria =mysqli_query($conexao, $sqlcategoria);
-            $qtdcategoria = mysqli_num_rows($resultcategoria);
-            if(empty($dados)){
-                header('Location: nonvalidated.php');
-            }
-            else{
-                if($dados['autenticado'] == 'nao'){
-                    header('Location: nonvalidated.php');
-                }
-            }
+require_once __DIR__ . "/functions/headers.php";
+require_once __DIR__ . "/functions/sessions.php";
+include_once('connection.php');
+require_once __DIR__ . "/functions/validationadm.php";
 
-
-        }
-
-    
-
-    if(isset($_GET['idaluno'])){
-        $idaluno = $_GET['idaluno'];
-        $selectcurso = "SELECT * from alunos WHere id = '$idaluno'";
-        $resultcurso = mysqli_query($conexao, $selectcurso);
-        $dadoscurso = mysqli_fetch_assoc($resultcurso);
-        $selectalunos = "SELECT * from aula";
-        $resultalunos = mysqli_query($conexao, $selectalunos);
-    }
-    else{
-        $idaula = $_GET['idaula'];
+    $sqlcategoria = 'SELECT * from categoria';
+    $resultcategoria =mysqli_query($conexao, $sqlcategoria);
+    $qtdcategoria = mysqli_num_rows($resultcategoria);
+        
+    $idaluno = isset($_GET['idaluno']) ? (int) $_GET['idaluno'] : null;
+    $idaula = isset($_GET['idaula']) ? (int) $_GET['idaula'] : null;
+    if($idaluno === null && $idaula !== null) {
+        
         $selectcurso = "SELECT * from aula WHere id = '$idaula'";
         $resultcurso = mysqli_query($conexao, $selectcurso);
         $dadoscurso = mysqli_fetch_assoc($resultcurso);
+        $qtdcurso = mysqli_num_rows($resultcurso);
+        if($qtdcurso === 0) {
+            header("Location: dashadm.php");
+            exit();
+        }
         $selectalunos = "SELECT * from alunos";
         $resultalunos = mysqli_query($conexao, $selectalunos);
-    
+        $qtdalunos = mysqli_num_rows($resultalunos);
+        if($qtdalunos === 0) {
+            header("Location: dashadm.php");
+            exit();
+        }
     }
-        
 
-    
+    if($idaula === null && $idaluno !== null) {
+        $selectcurso = "SELECT * from alunos WHere id = '$idaluno'";
+        $resultcurso = mysqli_query($conexao, $selectcurso);
+        $dadoscurso = mysqli_fetch_assoc($resultcurso);
+        $qtdcurso = mysqli_num_rows($resultcurso);
+        if($qtdcurso === 0) {
+            header("Location: dashadm.php");
+            exit();
+        }
+        $selectalunos = "SELECT * from aula";
+        $resultalunos = mysqli_query($conexao, $selectalunos);
+        $qtdalunos = mysqli_num_rows($resultalunos);
+        if($qtdalunos === 0) {
+            header("Location: dashadm.php");
+            exit();
+        }
+    }
+
+
+    if($idaluno === null && $idaula === null) {
+        header("Location: dashadm.php");
+        exit();
+    }
+
+
+    if($idaluno !== null && $idaula !== null) {
+        $selectcurso = "SELECT * from alunoaula WHere idaluno = '$idaluno' and idaula = '$idaula'";
+        $resultcurso = mysqli_query($conexao, $selectcurso);
+        $dadoscurso = mysqli_fetch_assoc($resultcurso);
+        $qtdcurso = mysqli_num_rows($resultcurso);
+        if($qtdcurso === 0) {
+            header("Location: dashadm.php");
+            exit();
+        }
+        $selectalunos = "SELECT * from aula";
+        $resultalunos = mysqli_query($conexao, $selectalunos);
+        $qtdalunos = mysqli_num_rows($resultalunos);
+        if($qtdalunos === 0) {
+            header("Location: dashadm.php");
+            exit();
+        }
+    }
+           
 
     // if((!isset($_SESSION['email']) == true) and (!isset($_SESSION['senha']) == true)){
     //     header('Location: index.html');
@@ -84,7 +102,7 @@
         
         <!-- Cabeçalho do formulário -->
         <div class="form-header">
-            <h1>Cadastro Aula <?php echo($dadoscurso['nome']); ?></h1>
+            <h1>Cadastro Aula <?php echo htmlspecialchars($dadoscurso['nome']); ?></h1>
             <p>Preencha as informações abaixo</p>
         </div>
 
@@ -93,12 +111,13 @@
             
             <!-- Campo Nome do Curso -->
 
-            <input type="hidden" name="idaluno" value="<?php   if(isset($_GET['idaluno'])){ echo($idaluno);}else{echo($idaula);}?>">
-            <label for="aula"><?php   if(isset($_GET['idaluno'])){ echo("Aula");}else{echo("Aluno");}?></label>
+            <input type="hidden" name="idaluno" value="<?php   if(isset($_GET['idaluno'])){ echo htmlspecialchars($idaluno);}else{echo htmlspecialchars($idaula);}?>">
+            <input type="hidden" name="token" value="<?php echo htmlspecialchars($_SESSION['tokenadm']); ?>">
+            <label for="aula"><?php   if(isset($_GET['idaluno'])){ echo htmlspecialchars("Aula");}else{echo htmlspecialchars("Aluno");}?></label>
             <select name="aula">
                 <?php while($dadosalunos = mysqli_fetch_assoc($resultalunos)) : ?>
-                    <option value="<?php echo $dadosalunos['id']; ?>">
-                        <?php echo $dadosalunos['nome']; ?>
+                    <option value="<?php echo htmlspecialchars($dadosalunos['id']); ?>">
+                        <?php echo htmlspecialchars($dadosalunos['nome']); ?>
                     </option>
                 <?php endwhile; ?>
             </select>
@@ -128,3 +147,5 @@
     </div>
 </body>
 </html>
+
+

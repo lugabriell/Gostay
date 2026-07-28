@@ -1,27 +1,30 @@
 <?php
-    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'");
-    header("X-Content-Type-Options: nosniff");
-    header("X-Frame-Options: DENY");
-    header("X-XSS-Protection: 1; mode=block");
-    header("Referrer-Policy: strict-origin-when-cross-origin");
-    header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
-    header("Permissions-Policy: geolocation=(), camera=(), microphone=()");
-    include_once('connection.php');
-    session_start();
-        if(!isset($_SESSION['emailprof']) && !isset($_SESSION['nameprof']) && !isset($_SESSION['idprof'])){
-            header('Location: nonvalidated.php');
-        }
-        $idcurso = $_GET['idcurso'];
-        $idaluno = $_GET['id'];
-        $selectcurso = "SELECT * from curso where id = '$idcurso'";
-        $resultcurso = mysqli_query($conexao, $selectcurso);
-        $dadoscurso = mysqli_fetch_assoc($resultcurso);
-        $selectalunos = "SELECT * from alunos WHERE id = '$idaluno'";
-        $resultalunos = mysqli_query($conexao, $selectalunos);
-        $resultalunos2 = mysqli_query($conexao, $selectalunos);
-        $selectalunocurso = "SELECT * from cursoaluno WHERE idcurso = '$idcurso' and idaluno = '$idaluno'";
-        $resultalunocurso = mysqli_query($conexao, $selectalunocurso);
-        $dadosalunocurso = mysqli_fetch_assoc($resultalunocurso);
+require_once __DIR__ . "/functions/headers.php";
+require_once __DIR__ . "/functions/sessions.php";
+include_once('connection.php');
+require_once __DIR__ . "/functions/validationadm.php";
+
+    //Puxandos os ids, e verificando se eles existem, caso não existam, redireciona para dashadm.php
+    $idcurso= isset($_GET['idcurso']) ? (int) $_GET['idcurso'] : null;
+    $idaluno = isset($_GET['idaluno']) ? (int) $_GET['idaluno'] : null;
+    if($idcurso === null || $idaluno === null ) {
+        header("Location: dashadm.php");
+        exit();
+    }
+
+
+    //Puxando os dados do curso, do aluno e do cursoaluno do banco de dados respectivamente, para poder editar o status do aluno no curso
+    $selectcurso = "SELECT * from curso where id = '$idcurso'";
+    $resultcurso = mysqli_query($conexao, $selectcurso);
+    $dadoscurso = mysqli_fetch_assoc($resultcurso);
+
+    $selectalunos = "SELECT * from alunos WHERE id = '$idaluno'";
+    $resultalunos = mysqli_query($conexao, $selectalunos);
+    $resultalunos2 = mysqli_query($conexao, $selectalunos);
+
+    $selectalunocurso = "SELECT * from cursoaluno WHERE idcurso = '$idcurso' and idaluno = '$idaluno'";
+    $resultalunocurso = mysqli_query($conexao, $selectalunocurso);
+    $dadosalunocurso = mysqli_fetch_assoc($resultalunocurso);
 
     
 
@@ -55,7 +58,7 @@
         
         <!-- Cabeçalho do formulário -->
         <div class="form-header">
-            <h1>Editar <?php echo($dadosalunos['nome']) ?> no curso: <?php echo($dadoscurso['nome']); ?></h1>
+            <h1>Editar <?php echo htmlspecialchars($dadosalunos['nome']) ?> no curso: <?php echo htmlspecialchars($dadoscurso['nome']); ?></h1>
             <p>Preencha as informações abaixo</p>
         </div>
 
@@ -63,9 +66,9 @@
         <form action="edit/editstatusaluno.php" method="POST">
             
             <!-- Campo Nome do Curso -->
-            <input type="hidden" name="token" value="<?php echo($_SESSION['tokenprof']); ?>">
-            <input type="hidden" name="idcurso" value="<?php echo($idcurso); ?>">
-            <input type="hidden" name="idaluno" value="<?php echo($idaluno) ?>">
+            <input type="hidden" name="token" value="<?php echo htmlspecialchars($_SESSION['tokenadm']); ?>">
+            <input type="hidden" name="idcurso" value="<?php echo htmlspecialchars($idcurso); ?>">
+            <input type="hidden" name="idaluno" value="<?php echo htmlspecialchars($idaluno) ?>">
             <div class="form-group">
                 <label>Status</label>
                 <div class="radio-group">

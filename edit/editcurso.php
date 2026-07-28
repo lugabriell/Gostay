@@ -1,7 +1,12 @@
 <?php
 require_once __DIR__ . "/../connection.php";
+require_once __DIR__ . "/../functions/sessions.php";
+require_once __DIR__ . "/../functions/headers.php";
 
-session_start();
+if (!hash_equals($_SESSION['tokenadm'], $_POST['token'])) {
+    header('Location: dashadm.php');
+    exit;
+}
 $nome          = $_POST['nome'];
 $qtdal         = $_POST['qtd-alunos'];
 $professor     = $_POST['professor'];
@@ -52,9 +57,18 @@ $stmt->bind_param(
     $idcurso
 );
 
-$stmt->execute();
-header("Location: ../curso.php?id=$idcurso")
 
+if(!$stmt->execute()){
+    $stmt->close();
+    $conexao->close();
+    exit;
+}
+else{
+    header("Location: ../curso.php?id=$idcurso");
+    $stmt->close();
+    $conexao->close();
+    exit();
+}
 
 
 ?>

@@ -1,58 +1,26 @@
 <?php
-    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'");
-    header("X-Content-Type-Options: nosniff");
-    header("X-Frame-Options: DENY");
-    header("X-XSS-Protection: 1; mode=block");
-    header("Referrer-Policy: strict-origin-when-cross-origin");
-    header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
-    header("Permissions-Policy: geolocation=(), camera=(), microphone=()");
+require_once __DIR__ . "/functions/headers.php";
+require_once __DIR__ . "/functions/sessions.php";
 require_once __DIR__ . "/connection.php";
-session_start();
-if(!isset($_SESSION['emailadm']) && !isset($_SESSION['nameadm'])){
-    header('Location: nonvalidated.php');
-}
-else{
-    $email = $_SESSION['emailadm'];
-    $nome = $_SESSION['nameadm'];
-    $sql = "SELECT autenticado FROM adms WHERE email = '$email' AND nome = '$nome' ";
-    $result = mysqli_query($conexao, $sql);
-    $dados = mysqli_fetch_assoc($result);
-    $sqlcategoria = 'SELECT * from categoria';
-    $resultcategoria =mysqli_query($conexao, $sqlcategoria);
-    $sqlcursos = 'SELECT * from curso';
-    $resultcurso =mysqli_query($conexao, $sqlcursos);
-    
-    $qtdcurso = mysqli_num_rows($resultcurso);
-    $qtdcategoria = mysqli_num_rows($resultcategoria);
-    if(empty($dados)){
-        header('Location: nonvalidated.php');
-    }
-    else{
-        if($dados['autenticado'] == 'nao'){
-            header('Location: nonvalidated.php');
-        }
-    }
+require_once __DIR__ . "/functions/validationadm.php";
+
+// Consultas para obter dados de categorias, cursos, professores e aulas respectivamente
+$sqlcategoria = 'SELECT * from categoria';
+$resultcategoria =mysqli_query($conexao, $sqlcategoria);
+$qtdcategoria = mysqli_num_rows($resultcategoria);
+
+$sqlcursos = 'SELECT * from curso';
+$resultcurso =mysqli_query($conexao, $sqlcursos);
+$qtdcurso = mysqli_num_rows($resultcurso);
 
 
-
-}
-$sql2 = "SELECT nome FROM adms WHERE email = '$email' AND nome = '$nome' ";
-$result2 = mysqli_query($conexao, $sql2);
-$dados2 = mysqli_fetch_assoc($result2);
-$nomeCompleto = $dados2['nome'];
 $sqlprofessor = "SELECT * FROM professor";
 $resultprofessor = mysqli_query($conexao, $sqlprofessor);
+
+
 $sqlaula = "SELECT * FROM aula";
 $resultaula = mysqli_query($conexao, $sqlaula);
-
-$partesNome = explode(' ', trim($nomeCompleto));
-$nomePrincipal = $partesNome[0] . ' ' . ($partesNome[1] ?? '');
-
-$letras = strtoupper(
-    substr($partesNome[0], 0, 1) .
-    (isset($partesNome[1]) ? substr($partesNome[1], 0, 1) : '')
-);
-
+$qtdaula = mysqli_num_rows($resultaula);
 
 
 ?>
@@ -85,9 +53,9 @@ $letras = strtoupper(
         </div>
         <div class="user-profile">
             <button class="user-button" id="userButton">
-                <div class="user-avatar"><?php echo($letras); ?></div>
+                <div class="user-avatar"><?php echo htmlspecialchars($letras); ?></div>
 
-                <span class="user-name"><?php echo($nomePrincipal); ?></span>
+                <span class="user-name"><?php echo htmlspecialchars($nomePrincipal); ?></span>
                 <svg class="dropdown-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
@@ -180,7 +148,7 @@ $letras = strtoupper(
                             <circle cx="12" cy="12" r="3"></circle>
                             <path d="M12 1v6m0 6v6m5.196-15.196l-4.242 4.242m0 5.656l-4.242 4.242M23 12h-6m-6 0H1m18.196-5.196l-4.242 4.242m0 5.656l4.242 4.242"></path>
                         </svg>
-                        <span class="nav-text">ConfiguraÃ§Ãµes</span>
+                        <span class="nav-text">Configurações</span>
                     </a>
                 </li>
             </ul>
@@ -198,7 +166,7 @@ $letras = strtoupper(
             <div class="kpi-card">
                 <div class="kpi-header">
                     <div>
-                        <div class="kpi-value"><?php echo($qtdcurso); ?></div>
+                        <div class="kpi-value"><?php echo htmlspecialchars($qtdcurso); ?></div>
                         <div class="kpi-label">Total de Cursos</div>
                         <span class="kpi-trend positive">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -219,8 +187,8 @@ $letras = strtoupper(
             <div class="kpi-card">
                 <div class="kpi-header">
                     <div>
-                        <div class="kpi-value"><?php echo($qtdcategoria); ?></div>
-                        <div class="kpi-label">NÂ° de Categorias</div>
+                        <div class="kpi-value"><?php echo htmlspecialchars($qtdcategoria); ?></div>
+                        <div class="kpi-label">N° de Categorias</div>
                         <span class="kpi-trend positive">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
@@ -282,8 +250,8 @@ $letras = strtoupper(
 
                     <div class="course-icon">ðŸ“š</div>
                     <div class="course-info">
-                        <div class="course-name"><?php echo($dadosprofessor['nome']); ?></div>
-                        <div class="course-meta"><?php echo($dadosprofessor['formacao']); ?></div>
+                        <div class="course-name"><?php echo htmlspecialchars($dadosprofessor['nome']); ?></div>
+                        <div class="course-meta"><?php echo htmlspecialchars($dadosprofessor['formacao']); ?></div>
                     </div>
 
                 </div>
@@ -307,10 +275,10 @@ $letras = strtoupper(
                         <div class="course-icon">ðŸ“š</div>
                         <div class="course-info">
                             <div class="course-name">
-                                <?php echo $dadosaula['nome']; ?>
+                                <?php echo htmlspecialchars($dadosaula['nome']); ?>
                             </div>
                             <div class="course-meta">
-                                <?php echo $dadosaula['duracao']; ?>
+                                <?php echo htmlspecialchars($dadosaula['duracao']); ?>
                             </div>
                         </div>
                     </div>
@@ -351,7 +319,7 @@ $letras = strtoupper(
 
                         while($dadoscursos = mysqli_fetch_assoc($resultcurso)):
                             
-                            $idcategoria2 = $dadoscursos['idcategoria'];
+                            $idcategoria2 = (int) $dadoscursos['idcategoria'];
                             $sqlcategoriaid = "SELECT * from categoria where id = '$idcategoria2'";
                             $resultcategoria2 = mysqli_query($conexao, $sqlcategoriaid);
                             $dadoscategoria2 = mysqli_fetch_assoc($resultcategoria2);
@@ -365,21 +333,21 @@ $letras = strtoupper(
                     <tr>
                         
                         <!-- //$dadoscursos = mysqli_fetch_assoc($resultcurso); -->
-                        <td><strong><?php echo($dadoscursos['nome']);?></strong></td>
-                        <td><?php echo($dadoscategoria2['nome']);  ?></td>
-                        <td><span class="badge <?php echo($badgeclass); ?>"><?php echo($dadoscursos['statuscurso']);?></span></td>
-                        <td><?php echo($dadoscursos['qtdal']);?></td>
+                        <td><strong><?php echo htmlspecialchars($dadoscursos['nome']);?></strong></td>
+                        <td><?php echo htmlspecialchars($dadoscategoria2['nome']);  ?></td>
+                        <td><span class="badge <?php echo htmlspecialchars($badgeclass); ?>"><?php echo htmlspecialchars($dadoscursos['statuscurso']);?></span></td>
+                        <td><?php echo htmlspecialchars($dadoscursos['qtdal']);?></td>
                         <td>
                             <div class="table-actions">
-                                <a href='curso.php?id=<?= $dadoscursos['id'] ?>' class="action-btn" title="Editar">
+                                <a href='curso.php?id=<?= htmlspecialchars($dadoscursos['id']) ?>' class="action-btn" title="Editar">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                     </svg>
                                 </a>
                                 <form method="POST" action="delete/deletecurso.php" style="display:inline;">
-                                    <input type="hidden" name="id" value="<?= $dadoscursos['id'] ?>">
-                                    <input type="hidden" name="token" value="<?= $_SESSION['tokenadm'] ?>">
+                                    <input type="hidden" name="id" value="<?= htmlspecialchars($dadoscursos['id']) ?>">
+                                    <input type="hidden" name="token" value="<?= htmlspecialchars($_SESSION['tokenadm']) ?>">
                                     
                                     <button type="submit" class="action-btn" title="Excluir">
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

@@ -1,61 +1,23 @@
 <?php
-    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'");
-    header("X-Content-Type-Options: nosniff");
-    header("X-Frame-Options: DENY");
-    header("X-XSS-Protection: 1; mode=block");
-    header("Referrer-Policy: strict-origin-when-cross-origin");
-    header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
-    header("Permissions-Policy: geolocation=(), camera=(), microphone=()");
+require_once __DIR__ . "/functions/headers.php";
+require_once __DIR__ . "/functions/sessions.php";
 require_once __DIR__ . "/connection.php";
-session_start();
-if(!isset($_SESSION['emailadm']) && !isset($_SESSION['nameadm'])){
-    header('Location: nonvalidated.php');
-}
-else{
-    $email = $_SESSION['emailadm'];
-    $nome = $_SESSION['nameadm'];
-    $sql = "SELECT autenticado FROM adms WHERE email = '$email' AND nome = '$nome' ";
-    $result = mysqli_query($conexao, $sql);
-    $dados = mysqli_fetch_assoc($result);
-    $sqlcategoria = 'SELECT * from professor';
-    $resultcategoria =mysqli_query($conexao, $sqlcategoria);
-    $sqlcursos = 'SELECT * from professor';
-    $resultcurso =mysqli_query($conexao, $sqlcursos);
-    $sqlcurso = 'SELECT * FROM curso';
-    $resultcursoo = mysqli_query($conexao, $sqlcurso);
-    $qtdcurso = mysqli_num_rows($resultcursoo);
+require_once __DIR__ . "/functions/validationadm.php";
 
-    $qtdcategoria = mysqli_num_rows($resultcategoria);
+$sqlcategoria = 'SELECT * from professor';
+$resultcategoria =mysqli_query($conexao, $sqlcategoria);
+$sqlcursos = 'SELECT * from professor';
+$resultcurso =mysqli_query($conexao, $sqlcursos);
+$sqlcurso = 'SELECT * FROM curso';
+$resultcursoo = mysqli_query($conexao, $sqlcurso);
+$qtdcurso = mysqli_num_rows($resultcursoo);
 
+$qtdcategoria = mysqli_num_rows($resultcategoria);
 
-    if(empty($dados)){
-        header('Location: nonvalidated.php');
-    }
-    else{
-        if($dados['autenticado'] == 'nao'){
-            header('Location: nonvalidated.php');
-        }
-    }
-
-
-
-}
-$sql2 = "SELECT nome FROM adms WHERE email = '$email' AND nome = '$nome' ";
-$result2 = mysqli_query($conexao, $sql2);
-$dados2 = mysqli_fetch_assoc($result2);
-$nomeCompleto = $dados2['nome'];
 $sqlprofessor = "SELECT * FROM professor";
 $resultprofessor = mysqli_query($conexao, $sqlprofessor);
 $sqlaula = "SELECT * FROM aula";
 $resultaula = mysqli_query($conexao, $sqlaula);
-
-$partesNome = explode(' ', trim($nomeCompleto));
-$nomePrincipal = $partesNome[0] . ' ' . ($partesNome[1] ?? '');
-
-$letras = strtoupper(
-    substr($partesNome[0], 0, 1) .
-    (isset($partesNome[1]) ? substr($partesNome[1], 0, 1) : '')
-);
 
 
 
@@ -89,9 +51,9 @@ $letras = strtoupper(
         </div>
         <div class="user-profile">
             <button class="user-button" id="userButton">
-                <div class="user-avatar"><?php echo($letras); ?></div>
+                <div class="user-avatar"><?php echo htmlspecialchars($letras); ?></div>
 
-                <span class="user-name"><?php echo($nomePrincipal); ?></span>
+                <span class="user-name"><?php echo htmlspecialchars($nomePrincipal); ?></span>
                 <svg class="dropdown-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
@@ -207,7 +169,7 @@ $letras = strtoupper(
             <div class="kpi-card">
                 <div class="kpi-header">
                     <div>
-                        <div class="kpi-value"><?php echo($qtdcurso); ?></div>
+                        <div class="kpi-value"><?php echo htmlspecialchars($qtdcurso); ?></div>
                         <div class="kpi-label">Total de Cursos</div>
                         <span class="kpi-trend positive">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -228,7 +190,7 @@ $letras = strtoupper(
             <div class="kpi-card">
                 <div class="kpi-header">
                     <div>
-                        <div class="kpi-value"><?php echo($qtdcategoria); ?></div>
+                        <div class="kpi-value"><?php echo htmlspecialchars($qtdcategoria); ?></div>
                         <div class="kpi-label">N° de Professores</div>
                         <span class="kpi-trend positive">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -296,21 +258,21 @@ $letras = strtoupper(
                     <tr>
                         
                         <!-- //$dadoscursos = mysqli_fetch_assoc($resultcurso); -->
-                        <td><strong><?php echo($dadoscursos['nome']);?></strong></td>
-                        <td><?php echo($dadoscursos['email']);  ?></td>
-                        <td><span class="badge <?php echo($badgeclass); ?>"><?php echo($dadoscursos['autenticado']);?></span></td>
-                        <td><?php echo($dadoscursos['formacao']);?></td>
+                        <td><strong><?php echo htmlspecialchars($dadoscursos['nome']);?></strong></td>
+                        <td><?php echo htmlspecialchars($dadoscursos['email']);  ?></td>
+                        <td><span class="badge <?php echo htmlspecialchars($badgeclass); ?>"><?php echo htmlspecialchars($dadoscursos['autenticado']);?></span></td>
+                        <td><?php echo htmlspecialchars($dadoscursos['formacao']) ;?></td>
                         <td>
                             <div class="table-actions">
-                                <a href='professor.php?id=<?= $dadoscursos['id'] ?>' class="action-btn" title="Editar">
+                                <a href='professor.php?id=<?= htmlspecialchars($dadoscursos['id']) ?>' class="action-btn" title="Editar">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                     </svg>
                                 </a>
                                 <form method="POST" action="delete/deleteprofessor.php" style="display:inline;">
-                                    <input type="hidden" name="id" value="<?= $dadoscursos['id'] ?>">
-                                    <input type="hidden" name="token" value="<?= $_SESSION['tokenadm'] ?>">
+                                    <input type="hidden" name="id" value="<?= htmlspecialchars($dadoscursos['id']) ?>">
+                                    <input type="hidden" name="token" value="<?= htmlspecialchars($_SESSION['tokenadm']) ?>">
                                     
                                     <button type="submit" class="action-btn" title="Excluir">
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

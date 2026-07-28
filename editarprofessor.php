@@ -1,45 +1,30 @@
 <?php
-    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'");
-    header("X-Content-Type-Options: nosniff");
-    header("X-Frame-Options: DENY");
-    header("X-XSS-Protection: 1; mode=block");
-    header("Referrer-Policy: strict-origin-when-cross-origin");
-    header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
-    header("Permissions-Policy: geolocation=(), camera=(), microphone=()");
-    include_once('connection.php');
-    session_start();
+require_once __DIR__ . "/functions/headers.php";
+require_once __DIR__ . "/functions/sessions.php";
+include_once('connection.php');
+require_once __DIR__ . "/functions/validationadm.php";
 
 
-    $sql = "SELECT nome, id From professor ";
-    $resultprof = mysqli_query($conexao, $sql);
 
-    if(!isset($_SESSION['emailadm']) && !isset($_SESSION['nameadm'])){
-        header('Location: nonvalidated.php');
+    $sqlcategoria = 'SELECT * from categoria';
+    $resultcategoria =mysqli_query($conexao, $sqlcategoria);
+    $qtdcategoria = mysqli_num_rows($resultcategoria);
+
+
+    $idprofessor = isset($_GET['id']) ? (int) $_GET['id'] : null;
+    if($idprofessor === null) {
+        header("Location: dashadm.php");
+        exit();
     }
-    else{
-        $email = $_SESSION['emailadm'];
-        $nome = $_SESSION['nameadm'];
-        $sql = "SELECT autenticado FROM adms WHERE email = '$email' AND nome = '$nome' ";
-        $result = mysqli_query($conexao, $sql);
-        $dados = mysqli_fetch_assoc($result);
-        $sqlcategoria = 'SELECT * from categoria';
-        $resultcategoria =mysqli_query($conexao, $sqlcategoria);
-        $qtdcategoria = mysqli_num_rows($resultcategoria);
-        if(empty($dados)){
-            header('Location: nonvalidated.php');
-        }
-        else{
-            if($dados['autenticado'] == 'nao'){
-                header('Location: nonvalidated.php');
-            }
-        }
-
-
-    }
-    $idprofessor = $_GET['id'];
     $sqlprofessor = "SELECT * From professor where id = '$idprofessor'";
     $resultprofessor = mysqli_query($conexao, $sqlprofessor);
     $dadosprofessor = mysqli_fetch_assoc($resultprofessor);
+    $qtdprofessor = mysqli_num_rows($resultprofessor);
+    if($qtdprofessor === 0) {
+        header("Location: dashadm.php");
+        exit();
+    }
+    
 
 
 ?>
@@ -74,13 +59,13 @@
                     type="text" 
                     id="nome" 
                     name="nome" 
-                    value="<?php echo($dadosprofessor['nome']); ?>"
+                    value="<?php echo htmlspecialchars($dadosprofessor['nome']); ?>"
                     placeholder="Digite o nome do Professor"
                     required
                 >
             </div>
-            <input type="hidden" name="idprofessor" id="idprofessor" value="<?php echo($idprofessor); ?>">
-
+            <input type="hidden" name="idprofessor" id="idprofessor" value="<?php echo htmlspecialchars($idprofessor); ?>">
+            input type="hidden" name="token" value="<?php echo htmlspecialchars($_SESSION['tokenadm']); ?>">
             <!-- Campo Quantidade de Alunos -->
             <div class="form-group">
                 <label for="email">Email</label>
@@ -89,7 +74,7 @@
                     id="email" 
                     name="email" 
                     placeholder="seuemail@email"
-                    value="<?php echo($dadosprofessor['email']); ?>"
+                    value="<?php echo htmlspecialchars($dadosprofessor['email']); ?>"
                     minlength="0"
                     required
                 >
@@ -104,7 +89,7 @@
                     type="text" 
                     id="formacao" 
                     name="formacao" 
-                    value="<?php echo($dadosprofessor['formacao']); ?>"
+                    value="<?php echo htmlspecialchars($dadosprofessor['formacao']); ?>"
                     placeholder="Sua formação"
                     minlength="0"
                     required
@@ -134,7 +119,7 @@
                     name="bio"
                     placeholder="Sua Bio..."
                     required
-                ><?php echo($dadosprofessor['bio']); ?></textarea>
+                ><?php echo htmlspecialchars($dadosprofessor['bio']); ?></textarea>
             </div>
 
             <!-- Campo Status (Radio) -->

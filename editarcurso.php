@@ -1,49 +1,38 @@
 <?php
-    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'");
-    header("X-Content-Type-Options: nosniff");
-    header("X-Frame-Options: DENY");
-    header("X-XSS-Protection: 1; mode=block");
-    header("Referrer-Policy: strict-origin-when-cross-origin");
-    header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
-    header("Permissions-Policy: geolocation=(), camera=(), microphone=()");
-    include_once('connection.php');
-    session_start();
+require_once __DIR__ . "/functions/headers.php";
+require_once __DIR__ . "/functions/sessions.php";
+include_once('connection.php');
+require_once __DIR__ . "/functions/validationadm.php";
 
-
+    //Puxando os professores do banco de dados
     $sql = "SELECT nome, id From professor ";
     $resultprof = mysqli_query($conexao, $sql);
 
-    if(!isset($_SESSION['emailadm']) && !isset($_SESSION['nameadm'])){
-        header('Location: nonvalidated.php');
+    // Puxando as categorias do banco de dados + qtd de categorias
+    $sqlcategoria = 'SELECT * from categoria';
+    $resultcategoria =mysqli_query($conexao, $sqlcategoria);
+    $qtdcategoria = mysqli_num_rows($resultcategoria);
+
+
+    // Puxando o id do curso do banco de dados + dados do curso
+    $idcurso = isset($_GET['id']) ? (int) $_GET['id'] : null;
+    if($idcurso === null) {
+        header("Location: dashadm.php");
+        exit();
     }
     else{
-        $email = $_SESSION['emailadm'];
-        $nome = $_SESSION['nameadm'];
-        $sql = "SELECT autenticado FROM adms WHERE email = '$email' AND nome = '$nome' ";
-        $result = mysqli_query($conexao, $sql);
-        $dados = mysqli_fetch_assoc($result);
-        $sqlcategoria = 'SELECT * from categoria';
-        $resultcategoria =mysqli_query($conexao, $sqlcategoria);
-        $qtdcategoria = mysqli_num_rows($resultcategoria);
-        if(empty($dados)){
-            header('Location: nonvalidated.php');
-        }
-        else{
-            if($dados['autenticado'] == 'nao'){
-                header('Location: nonvalidated.php');
-            }
-        }
 
-
+        $sql = "SELECT * FROM curso WHERE id = '$idcurso'";
+        $resultcurso = mysqli_query($conexao, $sql);
+        $dadoscurso = mysqli_fetch_assoc($resultcurso);
+        $qtdcurso = mysqli_num_rows($resultcurso);
+        if($qtdcurso === 0){
+            header("Location: dashadm.php");
+            exit();
+        }
     }
 
-
-    $idcurso = $_GET['id'];
-    $sql = "SELECT * FROM curso WHERE id = '$idcurso'";
-    $resultcurso = mysqli_query($conexao, $sql);
-    $dadoscurso = mysqli_fetch_assoc($resultcurso);
-
-
+    
     
 
     // if((!isset($_SESSION['email']) == true) and (!isset($_SESSION['senha']) == true)){
@@ -430,13 +419,13 @@
                     type="text" 
                     id="nome" 
                     name="nome" 
-                    value="<?php echo($dadoscurso['nome']); ?>"
+                    value="<?php echo htmlspecialchars($dadoscurso['nome']); ?>"
                     placeholder="Digite o nome do curso"
                     required
                 >
             </div>
-            <input type="hidden" name="id" value="<?php echo($idcurso); ?>">
-
+            <input type="hidden" name="id" value="<?php echo htmlspecialchars($idcurso); ?>">
+            <input type="hidden" name="token" value="<?php echo htmlspecialchars($_SESSION['tokenadm']); ?>">
             <!-- Campo Quantidade de Alunos -->
             <div class="form-group">
                 <label for="qtd-alunos">Quantidade de Alunos</label>
@@ -446,7 +435,7 @@
                     name="qtd-alunos" 
                     placeholder="0"
                     min="0"
-                    value="<?php echo($dadoscurso['qtdal']); ?>"
+                    value="<?php echo htmlspecialchars($dadoscurso['qtdal']); ?>"
                     required
                 >
             </div>
@@ -461,7 +450,7 @@
                               <input
                                   type="radio"
                                   name="professor"
-                                  value="<?= $dadosprof['id'] ?>"
+                                  value="<?= htmlspecialchars($dadosprof['id']) ?>"
                                   required
                                   <?= ($dadosprof['id'] == $dadoscurso['idprofessor']) ? 'checked' : '' ?>
                               >
@@ -482,7 +471,7 @@
                     name="qtd-modulos" 
                     placeholder="0"
                     min="1"
-                    value="<?php echo($dadoscurso['qtdm']); ?>"
+                    value="<?php echo htmlspecialchars($dadoscurso['qtdm']); ?>"
                     required
                 >
             </div>
@@ -496,7 +485,7 @@
                     name="qtd-aulas" 
                     placeholder="0"
                     min="1"
-                    value="<?php echo($dadoscurso['qtda']); ?>"
+                    value="<?php echo htmlspecialchars($dadoscurso['qtda']); ?>"
                     required
                 >
             </div>
@@ -510,7 +499,7 @@
                     name="carga-horaria" 
                     placeholder="0"
                     min="1"
-                    value="<?php echo($dadoscurso['cargahoraria']); ?>"
+                    value="<?php echo htmlspecialchars($dadoscurso['cargahoraria']); ?>"
                     required
                 >
             </div>
@@ -524,7 +513,7 @@
                     placeholder="Descreva o curso..."
                     
                     required
-                ><?php echo($dadoscurso['descricao']); ?></textarea>
+                ><?php echo htmlspecialchars($dadoscurso['descricao']); ?></textarea>
             </div>
             <div class="form-group">
                 <label>Tipo</label>
@@ -648,7 +637,7 @@
                     id="data-cadastro" 
                     name="data-cadastro" 
                     required
-                    value="<?php echo($dadoscurso['datacadastro']); ?>"
+                    value="<?php echo htmlspecialchars($dadoscurso['datacadastro']); ?>"
                 >
             </div>
 

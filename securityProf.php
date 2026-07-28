@@ -1,13 +1,7 @@
 <?php
-    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'");
-    header("X-Content-Type-Options: nosniff");
-    header("X-Frame-Options: DENY");
-    header("X-XSS-Protection: 1; mode=block");
-    header("Referrer-Policy: strict-origin-when-cross-origin");
-    header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
-    header("Permissions-Policy: geolocation=(), camera=(), microphone=()");
-session_start();
-include_once('connection.php');
+require_once __DIR__ . "/functions/headers.php";
+require_once __DIR__ . "/functions/sessions.php";
+require_once __DIR__ . "/connection.php";
 
 
 if(isset($_POST['submit']) && !empty($_POST['senha']) && !empty($_POST['email'])) {
@@ -24,26 +18,28 @@ if(isset($_POST['submit']) && !empty($_POST['senha']) && !empty($_POST['email'])
     if($result->num_rows > 0) {
         $userData = $result->fetch_assoc();
         if(password_verify($userSenha, $userData['senha'])) {
+            session_regenerate_id(true);
+            $_SESSION['tokenprof'] = bin2hex(random_bytes(32));
             $_SESSION['emailprof'] = $userData['email'];
             $_SESSION['nameprof'] = $userData['nome'];
             $_SESSION['idprof'] =  $userData['id'];
             $_SESSION['tokenprof'] = bin2hex(random_bytes(32));
-
+            $_SESSION['ipprof'] = $_SERVER['REMOTE_ADDR'];
+            $_SESSION['uaprof'] = $_SERVER['HTTP_USER_AGENT'];
             header("Location: homeprof.php");
-            
+            exit;
          } else {
             
             header("Location: loginprof.php?error=senha_incorreta");
-
+            exit;
         }
     } else {
         
          header("Location: loginprof.php?error=usuario_nao_encontrado");
-
+        exit;
     }
 } else {
-        echo ( 'Deu errado');
-
-   
+        header("Location: loginprof.php?error=erro_interno");
+        exit;
 }
 ?>

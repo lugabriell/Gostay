@@ -1,14 +1,8 @@
 <?php
- 
-    header("X-Content-Type-Options: nosniff");
-    header("X-Frame-Options: DENY");
-    header("X-XSS-Protection: 1; mode=block");
-    header("Referrer-Policy: strict-origin-when-cross-origin");
-    header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
-    header("Permissions-Policy: geolocation=(), camera=(), microphone=()");
-
-
 require_once __DIR__ . "/connection.php";
+require_once __DIR__ . "/functions/headers.php";
+require_once __DIR__ . "/functions/sessions.php";
+$_SESSION['tokenn1'] = bin2hex(random_bytes(32));
 $sql = "SELECT posterft, nome, cargahoraria FROM curso ORDER BY id DESC";
 $stmt = $conexao->prepare($sql);
 $stmt->execute();

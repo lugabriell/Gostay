@@ -1,13 +1,8 @@
+
 <?php
-    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'");
-    header("X-Content-Type-Options: nosniff");
-    header("X-Frame-Options: DENY");
-    header("X-XSS-Protection: 1; mode=block");
-    header("Referrer-Policy: strict-origin-when-cross-origin");
-    header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
-    header("Permissions-Policy: geolocation=(), camera=(), microphone=()");
-session_start();
-include_once('connection.php');
+require_once __DIR__ . "/functions/headers.php";
+require_once __DIR__ . "/functions/sessions.php";
+require_once __DIR__ . "/connection.php";
 if (!isset($_SESSION['tentativas'])) {
     $_SESSION['tentativas'] = 0;
     $_SESSION['maxtentativas'] = 5;
@@ -28,24 +23,27 @@ if($_SESSION['tentativas'] < $_SESSION['maxtentativas']){
         if($result->num_rows > 0) {
             $userData = $result->fetch_assoc();
             if(password_verify($userSenha, $userData['senha'])) {
+                session_regenerate_id(true);
                 $_SESSION['tokenadm'] = bin2hex(random_bytes(32));
                 $_SESSION['emailadm'] = $userData['email'];
                 $_SESSION['nameadm'] = $userData['nome'];
+                $_SESSION['ipadm'] = $_SERVER['REMOTE_ADDR'];
+                $_SESSION['uaadm'] = $_SERVER['HTTP_USER_AGENT'];
 
                 header("Location: dashadm.php");
                 
             } else {
                 
                 header("Location: loginadm.php?error=senha_incorreta");
-
+                $_SESSION['tentativas']++;
             }
         } else {
             
             header("Location: loginadm.php?error=usuario_nao_encontrado");
-
+            $_SESSION['tentativas']++;
         }
     } else {
-            echo ( 'Deu errado');
+           exit("Por favor, preencha todos os campos.");
 
     
     }

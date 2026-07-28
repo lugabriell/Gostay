@@ -1,73 +1,36 @@
 <?php
-    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'");
-    header("X-Content-Type-Options: nosniff");
-    header("X-Frame-Options: DENY");
-    header("X-XSS-Protection: 1; mode=block");
-    header("Referrer-Policy: strict-origin-when-cross-origin");
-    header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
-    header("Permissions-Policy: geolocation=(), camera=(), microphone=()");
+
 require_once __DIR__ . "/connection.php";
-session_start();
-if(!isset($_SESSION['emailadm']) && !isset($_SESSION['nameadm'])){
-    header('Location: nonvalidated.php');
-}
-else{
-    $email = $_SESSION['emailadm'];
-    $nome = $_SESSION['nameadm'];
-    $sql = "SELECT autenticado FROM adms WHERE email = '$email' AND nome = '$nome' ";
-    $result = mysqli_query($conexao, $sql);
-    $dados = mysqli_fetch_assoc($result);
-    $sqlvideos = 'SELECT * from media';
-    $resultvideos =mysqli_query($conexao, $sqlvideos);
-    $sqlmedia = 'SELECT * from media';
-    $resultmedia =mysqli_query($conexao, $sqlmedia);
-    $sqlcurso = 'SELECT * FROM curso';
-    $resultcurso = mysqli_query($conexao, $sqlcurso);
-    $qtdcurso = mysqli_num_rows($resultcurso);
-    $qtdvideosoriginal = mysqli_num_rows($resultvideos);
-    $dadosmedia = mysqli_fetch_assoc($resultvideos);
-    $videos = [];
+require_once __DIR__ . "/functions/headers.php";
+require_once __DIR__ . "/functions/sessions.php";
+require_once __DIR__ . "/functions/validationadm.php";
 
-    while($dadosmedia = mysqli_fetch_assoc($resultvideos)){
+$sqlvideos = 'SELECT * from media';
+$resultvideos =mysqli_query($conexao, $sqlvideos);
+$sqlmedia = 'SELECT * from media';
+$resultmedia =mysqli_query($conexao, $sqlmedia);
+$sqlcurso = 'SELECT * FROM curso';
+$resultcurso = mysqli_query($conexao, $sqlcurso);
+$qtdcurso = mysqli_num_rows($resultcurso);
+$qtdvideosoriginal = mysqli_num_rows($resultvideos);
+$videos = [];
 
-        $extensao = strtolower(pathinfo($dadosmedia['caminho'], PATHINFO_EXTENSION));
+while($dadosmedia = mysqli_fetch_assoc($resultvideos)){
 
-        if(in_array($extensao, ['mp4','webm','ogg'])){
-            $videos[] = $dadosmedia; 
-            $qtdvideos = count($videos);
+    $extensao = strtolower(pathinfo($dadosmedia['caminho'], PATHINFO_EXTENSION));
 
-        }
+    if(in_array($extensao, ['mp4','webm','ogg'])){
+        $videos[] = $dadosmedia; 
+        $qtdvideos = count($videos);
+
+    }
     }
 
 
-    if(empty($dados)){
-        header('Location: nonvalidated.php');
-    }
-    else{
-        if($dados['autenticado'] == 'nao'){
-            header('Location: nonvalidated.php');
-        }
-    }
-
-
-
-}
-$sql2 = "SELECT nome FROM adms WHERE email = '$email' AND nome = '$nome' ";
-$result2 = mysqli_query($conexao, $sql2);
-$dados2 = mysqli_fetch_assoc($result2);
-$nomeCompleto = $dados2['nome'];
 $sqlprofessor = "SELECT * FROM professor";
 $resultprofessor = mysqli_query($conexao, $sqlprofessor);
 $sqlaula = "SELECT * FROM aula";
 $resultaula = mysqli_query($conexao, $sqlaula);
-
-$partesNome = explode(' ', trim($nomeCompleto));
-$nomePrincipal = $partesNome[0] . ' ' . ($partesNome[1] ?? '');
-
-$letras = strtoupper(
-    substr($partesNome[0], 0, 1) .
-    (isset($partesNome[1]) ? substr($partesNome[1], 0, 1) : '')
-);
 
 
 
@@ -101,9 +64,9 @@ $letras = strtoupper(
         </div>
         <div class="user-profile">
             <button class="user-button" id="userButton">
-                <div class="user-avatar"><?php echo($letras); ?></div>
+                <div class="user-avatar"><?php echo htmlspecialchars($letras); ?></div>
 
-                <span class="user-name"><?php echo($nomePrincipal); ?></span>
+                <span class="user-name"><?php echo htmlspecialchars($nomePrincipal); ?></span>
                 <svg class="dropdown-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
@@ -219,7 +182,7 @@ $letras = strtoupper(
             <div class="kpi-card">
                 <div class="kpi-header">
                     <div>
-                        <div class="kpi-value"><?php echo($qtdcurso); ?></div>
+                        <div class="kpi-value"><?php echo htmlspecialchars($qtdcurso); ?></div>
                         <div class="kpi-label">Total de Cursos</div>
                         <span class="kpi-trend positive">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -240,7 +203,7 @@ $letras = strtoupper(
             <div class="kpi-card">
                 <div class="kpi-header">
                     <div>
-                        <div class="kpi-value"><?php if(isset($qtdvideos)){echo($qtdvideos);}else{echo 0;} ?></div>
+                        <div class="kpi-value"><?php if(isset($qtdvideos)){echo htmlspecialchars($qtdvideos);}else{echo 0;} ?></div>
                         <div class="kpi-label">N° de Aulas</div>
                         <span class="kpi-trend positive">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -289,26 +252,26 @@ $letras = strtoupper(
                     <tr>
                         
                         <!-- //$dadoscursos = mysqli_fetch_assoc($resultcurso); -->
-                        <td><strong><?php echo($videos[$teste]['caminho']);?></strong></td>
-                        <td><?php echo($videos[$teste]['datav']);  ?></td>    
+                        <td><strong><?php echo htmlspecialchars($videos[$teste]['caminho']);?></strong></td>
+                        <td><?php echo htmlspecialchars($videos[$teste]['datav']);  ?></td>    
                         <td>
                             <div class="table-actions">
-                                <a href='player.php?caminho=<?= $videos[$teste]['caminho'] ?>' class="action-btn" title="Editar">
+                                <a href='player.php?caminho=<?= htmlspecialchars($videos[$teste]['caminho']) ?>' class="action-btn" title="Editar">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                                         <circle cx="12" cy="12" r="3"></circle>
                                     </svg>
                                 </a>
                                 <form method="POST" action="delete/deletemedia.php" style="display:inline;">
-                                <input type="hidden" name="id" value="<?= $videos[$teste]['id'] ?>">
-                                <input type="hidden" name="token" value="<?= $_SESSION['tokenadm'] ?>">
-                                
-                                <button type="submit" class="action-btn" title="Excluir">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <polyline points="3 6 5 6 21 6"></polyline>
-                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                    </svg>
-                                </button>
+                                    <input type="hidden" name="id" value="<?= htmlspecialchars($videos[$teste]['id']) ?>">
+                                    <input type="hidden" name="token" value="<?= htmlspecialchars($_SESSION['tokenadm']) ?>">
+                                    
+                                    <button type="submit" class="action-btn" title="Excluir">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="3 6 5 6 21 6"></polyline>
+                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                        </svg>
+                                    </button>
                                 </form>
 
                             </div>
