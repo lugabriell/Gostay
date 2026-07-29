@@ -2,10 +2,8 @@
 require_once __DIR__ . "/connection.php";
 require_once __DIR__ . "/functions/headers.php";
 require_once __DIR__ . "/functions/sessions.php";
-  if(!isset($_SESSION['email'])|| !isset($_SESSION['nome'])){
-    header("Location:login.php");
-    exit;
-  }
+require_once __DIR__ . "/functions/validationuser.php";
+
 $trackid = (int) $_GET['trackid'];
 $sqlselect = "SELECT * FROM aula WHERE id = $trackid ORDER BY ordem DESC";
 $resultselect = mysqli_query($conexao, $sqlselect);
@@ -14,7 +12,7 @@ $sqlselect2 = "SELECT * FROM alunoaula WHERE idaula = $trackid";
 $resultselect2 = mysqli_query($conexao, $sqlselect2);
 $dadosselect2 = mysqli_fetch_assoc($resultselect2);
 $caminho = $dadosselect['caminhovideo'];
-$idcurso = $dadosselect['idcurso'];
+$idcurso = (int) $dadosselect['idcurso'];
 $ordem = $dadosselect['ordem'];
 if($dadosselect2['ultimaposicao'] !== 'nao'){
   $ultimaposicao = $dadosselect2['ultimaposicao'];
@@ -37,7 +35,7 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
         continue;
     }
     else{
-        $idprox = $dadosprox['id'];
+        $idprox = (int) $dadosprox['id'];
         break;
     }
 }
@@ -705,7 +703,7 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
 
     <!-- O atributo controls NÃO deve estar presente aqui -->
     <video id="video" preload="metadata">
-      <source src="<?php echo("creates/". $caminho); ?>" type="video/mp4"/>
+      <source src="<?php echo htmlspecialchars("creates/". $caminho); ?>" type="video/mp4"/>
       <track kind="subtitles" srclang="pt" label="Português" id="captions-track"/>
     </video>
 
@@ -743,7 +741,7 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
 
 
     <div class="top-bar">
-      <a href="infos.php?trackid=<?php echo($dadoscurso['id']);  ?>" class="back-btn">
+      <a href="infos.php?trackid=<?php echo htmlspecialchars($dadoscurso['id']);  ?>" class="back-btn">
         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
         <span>Voltar ao curso</span>
       </a>

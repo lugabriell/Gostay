@@ -2,7 +2,7 @@
 require_once("connection.php");
 require_once __DIR__ . "/functions/headers.php";
 require_once __DIR__ . "/functions/sessions.php";
-
+require_once __DIR__ . "/functions/validationprof.php";
 
     $idprof = (int) $_SESSION['idprof'];
     $stmt = $conexao->prepare("SELECT * FROM curso WHERE idprofessor = ?");
@@ -49,14 +49,7 @@ require_once __DIR__ . "/functions/sessions.php";
         
     }
     $totalalunos = array_sum($qtdalunos);
-    $nomeCompleto = $_SESSION['nameprof'];
-    $partesNome = explode(' ', trim($nomeCompleto));
-    $nomePrincipal = $partesNome[0] . ' ' . ($partesNome[1] ?? '');
 
-    $letras = strtoupper(
-        substr($partesNome[0], 0, 1) .
-        (isset($partesNome[1]) ? substr($partesNome[1], 0, 1) : '')
-    );
 
 
 ?>
@@ -89,9 +82,9 @@ require_once __DIR__ . "/functions/sessions.php";
         </div>
         <div class="user-profile">
             <button class="user-button" id="userButton">
-                <div class="user-avatar"><?php echo($letras); ?></div>
+                <div class="user-avatar"><?php echo htmlspecialchars($letras); ?></div>
 
-                <span class="user-name"><?php echo($nomePrincipal); ?></span>
+                <span class="user-name"><?php echo htmlspecialchars($nomePrincipal); ?></span>
                 <svg class="dropdown-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
@@ -167,7 +160,7 @@ require_once __DIR__ . "/functions/sessions.php";
             <div class="kpi-card">
                 <div class="kpi-header">
                     <div>
-                        <div class="kpi-value"><?php echo($qtdcurso); ?></div>
+                        <div class="kpi-value"><?php echo htmlspecialchars($qtdcurso); ?></div>
                         <div class="kpi-label">Total de Cursos</div>
                         <span class="kpi-trend positive">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -188,7 +181,7 @@ require_once __DIR__ . "/functions/sessions.php";
             <div class="kpi-card">
                 <div class="kpi-header">
                     <div>
-                        <div class="kpi-value"><?php echo($totalalunos); ?></div>
+                        <div class="kpi-value"><?php echo htmlspecialchars($totalalunos); ?></div>
                         <div class="kpi-label">N° de alunos</div>
                         <span class="kpi-trend positive">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -252,19 +245,19 @@ require_once __DIR__ . "/functions/sessions.php";
                         <tr>
                             
                             
-                            <td><strong><?php echo($nome[$l]);?></strong></td>
-                            <td><span class="badge <?php echo($badgeclass); ?>"><?php echo($statusaula[$l]);?></span></td>
-                            <td><strong><?php echo($cursos['nome']); ?></strong></td>
-                            <td><strong><?php echo($duracao[$l]); ?></strong></td>
+                            <td><strong><?php echo htmlspecialchars($nome[$l]);?></strong></td>
+                            <td><span class="badge <?php echo htmlspecialchars($badgeclass); ?>"><?php echo htmlspecialchars($statusaula[$l]);?></span></td>
+                            <td><strong><?php echo htmlspecialchars($cursos['nome']); ?></strong></td>
+                            <td><strong><?php echo htmlspecialchars($duracao[$l]); ?></strong></td>
                             <td>
                                 <div class="table-actions">
 
-                                    <a href='player.php?trackid=<?= $idaula[$l] ?>' class="action-btn" title="Assistir">
+                                    <a href='player.php?trackid=<?= htmlspecialchars($idaula[$l]); ?>' class="action-btn" title="Assistir">
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <polygon points="5 3 19 12 5 21 5 3"></polygon>
                                         </svg>
                                     </a>
-                                    <a href='media.php?trackid=<?= $idaula[$l] ?>' class="action-btn" title="Baixar">
+                                    <a href='media.php?trackid=<?= htmlspecialchars($idaula[$l]); ?>' class="action-btn" title="Baixar">
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                                             <polyline points="7 10 12 15 17 10"></polyline>

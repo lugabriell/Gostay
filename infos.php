@@ -1,14 +1,21 @@
 <?php
 require_once __DIR__ . "/functions/headers.php";
-
 require_once __DIR__ . "/functions/sessions.php";
-  include_once("connection.php");
-  $idaluno = $_SESSION['id'];
-  if(!isset($_SESSION['email'])|| !isset($_SESSION['nome'])){
-    header("Location:login.php");
-    exit;
+require_once __DIR__ . "/functions/validationuser.php";
+
+include_once("connection.php");
+
+  $idaluno = isset($_GET['id']) ? (int) $_GET['id'] : null;
+    if($idaluno === null){
+        header("Location: homepage.php");
+        exit();
+    }
+  $idcurso = isset($_GET['trackid']) ? (int) $_GET['trackid'] : null;
+  if($idcurso === null){
+      header("Location: homepage.php");
+      exit();
   }
-  $idcurso = (int) $_GET['trackid'];
+
 
   $sqlcurso = "SELECT * FROM curso WHERE id = ?";
   $stmtcurso = $conexao->prepare($sqlcurso);
@@ -17,7 +24,7 @@ require_once __DIR__ . "/functions/sessions.php";
   $resultcurso = $stmtcurso->get_result();
   $dadoscurso = mysqli_fetch_assoc($resultcurso);
   $tipo = $dadoscurso['tipo'];
-  $sqlalunocurso = "SELECT * FROM cursoaluno WHERE idcurso = '$idcurso' AND idaluno = '$idaluno'";
+  $sqlalunocurso = "SELECT * FROM cursoaluno WHERE idcurso = $idcurso AND idaluno = $idaluno";
   $resultcursoaluno = mysqli_query($conexao, $sqlalunocurso);
   $numrowsaluno = mysqli_num_rows($resultcursoaluno);
 
@@ -26,19 +33,14 @@ require_once __DIR__ . "/functions/sessions.php";
     $sqlnovidades = "SELECT * FROM curso WHERE tipo ='gratis' ORDER BY datacadastro DESC";
     $resultnovidades = mysqli_query($conexao, $sqlnovidades);
 
-    $sqlinfo = "SELECT * FROM curso WHERE id = '$idcurso'";
-    $resultinfo = mysqli_query($conexao, $sqlinfo);
-    $dadosinfo = mysqli_fetch_assoc($resultinfo);
-
-
-    $idcategoria = $dadosinfo['idcategoria'];
-    $sqlcategoria = "SELECT * FROM categoria WHERE id = '$idcategoria'";
+    $idcategoria = $dadoscurso['idcategoria'];
+    $sqlcategoria = "SELECT * FROM categoria WHERE id = $idcategoria";
     $resultcategoria = mysqli_query($conexao, $sqlcategoria);
     $dadoscategoria = mysqli_fetch_assoc($resultcategoria);
 
 
-    $idprofessor= $dadosinfo['idprofessor'];
-    $sqlprofessor= "SELECT * FROM professor WHERE id = '$idprofessor'";
+    $idprofessor= $dadoscurso['idprofessor'];
+    $sqlprofessor= "SELECT * FROM professor WHERE id = $idprofessor";
     $resultprofessor= mysqli_query($conexao, $sqlprofessor);
     $dadosprofessor= mysqli_fetch_assoc($resultprofessor);
 
@@ -47,24 +49,23 @@ require_once __DIR__ . "/functions/sessions.php";
     SELECT aula.*
     FROM alunoaula
     JOIN aula ON aula.id = alunoaula.idaula
-    WHERE alunoaula.idaluno = '$idaluno'
+    WHERE alunoaula.idaluno = $idaluno
     AND alunoaula.statusal = 'ativo'
-    AND aula.idcurso = '$idcurso'
+    AND aula.idcurso = $idcurso
     ORDER BY aula.ordem DESC
     ";
 
     $resultaula = mysqli_query($conexao, $sqlaula);
     $numrows = mysqli_num_rows($resultaula);
-    $resultaula2 = mysqli_query($conexao, $sqlaula);
-    $numrowsaula = mysqli_num_rows($resultaula2);
+    $numrowsaula = mysqli_num_rows($resultaula);
     if($numrowsaula > 0){
-        $dadosaula2 = mysqli_fetch_assoc($resultaula2);
+        $dadosaula2 = mysqli_fetch_assoc($resultaula);
         $idaula = $dadosaula2['id'];
     }
     else{
         $sqlaulanao = "SELECT id
             FROM aula
-            WHERE idcurso = '$idcurso'
+            WHERE idcurso = $idcurso
             ORDER BY ordem DESC";
         $resultaulanao = mysqli_query($conexao, $sqlaulanao);
         $dadosaulanao = mysqli_fetch_assoc($resultaulanao);
@@ -81,7 +82,7 @@ require_once __DIR__ . "/functions/sessions.php";
         $datafim = "nao";
         
         $stmtaulanao->bind_param(
-            "iisdsss",
+            "iisssss",
             $idaula,
             $idaluno,
             $statusal,
@@ -120,7 +121,7 @@ require_once __DIR__ . "/functions/sessions.php";
   <style>
         .banner-bg {
       position: absolute; inset: 0;
-      background: url('<?php echo("creates/". $dadosinfo['posterft']); ?>') center/cover no-repeat;
+      background: url('<?php echo htmlspecialchars("creates/". $dadoscurso['posterft']); ?>') center/cover no-repeat;
       transform: scale(1.04);
       animation: banner-zoom 20s ease-in-out infinite alternate;
     }
@@ -167,24 +168,24 @@ require_once __DIR__ . "/functions/sessions.php";
         <span>›</span>
         <a href="homepage.php#cursos">Cursos</a>
         <span>›</span>
-        <span style="color:rgba(255,255,255,.7)"><?php echo htmlspecialchars($dadosinfo['nome']); ?></span>
+        <span style="color:rgba(255,255,255,.7)"><?php echo htmlspecialchars($dadoscurso['nome']); ?></span>
       </div>
       <div class="banner-category"><?php echo htmlspecialchars($dadoscategoria['nome']); ?></div>
-      <h1 class="banner-title"><?php echo htmlspecialchars($dadosinfo['nome']); ?></h1>
+      <h1 class="banner-title"><?php echo htmlspecialchars($dadoscurso['nome']); ?></h1>
       <div class="banner-meta">
         <span class="banner-tag">
           <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-          <?php echo htmlspecialchars($dadosinfo['cargahoraria']); ?>H
+          <?php echo htmlspecialchars($dadoscurso['cargahoraria']); ?>H
         </span>-
         <span class="banner-tag"> 
-        <?php echo htmlspecialchars($dadosinfo['descricao']); ?>
+        <?php echo htmlspecialchars($dadoscurso['descricao']); ?>
         </span>
       </div>
       <?php if($numrowsaluno < 1){ ?>
         
             <div class="banner-actions">
                 <form action="creates/autocreate.php" method="POST" style="display:inline;">
-                    <input type="hidden" name="trackid" value="<?= htmlspecialchars($dadosinfo['id']) ?>">
+                    <input type="hidden" name="trackid" value="<?= htmlspecialchars($dadoscurso['id']) ?>">
                     <input type="hidden" name="token" value="<?= htmlspecialchars($_SESSION['tokenuser']) ?>">
                     <button type="submit" class="btn btn-ghost">
                         Adicionar aos meus Cursos
@@ -229,10 +230,10 @@ require_once __DIR__ . "/functions/sessions.php";
         <!-- Description card -->
         <div class="info-desc-card">
           <div class="section-label">Sobre o curso</div>
-          <h2 class="info-title"><?php echo htmlspecialchars($dadosinfo['nome']); ?></h2>
+          <h2 class="info-title"><?php echo htmlspecialchars($dadoscurso['nome']); ?></h2>
           <div class="info-description">
             <p>
-              <?php echo htmlspecialchars($dadosinfo['descricao']); ?>    
+              <?php echo htmlspecialchars($dadoscurso['descricao']); ?>    
             </p>
           </div>
         </div>
@@ -241,7 +242,7 @@ require_once __DIR__ . "/functions/sessions.php";
         <div class="lessons-section">
           <div class="lessons-header">
             <div class="section-label" style="margin-bottom:0">Aulas do curso</div>
-            <span class="lessons-count"><?php $numrowsaula = mysqli_num_rows($resultaula); echo htmlspecialchars($numrowsaula); ?> aulas · <?php echo htmlspecialchars($dadosinfo['cargahoraria']); ?>h </span>
+            <span class="lessons-count"><?php $numrowsaula = mysqli_num_rows($resultaula); echo htmlspecialchars($numrowsaula); ?> aulas · <?php echo htmlspecialchars($dadoscurso['cargahoraria']); ?>h </span>
           </div>
           <?php 
           $i = 1;
@@ -291,7 +292,7 @@ require_once __DIR__ . "/functions/sessions.php";
             </div>
             <div class="stat-info">
               <div class="stat-label">Carga horária</div>
-              <div class="stat-value"><?php echo htmlspecialchars($dadosinfo['cargahoraria']); ?>H</div>
+              <div class="stat-value"><?php echo htmlspecialchars($dadoscurso['cargahoraria']); ?>H</div>
             </div>
           </div>
 
@@ -311,7 +312,7 @@ require_once __DIR__ . "/functions/sessions.php";
             </div>
             <div class="stat-info">
               <div class="stat-label">Nível</div>
-              <div class="stat-value"><?php echo htmlspecialchars($dadosinfo['nivel']); ?></div>
+              <div class="stat-value"><?php echo htmlspecialchars($dadoscurso['nivel']); ?></div>
             </div>
           </div>
 
@@ -358,7 +359,7 @@ require_once __DIR__ . "/functions/sessions.php";
                       $idnovidade =$dadosnovidades['id']
             ?>
 
-            <a class="rel-card" href="infos.php?trackid=<?php echo $idnovidade; ?>">
+            <a class="rel-card" href="infos.php?trackid=<?php echo htmlspecialchars($idnovidade); ?>">
               <img class="rel-card-img" src="<?php echo("creates/". $dadosnovidades['posterft']); ?>" alt="Curso"/>
               <div class="rel-card-body">
                 <div class="rel-card-category"><?php echo htmlspecialchars($dadosnovidades['nome']); ?></div>

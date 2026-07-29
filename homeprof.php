@@ -2,9 +2,9 @@
     require_once("connection.php");
 require_once __DIR__ . "/functions/headers.php";
 require_once __DIR__ . "/functions/sessions.php";
+require_once __DIR__ . "/functions/validationprof.php";
 
-
-    $idprof = $_SESSION['idprof'];
+    $idprof = (int) $_SESSION['idprof'];
     $stmt = $conexao->prepare("SELECT * FROM curso WHERE idprofessor = ?");
     $stmt2 = $conexao->prepare("SELECT * FROM curso WHERE idprofessor = ?");
     $stmt->bind_param("i", $idprof);
@@ -38,19 +38,6 @@ require_once __DIR__ . "/functions/sessions.php";
     }
     $totalalunos = array_sum($qtdalunos);
     
-
-
-
-
-    $nomeCompleto = $_SESSION['nameprof'];
-    $partesNome = explode(' ', trim($nomeCompleto));
-    $nomePrincipal = $partesNome[0] . ' ' . ($partesNome[1] ?? '');
-
-    $letras = strtoupper(
-        substr($partesNome[0], 0, 1) .
-        (isset($partesNome[1]) ? substr($partesNome[1], 0, 1) : '')
-    );
-
 
 ?>
 <!DOCTYPE html>

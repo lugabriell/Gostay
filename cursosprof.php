@@ -2,9 +2,9 @@
     require_once("connection.php");
     require_once __DIR__ . "/functions/headers.php";
     require_once __DIR__ . "/functions/sessions.php";
+    require_once  __DIR__ . "/functions/validationprof.php";
 
-
-    $idprof = $_SESSION['idprof'];
+    $idprof = (int) $_SESSION['idprof'];
     $stmt = $conexao->prepare("SELECT * FROM curso WHERE idprofessor = ?");
     $stmt2 = $conexao->prepare("SELECT * FROM curso WHERE idprofessor = ?");
     $stmt->bind_param("i", $idprof);
@@ -42,15 +42,6 @@
 
 
 
-    $nomeCompleto = $_SESSION['nameprof'];
-    $partesNome = explode(' ', trim($nomeCompleto));
-    $nomePrincipal = $partesNome[0] . ' ' . ($partesNome[1] ?? '');
-
-    $letras = strtoupper(
-        substr($partesNome[0], 0, 1) .
-        (isset($partesNome[1]) ? substr($partesNome[1], 0, 1) : '')
-    );
-
 
 ?>
 <!DOCTYPE html>
@@ -82,9 +73,9 @@
         </div>
         <div class="user-profile">
             <button class="user-button" id="userButton">
-                <div class="user-avatar"><?php echo($letras); ?></div>
+                <div class="user-avatar"><?php echo htmlspecialchars($letras); ?></div>
 
-                <span class="user-name"><?php echo($nomePrincipal); ?></span>
+                <span class="user-name"><?php echo htmlspecialchars($nomePrincipal); ?></span>
                 <svg class="dropdown-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
@@ -160,7 +151,7 @@
             <div class="kpi-card">
                 <div class="kpi-header">
                     <div>
-                        <div class="kpi-value"><?php echo($qtdcurso); ?></div>
+                        <div class="kpi-value"><?php echo htmlspecialchars($qtdcurso); ?></div>
                         <div class="kpi-label">Total de Cursos</div>
                         <span class="kpi-trend positive">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -181,7 +172,7 @@
             <div class="kpi-card">
                 <div class="kpi-header">
                     <div>
-                        <div class="kpi-value"><?php echo($totalalunos); ?></div>
+                        <div class="kpi-value"><?php echo htmlspecialchars($totalalunos); ?></div>
                         <div class="kpi-label">N째 de alunos</div>
                         <span class="kpi-trend positive">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -236,9 +227,9 @@
                         <tr>
                             
                             
-                            <td><strong><?php echo($nomecurso[$l]);?></strong></td>
-                            <td><span class="badge <?php echo($badgeclass); ?>"><?php echo($statuscurso[$l]);?></span></td>
-                            <td><strong><?php echo($datascurso[$l]); ?></strong></td>
+                            <td><strong><?php echo htmlspecialchars($nomecurso[$l]);?></strong></td>
+                            <td><span class="badge <?php echo htmlspecialchars($badgeclass); ?>"><?php echo htmlspecialchars($statuscurso[$l]);?></span></td>
+                            <td><strong><?php echo htmlspecialchars($datascurso[$l]); ?></strong></td>
                         </tr>
                     <?php 
                     endfor; ?>
