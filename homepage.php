@@ -620,7 +620,7 @@ include_once("connection.php");
       <nav>
         <ul id="nav-menu">
           <li><a href="#destaques">Destaques</a></li>
-          <li><a href="#gratuitos">Gratuitos</a></li>
+          <li><a href="#gratuitos">Autorais</a></li>
           <li><a href="#cursos">Meus Cursos</a></li>
         </ul>
       </nav>
@@ -701,7 +701,7 @@ include_once("connection.php");
     <section id="gratuitos" class="section">
       <div class="container">
         <div class="section-header">
-          <h2 class="section-title">Gratuitos</h2>
+          <h2 class="section-title">Autorais</h2>
         </div>
         <div class="carousel-wrapper" id="carousel-rec">
           <button class="carousel-btn prev" onclick="scrollCarousel('carousel-rec', -1)">

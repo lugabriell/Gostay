@@ -68,9 +68,9 @@ else{
             exit();
         }
         $stmt = $conexao->prepare(
-            "SELECT statusal FROM cursoaluno ca 
+            "SELECT statusa FROM cursoaluno ca 
             JOIN aula a ON a.idcurso = ca.idcurso 
-            WHERE a.id = ? AND ca.idaluno = ? AND ca.statusal = 'ativo'"
+            WHERE a.id = ? AND ca.idaluno = ? AND ca.statusa = 'ativo'"
         );
         $stmt->bind_param("ii", $idaula, $idaluno);
         $stmt->execute();
@@ -79,6 +79,7 @@ else{
 
         if (!$autorizado) {
             echo "<script>alert('Error na aula!');</script>";
+            header("Location: infos.php?trackid=" . urlencode($idaula));
             exit(); 
         }   
 

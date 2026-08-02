@@ -1,6 +1,12 @@
 <?php
+require_once __DIR__ . "/../connection.php";
+
 if (!isset($_SESSION['ip']) || !isset($_SESSION['ua']) ||     $_SESSION['ip'] !== $_SERVER['REMOTE_ADDR'] || 
     $_SESSION['ua'] !== $_SERVER['HTTP_USER_AGENT']){
+    header("Location: login.php?error=nao_validado");
+    exit;
+}
+else{
     if ($_SESSION['ip'] !== $_SERVER['REMOTE_ADDR'] || 
         $_SESSION['ua'] !== $_SERVER['HTTP_USER_AGENT']) {
         session_destroy();
@@ -44,9 +50,4 @@ if (!isset($_SESSION['ip']) || !isset($_SESSION['ua']) ||     $_SESSION['ip'] !=
         substr($partesNome[0], 0, 1) .
         (isset($partesNome[1]) ? substr($partesNome[1], 0, 1) : '')
     );
-}
-else{
-    header("Location: login.php?error");
-    session_destroy();
-    exit;
 }

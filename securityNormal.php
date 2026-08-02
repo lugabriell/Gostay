@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . "/functions/headers.php";
 require_once __DIR__ . "/functions/sessions.php";
+require_once __DIR__ . "/functions/headers.php";
 require_once __DIR__ . "/connection.php";
 if (!isset($_SESSION['tentativas'])) {
     $_SESSION['tentativas'] = 0;
@@ -30,15 +30,18 @@ if($_SESSION['tentativas'] < $_SESSION['maxtentativas']){
                 $_SESSION['ip'] = $_SERVER['REMOTE_ADDR'];
                 $_SESSION['ua'] = $_SERVER['HTTP_USER_AGENT'];
                 $_SESSION['tentativas'] = 0;
+                var_dump($_SESSION);
                 header("Location: homepage.php");
                 exit;
             } else {
                 $_SESSION['tentativas']++;
+    
                 header("Location: login.php?error=nao_foi_possivel_encontrar_o_usuario");
                 exit;
             }
         } else {
             $_SESSION['tentativas']++;
+
             header("Location: login.php?error=nao_foi_possivel_encontrar_o_usuario");
             exit;
 
