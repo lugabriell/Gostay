@@ -61,6 +61,7 @@ include_once("connection.php");
     if($numrowsaula > 0){
         $dadosaula2 = mysqli_fetch_assoc($resultaula);
         $idaula = $dadosaula2['id'];
+        mysqli_data_seek($resultaula, 0); 
     }
     else{
         $sqlaulanao = "SELECT id
