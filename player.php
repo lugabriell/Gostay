@@ -27,15 +27,14 @@ $resultcurso = mysqli_query($conexao, $sqlcurso);
 $dadoscurso = mysqli_fetch_assoc($resultcurso);
 
 
+$idprox = null;
+$dadosprox = null;
 $sqlselect2 = "SELECT * FROM aula WHERE idcurso = '$idcurso' ORDER BY ordem ASC";
 $resultselect2 = mysqli_query($conexao, $sqlselect2);
-while($dadosprox= mysqli_fetch_assoc($resultselect2)){
-    if($ordem >= $dadosprox['ordem']){
-
-        continue;
-    }
-    else{
-        $idprox = (int) $dadosprox['id'];
+while ($row = mysqli_fetch_assoc($resultselect2)) {
+    if ((int) $row['ordem'] > (int) $ordem) {
+        $dadosprox = $row;
+        $idprox = (int) $row['id'];
         break;
     }
 }
@@ -751,7 +750,7 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
       </div>
     </div>
 
-    <?php if(isset($dadosprox)){ ?>
+    <?php if ($idprox !== null) { ?>
     <div class="next-card" id="next-card">
       <svg class="countdown-ring" viewBox="0 0 36 36" id="countdown-ring">
         <circle class="track" cx="18" cy="18" r="15.9"/>
@@ -1266,7 +1265,7 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
       });
     }
 
-    const nextVideo = "player.php?trackid=<?php  echo htmlspecialchars(isset($dadosprox['id']) ? $dadosprox['id'] : ''); ?>";
+    const nextVideo = <?php echo $idprox !== null ? json_encode('player.php?trackid=' . $idprox) : 'null'; ?>;
 
     if (nextPlayBtn) {
       nextPlayBtn.addEventListener('click', e => {
@@ -1278,7 +1277,10 @@ while($dadosprox= mysqli_fetch_assoc($resultselect2)){
     video.addEventListener('ended', () => {
       if (autoplayOn && !nextCardDismissed && nextVideo) {
         window.location.href = nextVideo;
+        return;
       }
+      video.pause();
+      showControls();
     });
 
 
