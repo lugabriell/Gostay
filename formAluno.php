@@ -3,14 +3,6 @@ require_once __DIR__ . "/functions/headers.php";
 require_once __DIR__ . "/functions/sessions.php";
 include_once('connection.php');
 $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
-    // if((!isset($_SESSION['email']) == true) and (!isset($_SESSION['senha']) == true)){
-    //     header('Location: index.html');
-    //     session_unset();
-    //     session_destroy();
-    // }
-    // else{
-    //   $_SESSION['verificação'] = 'Ativo';
-    // }
 ?>
 <!doctype html>
 <html lang="pt-BR">
@@ -32,6 +24,9 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
       --white-06: rgba(255,255,255,0.06);
       --white-10: rgba(255,255,255,0.10);
       --white-12: rgba(255,255,255,0.12);
+      --success: #4caf50;
+      --danger: #f44336;
+      --warning: #ff9800;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -121,7 +116,7 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
       overflow: hidden;
       display: grid;
       grid-template-columns: 1fr 460px;
-      height: calc(100vh - 80px);
+      max-height: 90vh;
     }
 
     /* ── Hero ── */
@@ -183,6 +178,7 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
       flex-direction: column;
       gap: 14px;
       overflow-y: auto;
+      max-height: 90vh;
     }
     .form-title { font-size: 16px; font-weight: 600; color: #fff; }
     .form-sub   { font-size: 12.5px; color: rgba(255,255,255,0.45); margin-bottom: 4px; }
@@ -224,6 +220,7 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
       box-shadow: 0 0 0 3px rgba(245,197,24,0.10);
     }
     input.invalid { border-color: #ff6b6b !important; box-shadow: 0 0 0 3px rgba(255,107,107,0.12) !important; }
+    input.valid { border-color: var(--success) !important; box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.12) !important; }
 
     .select-wrap { position: relative; }
     .select-wrap::after {
@@ -240,6 +237,114 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
     select option { background: var(--blue-md); color: #fff; }
 
     .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    /* Password requirements com animação */
+    .password-requirements {
+      margin-top: 6px;
+      padding: 10px 12px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.06);
+      
+      /* Animação de aparecer/desaparecer */
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                  transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                  margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      margin-top: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .password-requirements.visible {
+      max-height: 300px;
+      opacity: 1;
+      transform: translateY(0);
+      margin-top: 6px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+
+    .requirement {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 0;
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      transition: all 0.3s ease;
+      
+      /* Animação individual dos itens */
+      opacity: 0;
+      transform: translateX(-10px);
+      transition: opacity 0.3s ease 0.1s, transform 0.3s ease 0.1s, color 0.3s ease;
+    }
+
+    .password-requirements.visible .requirement {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Delay para cada item aparecer em sequência */
+    .password-requirements.visible .requirement:nth-child(1) { transition-delay: 0.05s; }
+    .password-requirements.visible .requirement:nth-child(2) { transition-delay: 0.10s; }
+    .password-requirements.visible .requirement:nth-child(3) { transition-delay: 0.15s; }
+    .password-requirements.visible .requirement:nth-child(4) { transition-delay: 0.20s; }
+    .password-requirements.visible .requirement:nth-child(5) { transition-delay: 0.25s; }
+    .password-requirements.visible .requirement:nth-child(6) { transition-delay: 0.30s; }
+
+    .requirement.valid {
+      color: var(--success);
+    }
+
+    .requirement.invalid {
+      color: var(--danger);
+    }
+
+    .requirement-icon {
+      font-size: 14px;
+      width: 20px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .strength-bar {
+      margin-top: 8px;
+      height: 4px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 2px;
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity 0.3s ease 0.2s;
+    }
+
+    .password-requirements.visible .strength-bar {
+      opacity: 1;
+    }
+
+    .strength-bar-fill {
+      height: 100%;
+      width: 0%;
+      transition: all 0.5s ease;
+      border-radius: 2px;
+    }
+
+    .strength-text {
+      font-size: 11px;
+      color: rgba(255,255,255,0.4);
+      margin-top: 4px;
+      text-align: right;
+      transition: color 0.3s ease, opacity 0.3s ease 0.2s;
+      opacity: 0;
+    }
+
+    .password-requirements.visible .strength-text {
+      opacity: 1;
+    }
 
     /* Radio group (admin only) */
     .radio-group { display: flex; gap: 16px; margin-top: 8px; }
@@ -296,9 +401,14 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
       font-weight: 700;
       cursor: pointer;
       letter-spacing: .2px;
-      transition: transform .12s, box-shadow .12s;
+      transition: transform .12s, box-shadow .12s, opacity .3s;
     }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(245,197,24,0.28); }
+    .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(245,197,24,0.28); }
+    .btn-primary:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+    }
     .btn-ghost {
       padding: 12px 16px;
       background: transparent;
@@ -334,13 +444,48 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
     .flash-error   { background: rgba(255,107,107,0.12); border: 1px solid rgba(255,107,107,0.3); color: #ff9a9a; }
     .flash-success { background: rgba(80,200,120,0.10); border: 1px solid rgba(80,200,120,0.25); color: #7de8a0; }
 
-    .hero-p{
-      margin-top: 10px;
+    .password-input-wrapper {
+      position: relative;
     }
+
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.5);
+      cursor: pointer;
+      font-size: 18px;
+      padding: 4px;
+      transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+      color: rgba(255,255,255,0.8);
+    }
+
+    /* Badge de dica flutuante */
+    .password-hint {
+      font-size: 11px;
+      color: rgba(255,255,255,0.3);
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: opacity 0.3s ease;
+    }
+
+    .password-hint.hidden {
+      opacity: 0;
+    }
+
     @media (max-width: 780px) {
-      .card { grid-template-columns: 1fr; }
+      .card { grid-template-columns: 1fr; max-height: none; }
       .hero { display: none; }
       .nav-links { display: none; }
+      .form-side { max-height: none; }
     }
     @media (max-width: 480px) {
       .row { grid-template-columns: 1fr; }
@@ -450,11 +595,50 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
       <div class="row">
         <div>
           <label for="senha">Senha <span class="req">*</span></label>
-          <input
-            id="senha" name="senha" type="password"
-            minlength="6" maxlength="30" required
-            placeholder="Mínimo 6 caracteres"
-          />
+          <div class="password-input-wrapper">
+            <input
+              id="senha" name="senha" type="password"
+              minlength="8" maxlength="30" required
+              placeholder="Mínimo 8 caracteres"
+              autocomplete="new-password"
+            />
+            <button type="button" class="toggle-password" id="togglePassword" aria-label="Mostrar/ocultar senha">
+              👁️
+            </button>
+          </div>
+          
+          <!-- Dica flutuante -->
+          <!-- <div class="password-hint" id="passwordHint">
+            💡 Clique no campo para ver os requisitos
+          </div> -->
+
+          <!-- Requisitos da senha em tempo real com animação -->
+          <div class="password-requirements" id="passwordRequirements">
+            <div class="requirement" id="req-length">
+              <span class="requirement-icon">❌</span>
+              <span>Mínimo 8 caracteres</span>
+            </div>
+            <div class="requirement" id="req-uppercase">
+              <span class="requirement-icon">❌</span>
+              <span>Pelo menos 1 letra maiúscula</span>
+            </div>
+            <div class="requirement" id="req-lowercase">
+              <span class="requirement-icon">❌</span>
+              <span>Pelo menos 1 letra minúscula</span>
+            </div>
+            <div class="requirement" id="req-number">
+              <span class="requirement-icon">❌</span>
+              <span>Pelo menos 1 número</span>
+            </div>
+            <div class="requirement" id="req-special">
+              <span class="requirement-icon">❌</span>
+              <span>Pelo menos 1 caractere especial (!@#$%^&*)</span>
+            </div>
+            <div class="strength-bar">
+              <div class="strength-bar-fill" id="strengthBar"></div>
+            </div>
+            <div class="strength-text" id="strengthText">Força: Fraca</div>
+          </div>
         </div>
         <div>
           <label for="datanas">Data de nascimento <span class="req">*</span></label>
@@ -526,7 +710,7 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
 
       <!-- Botões -->
       <div class="actions">
-        <button type="submit" class="btn-primary">Criar conta</button>
+        <button type="submit" class="btn-primary" id="submitBtn" disabled>Criar conta</button>
         <button type="reset" class="btn-ghost">Limpar</button>
       </div>
 
@@ -537,6 +721,165 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
   </div>
 
   <script>
+    // Elementos DOM para validação de senha
+    const passwordInput = document.getElementById('senha');
+    const togglePassword = document.getElementById('togglePassword');
+    const submitBtn = document.getElementById('submitBtn');
+    const strengthBar = document.getElementById('strengthBar');
+    const strengthText = document.getElementById('strengthText');
+    const passwordRequirements = document.getElementById('passwordRequirements');
+    const passwordHint = document.getElementById('passwordHint');
+
+    // Flag para controlar se o campo já foi focado
+    let hasBeenFocused = false;
+
+    // Mapeamento dos requisitos
+    const requirements = {
+      length: {
+        element: document.getElementById('req-length'),
+        icon: document.querySelector('#req-length .requirement-icon'),
+        check: (value) => value.length >= 8
+      },
+      uppercase: {
+        element: document.getElementById('req-uppercase'),
+        icon: document.querySelector('#req-uppercase .requirement-icon'),
+        check: (value) => /[A-Z]/.test(value)
+      },
+      lowercase: {
+        element: document.getElementById('req-lowercase'),
+        icon: document.querySelector('#req-lowercase .requirement-icon'),
+        check: (value) => /[a-z]/.test(value)
+      },
+      number: {
+        element: document.getElementById('req-number'),
+        icon: document.querySelector('#req-number .requirement-icon'),
+        check: (value) => /\d/.test(value)
+      },
+      special: {
+        element: document.getElementById('req-special'),
+        icon: document.querySelector('#req-special .requirement-icon'),
+        check: (value) => /[!@#$%^&*()_+\-=\[\]{};:'",.<>?/\\|`~]/.test(value)
+      }
+    };
+
+    // Função para mostrar/ocultar requisitos com animação
+    function toggleRequirements(show) {
+      if (show) {
+        passwordRequirements.classList.add('visible');
+        passwordHint.classList.add('hidden');
+        hasBeenFocused = true;
+      } else {
+        // Só esconde se o campo não tiver conteúdo ou se todos os requisitos forem atendidos
+        if (passwordInput.value.length === 0 || validatePassword(passwordInput.value)) {
+          passwordRequirements.classList.remove('visible');
+          passwordHint.classList.remove('hidden');
+        }
+      }
+    }
+
+    // Função para validar a senha em tempo real
+    function validatePassword(password) {
+      let validCount = 0;
+      const totalRequirements = Object.keys(requirements).length;
+
+      // Verifica cada requisito
+      Object.values(requirements).forEach(req => {
+        const isValid = req.check(password);
+        
+        // Atualiza a classe do elemento
+        req.element.className = `requirement ${isValid ? 'valid' : 'invalid'}`;
+        
+        // Atualiza o ícone
+        req.icon.textContent = isValid ? '✅' : '❌';
+        
+        if (isValid) validCount++;
+      });
+
+      // Atualiza a barra de força
+      const percentage = (validCount / totalRequirements) * 100;
+      strengthBar.style.width = `${percentage}%`;
+      
+      // Define a cor e texto da força
+      let color, text;
+      if (percentage <= 20) {
+        color = '#f44336';
+        text = 'Muito Fraca';
+      } else if (percentage <= 40) {
+        color = '#ff9800';
+        text = 'Fraca';
+      } else if (percentage <= 60) {
+        color = '#ffc107';
+        text = 'Média';
+      } else if (percentage <= 80) {
+        color = '#8bc34a';
+        text = 'Forte';
+      } else {
+        color = '#4caf50';
+        text = 'Muito Forte';
+      }
+      
+      strengthBar.style.background = color;
+      strengthText.textContent = `Força: ${text}`;
+      strengthText.style.color = color;
+
+      // Habilita/desabilita o botão de submit
+      const allValid = validCount === totalRequirements;
+      submitBtn.disabled = !allValid;
+      
+      // Adiciona classe visual ao campo de senha
+      if (password.length > 0) {
+        passwordInput.className = allValid ? 'valid' : 'invalid';
+      } else {
+        passwordInput.className = '';
+      }
+
+      return allValid;
+    }
+
+    // Evento de foco no campo de senha - mostra os requisitos
+    passwordInput.addEventListener('focus', function() {
+      toggleRequirements(true);
+    });
+
+    // Evento de blur (perde foco) - esconde os requisitos se a senha for válida ou vazia
+    passwordInput.addEventListener('blur', function() {
+      // Pequeno delay para não atrapalhar o clique em outros campos
+      setTimeout(() => {
+        const password = this.value;
+        if (password.length === 0 || validatePassword(password)) {
+          toggleRequirements(false);
+        }
+        // Se a senha for inválida mas não vazia, mantém visível
+      }, 150);
+    });
+
+    // Evento de input em tempo real
+    passwordInput.addEventListener('input', function(e) {
+      validatePassword(this.value);
+      // Se o campo tem conteúdo e já foi focado, mantém visível
+      if (this.value.length > 0 && hasBeenFocused) {
+        passwordRequirements.classList.add('visible');
+        passwordHint.classList.add('hidden');
+      }
+    });
+
+    // Mostrar/ocultar senha
+    togglePassword.addEventListener('click', function() {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      this.textContent = type === 'password' ? '👁️' : '🙈';
+    });
+
+    // Fechar requisitos ao clicar em outro campo do formulário
+    document.querySelectorAll('input:not(#senha), select, textarea').forEach(function(element) {
+      element.addEventListener('focus', function() {
+        const password = passwordInput.value;
+        if (password.length === 0 || validatePassword(password)) {
+          toggleRequirements(false);
+        }
+      });
+    });
+
     // Atualiza nome do arquivo selecionado
     document.getElementById('arquivo').addEventListener('change', function () {
       const label = document.getElementById('file-name');
@@ -555,12 +898,37 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
           field.classList.remove('invalid');
         }
       });
-      if (!valid) e.preventDefault();
+      
+      // Verifica se a senha é válida antes de enviar
+      const password = passwordInput.value;
+      if (!validatePassword(password)) {
+        valid = false;
+        // Mostra os requisitos se houver erro
+        toggleRequirements(true);
+      }
+      
+      if (!valid) {
+        e.preventDefault();
+        // Scroll para o primeiro campo inválido
+        const firstInvalid = document.querySelector('.invalid');
+        if (firstInvalid) {
+          firstInvalid.focus();
+        }
+      }
     });
 
     // Remove classe invalid ao digitar
     document.querySelectorAll('input, select').forEach(function (el) {
-      el.addEventListener('input', function () { this.classList.remove('invalid'); });
+      el.addEventListener('input', function () { 
+        if (this.id !== 'senha') {
+          this.classList.remove('invalid'); 
+        }
+      });
+      el.addEventListener('change', function () { 
+        if (this.id !== 'senha') {
+          this.classList.remove('invalid'); 
+        }
+      });
     });
 
     // Máscara simples de telefone
@@ -573,6 +941,12 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
       }
       this.value = v;
     });
+
+    // Validação inicial da senha (campo vazio)
+    validatePassword('');
+    
+    // Esconde os requisitos inicialmente
+    passwordRequirements.classList.remove('visible');
   </script>
 
 </body>
