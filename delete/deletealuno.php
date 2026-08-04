@@ -29,6 +29,10 @@ if (!hash_equals($_SESSION['tokenadm'], $_POST['token'])) {
         {
             $sqlDelete= "DELETE FROM alunos WHERE id = '$id'";
             $resultDelete = $conexao->query($sqlDelete);
+            $sqldeletealunoaluno = "DELETE FROM cursoaluno WHERE idaluno = '$id'";
+            $resultDeletealunoaluno = $conexao->query($sqldeletealunoaluno);
+            $sqldeletealunoaula = "DELETE FROM alunoaula WHERE idaluno = '$id'";
+            $resultDeletealunoaula = $conexao->query($sqldeletealunoaula);
         }
     }
     header("Location: ../alunosadm.php");

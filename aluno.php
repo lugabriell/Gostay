@@ -10,26 +10,26 @@ $resultcategoria =mysqli_query($conexao, $sqlcategoria);
 $qtdcategoria = mysqli_num_rows($resultcategoria);
 
 //Verificando se o ID do aluno foi passado
-$idcurso = isset($_GET['id']) ? (int) $_GET['id'] : null;
-if(!isset($idinfo) || empty($idinfo)) {
+$idaluno = isset($_GET['id']) ? (int) $_GET['id'] : null;
+if(!isset($idaluno) || empty($idaluno)) {
     header("Location: dashadm.php?error=invalid_id");
     exit("ID do aluno inválido.");
 }
 
 //Puxando no banco os cursos dos alunos + qtd
-$sqlcursos2 = "SELECT * from cursoaluno WHERE idaluno = $idinfo";
+$sqlcursos2 = "SELECT * from cursoaluno WHERE idaluno = $idaluno";
 $resultcurso2 =mysqli_query($conexao, $sqlcursos2);
 $qtdcurso = mysqli_num_rows($resultcurso2);
 
 // Puxando as aulas desse aluno
-$sqlalunoaula = "SELECT * FROM alunoaula WHERE idaluno = $idinfo";
+$sqlalunoaula = "SELECT * FROM alunoaula WHERE idaluno = $idaluno";
 $resultalunoaula = mysqli_query($conexao, $sqlalunoaula);
 $resultalunoaula2 = mysqli_query($conexao, $sqlalunoaula);
-$sqlcursoaluno = "SELECT * FROM cursoaluno WHERE idaluno = $idinfo";
+$sqlcursoaluno = "SELECT * FROM cursoaluno WHERE idaluno = $idaluno";
 
 
 // Puxando os dados do aluno 
-$sqlinfo = "SELECT * FROM alunos WHERE id = $idinfo";
+$sqlinfo = "SELECT * FROM alunos WHERE id = $idaluno";
 $resultinfo = mysqli_query($conexao, $sqlinfo);
 $dadosinfo = mysqli_fetch_assoc($resultinfo);
 
@@ -214,7 +214,7 @@ if (!$dadosinfo) {
                 </div>
                 <div class="kpi-label" style="margin-top:4px;">
                     <strong>Autenticado:</strong> <?php echo htmlspecialchars($dadosinfo['autenticado']); ?>
-                    <strong>Último Login:</strong> <?php echo htmlspecialchars($dadosinfo['ultimologin']); ?>
+                    <strong>Último Login:</strong> <?php echo($dadosinfo['ultimologin']); ?>
                 </div>
             </div>
 

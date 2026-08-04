@@ -2,7 +2,7 @@
 require_once __DIR__ . "/functions/headers.php";
 require_once __DIR__ . "/functions/sessions.php";
 include_once('connection.php');
-
+$_SESSION['tokenn1'] = bin2hex(random_bytes(32));
     // if((!isset($_SESSION['email']) == true) and (!isset($_SESSION['senha']) == true)){
     //     header('Location: index.html');
     //     session_unset();

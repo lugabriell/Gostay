@@ -31,7 +31,8 @@ if (!hash_equals($_SESSION['tokenadm'], $_POST['token'])) {
         {
             $sqlDelete= "DELETE FROM aula WHERE id = '$id' ";
             $resultDelete = $conexao->query($sqlDelete);
-            
+            $sqldeleteaulaaluno = "DELETE FROM alunoaula WHERE idaula = '$id' ";
+            $resultDeleteaulaaluno = $conexao->query($sqldeleteaulaaluno);
         }
     }
     
