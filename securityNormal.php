@@ -30,7 +30,6 @@ if($_SESSION['tentativas'] < $_SESSION['maxtentativas']){
                 $_SESSION['ip'] = $_SERVER['REMOTE_ADDR'];
                 $_SESSION['ua'] = $_SERVER['HTTP_USER_AGENT'];
                 $_SESSION['tentativas'] = 0;
-                var_dump($_SESSION);
                 header("Location: homepage.php");
                 exit;
             } else {

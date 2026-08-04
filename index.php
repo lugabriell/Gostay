@@ -18,7 +18,7 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GoStay — A maior plataforma de Estética da América Latina</title>
+<title>GoStay</title>
 <link rel="shortcut icon" href="assets/ACELERADOR DO POTENCIAL HUMANO (1).png" type="image">
 <?php require_once __DIR__ . '/functions/analytics.php'; ?>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -195,7 +195,22 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
     z-index:0;
     overflow:hidden;
   }
+  .hero-carousel img{
+    width:100%;
+    height:100%;
+    object-fit:contain !important; /* Mostra a imagem inteira */
+    object-position:center;
+    background:#000; /* opcional, evita áreas transparentes */
+}
   .hero-carousel .track{ height:100%; }
+  .hero-video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center;
+    background:#000;
+    display:block;
+  }
   .hero-overlay{
     position:absolute;
     inset:0;
@@ -752,10 +767,15 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
 
     <div class="hero-carousel" id="carousel">
       <div class="track" id="track">
-        <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1594824476967-48c8b964273f?q=80&w=1920&auto=format&fit=crop')"></div>
-        <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1612531386530-97286d97c2d2?q=80&w=1920&auto=format&fit=crop')"></div>
-        <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=1920&auto=format&fit=crop')"></div>
-        <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1551601651-2a8555f1a136?q=80&w=1920&auto=format&fit=crop')"></div>
+        <div class="slide" style="background-color:#0C1322;">
+          <video class="hero-video" autoplay muted loop playsinline preload="auto">
+            <source src="assets/videosite.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="slide" style="background-image:url('assets/fundo.jpeg'); background-size:contain; background-repeat:no-repeat; background-position:center; background-color:#0C1322;"></div>
+        <div class="slide" style="background-image:url('assets/fundoelane.png'); background-size:contain; background-repeat:no-repeat; background-position:center; background-color:#0C1322;"></div>
+        <div class="slide" style="background-image:url('assets/fundo2.png'); background-size:contain; background-repeat:no-repeat; background-position:center; background-color:#0C1322;"></div>
+        <div class="slide" style="background-image:url('assets/fundo3.png'); background-size:contain; background-repeat:no-repeat; background-position:center; background-color:#0C1322;"></div>
       </div>
     </div>
     <div class="hero-overlay"></div>
@@ -767,8 +787,8 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
     <div class="hero-content">
       <div class="hero-content-inner fade">
         <div class="eyebrow">Domine a estética profissional</div>
-        <h1>A maior plataforma de<br><span class="accent">Estética</span> da América Latina</h1>
-        <p class="hero-sub">Do básico ao avançado, reunimos conteúdo científico, prática clínica real e atualização constante em harmonização facial, corporal, capilar e muito mais.</p>
+        <h1>A nova casa do <br><span class="accent">conhecimento</span> em Saúde</h1>
+        <p class="hero-sub">Conteúdos originais, grandes especialistas e cursos para transformar conhecimento em prática, carreira e resultado.</p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="login.php">Conheça os planos</a>
           <a class="btn btn-ghost" href="login.php">Fale conosco</a>
@@ -909,38 +929,50 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
       </div>
       <div class="teacher-carousel fade fade-d1">
         <div class="teacher-track" id="teacherTrack">
-          <div class="teacher-card">
-            <div class="teacher-photo"><img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=600&auto=format&fit=crop" alt="Wagner Baseggio"></div>
-            <div class="teacher-info"><h4>Wagner Baseggio</h4><p>Doutor em odontologia e fundador da GoStay</p></div>
-          </div>
-          <div class="teacher-card">
-            <div class="teacher-photo"><img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?q=80&w=600&auto=format&fit=crop" alt="Bel Guerra"></div>
-            <div class="teacher-info"><h4>Bel Guerra</h4><p>Doutora, especialista em Estética Facial e Corporal</p></div>
-          </div>
-          <div class="teacher-card">
-            <div class="teacher-photo"><img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=600&auto=format&fit=crop" alt="Guilherme Cattani"></div>
-            <div class="teacher-info"><h4>Guilherme Cattani</h4><p>Advogado especialista em proteção jurídica para profissionais da estética</p></div>
-          </div>
-          <div class="teacher-card">
-            <div class="teacher-photo"><img src="https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?q=80&w=600&auto=format&fit=crop" alt="Professora convidada"></div>
-            <div class="teacher-info"><h4>Camila Duarte</h4><p>Especialista em bioestimuladores e preenchimento</p></div>
-          </div>
-          <div class="teacher-card">
-            <div class="teacher-photo"><img src="https://images.unsplash.com/photo-1620331311520-246422fd82f9?q=80&w=600&auto=format&fit=crop" alt="Professor convidado"></div>
-            <div class="teacher-info"><h4>Rafael Menezes</h4><p>Especialista em estética corporal e capilar</p></div>
-          </div>
-          <div class="teacher-card">
-            <div class="teacher-photo"><img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=600&auto=format&fit=crop" alt="Marina Costa"></div>
-            <div class="teacher-info"><h4>Marina Costa</h4><p>Especialista em preenchimento labial e contorno facial</p></div>
-          </div>
-          <div class="teacher-card">
-            <div class="teacher-photo"><img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=600&auto=format&fit=crop" alt="Diego Ferreira"></div>
-            <div class="teacher-info"><h4>Diego Ferreira</h4><p>Mestre em anatomia facial aplicada à harmonização</p></div>
-          </div>
-          <div class="teacher-card">
-            <div class="teacher-photo"><img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=600&auto=format&fit=crop" alt="Juliana Prado"></div>
-            <div class="teacher-info"><h4>Juliana Prado</h4><p>Farmacêutica especialista em bioestimuladores de colágeno</p></div>
-          </div>
+            <div class="teacher-card">
+              <div class="teacher-photo"><img src="assets/1.png" alt="Antônio Castelo Branco" style="width:100%; height:100%; object-fit:contain; object-position:center; background:#0C1322;"></div>
+              <div class="teacher-info"><h4>Antônio Castelo Branco</h4><p></p></div>
+            </div>
+            
+            <div class="teacher-card">
+              <div class="teacher-photo"><img src="assets/2.png" alt="Lucas de Paula" style="width:100%; height:100%; object-fit:contain; object-position:center; background:#0C1322;"></div>
+              <div class="teacher-info"><h4>Lucas de Paula</h4><p></p></div>
+            </div>
+            
+            <div class="teacher-card">
+              <div class="teacher-photo"><img src="assets/3.png" alt="Manoel Oliveira" style="width:100%; height:100%; object-fit:contain; object-position:center; background:#0C1322;"></div>
+              <div class="teacher-info"><h4>Manoel Oliveira</h4><p></p></div>
+            </div>
+            
+            <div class="teacher-card">
+              <div class="teacher-photo"><img src="assets/4.png" alt="Luma Fernandes" style="width:100%; height:100%; object-fit:contain; object-position:center; background:#0C1322;"></div>
+              <div class="teacher-info"><h4>Luma Fernandes</h4><p></p></div>
+            </div>
+            
+            <div class="teacher-card">
+              <div class="teacher-photo"><img src="assets/5.png" alt="Joyce Torraca" style="width:100%; height:100%; object-fit:contain; object-position:center; background:#0C1322;"></div>
+              <div class="teacher-info"><h4>Joyce Torraca</h4><p></p></div>
+            </div>
+            
+            <div class="teacher-card">
+              <div class="teacher-photo"><img src="assets/6.png" alt="Christian Rodrigues" style="width:100%; height:100%; object-fit:contain; object-position:center; background:#0C1322;"></div>
+              <div class="teacher-info"><h4>Christian Rodrigues</h4><p></p></div>
+            </div>
+            
+            <div class="teacher-card">
+              <div class="teacher-photo"><img src="assets/7.png" alt="Matheus Cavalcante" style="width:100%; height:100%; object-fit:contain; object-position:center; background:#0C1322;"></div>
+              <div class="teacher-info"><h4>Matheus Cavalcante</h4><p></p></div>
+            </div>
+            
+            <div class="teacher-card">
+              <div class="teacher-photo"><img src="assets/8.png" alt="Verônica Almeida" style="width:100%; height:100%; object-fit:contain; object-position:center; background:#0C1322;"></div>
+              <div class="teacher-info"><h4>Verônica Almeida</h4><p></p></div>
+            </div>
+            
+            <div class="teacher-card">
+              <div class="teacher-photo"><img src="assets/9.png" alt="Elane Maciel" style="width:100%; height:100%; object-fit:contain; object-position:center; background:#0C1322;"></div>
+              <div class="teacher-info"><h4>Elane Maciel</h4><p></p></div>
+            </div>
         </div>
       </div>
     </div>
@@ -1094,7 +1126,7 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
     </div>
     <div class="foot-bottom">
       <span>© 2026 GoStay — Todos os direitos reservados.</span>
-      <span>Feito com Sora + Ubuntu</span>
+      <span>Made by Lucas</span>
     </div>
   </div>
 </footer>
