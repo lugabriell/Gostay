@@ -966,7 +966,7 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
             <li><span class="check">✓</span>Suporte por e-mail</li>
             <li><span class="check">✓</span>Atualizações mensais</li>
           </ul>
-          <a class="btn btn-ghost" href="login.php">Conhecer</a>
+          <a class="btn btn-ghost" href="planos.php">Conhecer</a>
         </div>
         <div class="plan-card featured fade fade-d2">
           <span class="plan-tag">★ Mais popular</span>
@@ -977,9 +977,8 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
             <li><span class="check">✓</span>Certificados reconhecidos</li>
             <li><span class="check">✓</span>Mentoria ao vivo mensal</li>
             <li><span class="check">✓</span>Suporte prioritário 24/7</li>
-            <li><span class="check">✓</span>Downloads para estudo offline</li>
           </ul>
-          <a class="btn btn-primary" href="login.php">Conhecer</a>
+          <a class="btn btn-primary" href="planos.php">Conhecer</a>
         </div>
         <div class="plan-card fade fade-d3">
           <span class="plan-tag">Pro</span>
@@ -991,7 +990,7 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
             <li><span class="check">✓</span>Acesso antecipado a lançamentos</li>
             <li><span class="check">✓</span>Comunidade exclusiva Pro</li>
           </ul>
-          <a class="btn btn-ghost" href="login.php">Conhecer</a>
+          <a class="btn btn-ghost" href="planos.php">Conhecer</a>
         </div>
       </div>
     </div>

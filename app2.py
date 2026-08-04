@@ -13,12 +13,12 @@ password = password.replace("_", "\b")
 
 smtp_server = 'smtp.gmail.com'
 smtp_port = 587
-sender_email = 'lucas74126@gmail.com'
+sender_email = 'administrativo@gostay.com'
 
 
 
 def enviodeemail(emails, chave):
-    mensagem1 = "Código de verificação do Ids Ead"
+    mensagem1 = "Código de verificação do Gostay:"
 
     server = smtplib.SMTP(smtp_server, smtp_port)
     server.starttls()
