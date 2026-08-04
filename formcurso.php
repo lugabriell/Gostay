@@ -519,6 +519,10 @@ require_once __DIR__ . "/functions/validationadm.php";
                         <input type="radio" name="tipo" value="gratis">
                         <span>Gratuito</span>
                     </label>
+                    <label class="radio-label">
+                        <input type="radio" name="tipo" value="assinatura">
+                        <span>Assinatura</span>
+                    </label>
                 </div>
             </div>
 
