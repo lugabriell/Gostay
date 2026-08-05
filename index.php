@@ -1,26 +1,24 @@
-<?php
-
-
-// <img src="assets/ACELERADOR DO POTENCIAL HUMANO (1).png"
-        //  alt="gostay"
-        //  style="height: 140px; width: auto; object-fit: contain; display: block;">
-
-
-        
-require_once __DIR__ . "/connection.php";
-require_once __DIR__ . "/functions/headers.php";
-session_start();
-$_SESSION['tokenn1'] = bin2hex(random_bytes(32));
-?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GoStay</title>
-<link rel="shortcut icon" href="assets/ACELERADOR DO POTENCIAL HUMANO (1).png" type="image">
-<?php require_once __DIR__ . '/functions/analytics.php'; ?>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>GoStay | A nova casa do conhecimento em Saúde</title>
+<meta name="description" content="A nova casa do conhecimento em Saúde. Conteúdos originais, grandes especialistas e cursos para transformar conhecimento em prática, carreira e resultado.">
+<meta name="robots" content="index, nofollow">
+<meta property="og:title" content="GoStay | A nova casa do conhecimento em Saúde">
+<meta property="og:description" content="Conteúdos originais, grandes especialistas e cursos para transformar conhecimento em prática, carreira e resultado.">
+<meta property="og:image" content="https://gostay.com.br/assets/ACELERADOR%20DO%20POTENCIAL%20HUMANO%20(1).png">
+<meta property="og:url" content="https://gostay.com.br">
+<meta property="og:type" content="website">
+<link rel="shortcut icon" href="assets/ACELERADOR DO POTENCIAL HUMANO (1).png" type="image/png">
+<?php
+require_once __DIR__ . "/connection.php";
+require_once __DIR__ . "/functions/headers.php";
+session_start();
+$_SESSION['tokenn1'] = bin2hex(random_bytes(32));
+require_once __DIR__ . '/functions/analytics.php';
+?>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -44,9 +42,10 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
     --radius-lg: 22px;
     --radius-md: 14px;
     --radius-sm: 8px;
+    --nav-height: 72px;
   }
   *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
+  html{scroll-behavior:smooth; background:var(--bg-0);}
   body{
     margin:0;
     background:var(--bg-0);
@@ -56,31 +55,16 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
     -webkit-font-smoothing:antialiased;
     overflow-x:hidden;
   }
-  h1,h2,h3,h4{
-    font-family:var(--font-display);
-    margin:0;
-    letter-spacing:-0.01em;
-  }
+  h1,h2,h3,h4{font-family:var(--font-display); margin:0; letter-spacing:-0.01em;}
   p{margin:0;}
-  a{color:inherit;text-decoration:none;}
-  img{max-width:100%;display:block;}
-  .wrap{
-    max-width:1180px;
-    margin:0 auto;
-    padding:0 32px;
-  }
+  a{color:inherit; text-decoration:none;}
+  img{max-width:100%; display:block;}
+  .wrap{max-width:1280px; margin:0 auto; padding:0 32px;}
   ::selection{background:var(--yellow-soft); color:var(--yellow);}
 
-  /* ---------- fade-on-scroll ---------- */
-  .fade{
-    opacity:0;
-    transform:translateY(28px);
-    transition:opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1);
-  }
-  .fade.in{
-    opacity:1;
-    transform:translateY(0);
-  }
+  /* ---------- fade on scroll ---------- */
+  .fade{opacity:0; transform:translateY(28px); transition:opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1);}
+  .fade.in{opacity:1; transform:translateY(0);}
   .fade-d1{transition-delay:.08s;}
   .fade-d2{transition-delay:.16s;}
   .fade-d3{transition-delay:.24s;}
@@ -89,209 +73,99 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
     .fade{opacity:1;transform:none;transition:none;}
   }
 
-  /* ---------- nav ---------- */
+  /* ---------- header (estilo Netflix) ---------- */
   header{
-    position:fixed;
-    top:0; left:0; right:0;
-    z-index:100;
-    background:rgba(8,12,22,0.78);
-    backdrop-filter:blur(14px);
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    height:var(--nav-height);
+    background:linear-gradient(180deg, rgba(8,12,22,0.95) 0%, rgba(8,12,22,0.6) 100%);
+    backdrop-filter:blur(12px);
     border-bottom:1px solid transparent;
-    transform:translateY(-100%);
-    transition:transform .4s cubic-bezier(.2,.7,.2,1), border-color .3s;
+    transition:transform .4s cubic-bezier(.2,.7,.2,1), background .3s, border-color .3s;
+    display:flex; align-items:center;
+    transform: translateY(-100%);
   }
   header.header-visible{
-    transform:translateY(0);
+    transform: translateY(0);
+  }
+  header.scrolled{
+    background:rgba(8,12,22,0.92);
     border-bottom:1px solid var(--line);
+    backdrop-filter:blur(20px);
   }
   .nav{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:18px 32px;
-    max-width:1180px;
-    margin:0 auto;
+    display:flex; align-items:center; justify-content:space-between;
+    width:100%; max-width:1280px; margin:0 auto; padding:0 32px;
   }
   .logo{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    font-family:var(--font-display);
-    font-weight:700;
-    font-size:19px;
+    display:flex; align-items:center; gap:8px;
+    font-family:var(--font-display); font-weight:700; font-size:20px;
+    flex-shrink:0;
   }
-  .logo .dot{
-    width:9px;height:9px;border-radius:50%;
-    background:var(--yellow);
-    box-shadow:0 0 14px var(--yellow);
-  }
+  .logo img{height:44px; width:auto; object-fit:contain;}
   .nav-links{
-    display:flex;
-    gap:34px;
-    font-size:14.5px;
-    color:var(--text-1);
+    display:flex; gap:32px; font-size:14px; font-weight:500;
+    color:var(--text-1); margin-left:40px;
   }
-  .nav-links a{transition:color .2s;}
+  .nav-links a{transition:color .2s; white-space:nowrap;}
   .nav-links a:hover{color:var(--text-0);}
-  .nav-cta{
-    display:flex;
-    align-items:center;
-    gap:16px;
-  }
+  .nav-cta{display:flex; align-items:center; gap:12px; margin-left:auto;}
   .btn{
-    font-family:var(--font-body);
-    font-weight:500;
-    font-size:14px;
-    padding:11px 22px;
-    border-radius:999px;
-    border:1px solid transparent;
-    cursor:pointer;
-    transition:transform .2s, box-shadow .2s, background .2s, border-color .2s;
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
+    font-family:var(--font-body); font-weight:600; font-size:13px;
+    padding:10px 20px; border-radius:6px; border:1px solid transparent;
+    cursor:pointer; transition:transform .2s, box-shadow .2s, background .2s, border-color .2s;
+    display:inline-flex; align-items:center; gap:8px; white-space:nowrap;
+    letter-spacing:0.01em;
   }
   .btn-primary{
-    background:var(--yellow);
-    color:#181205;
+    background:var(--yellow); color:#181205;
     font-weight:700;
   }
-  .btn-primary:hover{transform:translateY(-2px); box-shadow:0 10px 24px rgba(242,194,48,0.28);}
+  .btn-primary:hover{transform:translateY(-2px); box-shadow:0 8px 20px rgba(242,194,48,0.3);}
   .btn-ghost{
-    border-color:var(--line-strong);
-    color:var(--text-0);
-    background:transparent;
+    border-color:var(--line-strong); color:var(--text-0); background:transparent;
   }
   .btn-ghost:hover{border-color:var(--blue); color:var(--blue);}
   .eyebrow{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    font-size:12.5px;
-    font-weight:600;
-    letter-spacing:.14em;
-    text-transform:uppercase;
-    color:var(--yellow);
-    margin-bottom:16px;
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:12px; font-weight:600; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--yellow); margin-bottom:16px;
   }
-  .eyebrow::before{
-    content:'';
-    width:16px;height:1px;
-    background:var(--yellow);
-  }
+  .eyebrow::before{content:''; width:16px; height:1px; background:var(--yellow);}
 
-  /* ---------- hero / carousel section ---------- */
+  /* ---------- hero banner (Netflix style) ---------- */
   .hero{
-    position:relative;
-    min-height:720px;
-    display:flex;
-    align-items:flex-end;
-    overflow:hidden;
-    padding:0;
-  }
-  .hero-carousel{
-    position:absolute;
-    inset:0;
-    z-index:0;
+    position:relative; width:100%; height:100vh; min-height:600px; max-height:900px;
     overflow:hidden;
   }
-  .hero-carousel img{
-    width:100%;
-    height:100%;
-    object-fit:contain !important; /* Mostra a imagem inteira */
-    object-position:center;
-    background:#000; /* opcional, evita áreas transparentes */
-}
-  .hero-carousel .track{ height:100%; }
+  .hero-carousel{position:absolute; inset:0; z-index:0;}
+  .hero-carousel .track{height:100%;}
   .hero-video{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    object-position:center;
-    background:#000;
-    display:block;
+    width:100%; height:100%; object-fit:cover; object-position:center; background:#000;
   }
   .hero-overlay{
-    position:absolute;
-    inset:0;
-    z-index:1;
-    pointer-events:none;
+    position:absolute; inset:0; z-index:1;
     background:
-      linear-gradient(100deg, rgba(8,12,22,.95) 0%, rgba(8,12,22,.82) 30%, rgba(8,12,22,.35) 58%, rgba(8,12,22,.6) 100%),
-      linear-gradient(0deg, rgba(8,12,22,.92) 0%, rgba(8,12,22,.05) 42%);
+      linear-gradient(180deg, rgba(8,12,22,0.4) 0%, rgba(8,12,22,0) 40%, rgba(8,12,22,0.88) 100%),
+      linear-gradient(90deg, rgba(8,12,22,0.9) 0%, rgba(8,12,22,0.5) 45%, rgba(8,12,22,0.1) 100%);
   }
   .hero-content{
-    position:relative;
-    z-index:2;
-    width:100%;
-    padding:160px 32px 76px;
+    position:absolute; bottom:15%; left:4%; z-index:2; max-width:600px;
+    padding:0 32px;
   }
-  .hero-content-inner{
-    max-width:1180px;
-    margin:0 auto;
-  }
-  .hero h1{
-    font-size:clamp(36px, 5.2vw, 64px);
-    font-weight:700;
-    line-height:1.06;
-    max-width:700px;
-  }
-  .hero h1 .accent{ color:var(--yellow); }
-  .hero-sub{
-    font-size:16px;
-    color:var(--text-1);
-    max-width:460px;
-    margin-top:22px;
-  }
-  .hero-actions{
-    display:flex;
-    gap:14px;
-    margin-top:32px;
-  }
-  .hero .carousel-dots{ bottom:32px; right:32px; }
-  .hero .carousel-prev{ left:24px; }
-  .hero .carousel-next{ right:24px; }
+  .hero h1{font-size:clamp(36px, 5vw, 64px); font-weight:700; line-height:1.1; margin-bottom:16px;}
+  .hero h1 .accent{color:var(--yellow);}
+  .hero-sub{font-size:16px; color:var(--text-1); max-width:480px; margin-bottom:24px;}
+  .hero-actions{display:flex; gap:12px; flex-wrap:wrap;}
+  .hero .carousel-dots{bottom:24px; right:32px; z-index:3;}
+  .hero .carousel-nav{top:50%; transform:translateY(-50%); z-index:3;}
 
-  /* ---------- números (seção própria) ---------- */
-  .stats-section{
-    background:var(--bg-1);
-    border-top:1px solid var(--line);
-    border-bottom:1px solid var(--line);
-  }
-  .stat-row{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:20px;
-  }
-  .stat-card{
-    background:var(--bg-2);
-    border:1px solid var(--line);
-    border-radius:var(--radius-md);
-    padding:28px 24px;
-    text-align:left;
-    transition:border-color .3s, transform .3s;
-  }
-  .stat-card:hover{border-color:var(--yellow); transform:translateY(-4px);}
-  .stat-number{
-    font-family:var(--font-display);
-    font-size:36px;
-    font-weight:700;
-    display:block;
-    color:var(--yellow);
-    margin-bottom:6px;
-  }
-  .stat-card span{
-    font-size:13.5px;
-    color:var(--text-1);
-  }
-
+  /* ---------- carousel base (usado no hero e autorais) ---------- */
   .carousel{
     position:relative;
     border-radius:var(--radius-lg);
     overflow:hidden;
     border:1px solid var(--line);
     background:var(--bg-2);
-    aspect-ratio: 16/10;
   }
   .track{
     display:flex;
@@ -359,6 +233,8 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
     z-index:5;
     transition:background .2s, border-color .2s;
     backdrop-filter:blur(6px);
+    font-size:18px;
+    flex-shrink:0;
   }
   .carousel-nav:hover{background:var(--blue); border-color:var(--blue);}
   .carousel-prev{left:16px;}
@@ -391,360 +267,232 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
   }
   @keyframes fillDot{ from{width:0%;} to{width:100%;} }
 
-  /* ---------- generic section ---------- */
-  section{
-    padding:96px 0;
-  }
-  .section-head{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-end;
-    gap:24px;
-    margin-bottom:48px;
-  }
-  .section-head h2{
-    font-size:clamp(26px,3vw,36px);
-    font-weight:700;
-    max-width:560px;
-  }
-  .section-head p{
-    color:var(--text-1);
-    max-width:340px;
-    font-size:14.5px;
-  }
-  .divider{
-    border:none;
-    border-top:1px solid var(--line);
-  }
-
-  /* ---------- autorais ---------- */
+  /* ajuste específico para o carrossel de autorais (aspecto mais largo) */
   .carousel.autorais-carousel{
     aspect-ratio: 21/9;
   }
 
-  /* ---------- metodologia ---------- */
-  .method-list{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:20px;
+  /* ---------- sections genéricas (streaming rows) ---------- */
+  .row-section{margin:48px 0;}
+  .row-header{display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:20px; padding:0 32px;}
+  .row-title{font-size:clamp(20px, 2.4vw, 28px); font-weight:700;}
+  .row-controls{display:flex; gap:8px;}
+  .row-controls .carousel-nav{position:static; transform:none; margin:0;}
+  .row-carousel{position:relative;}
+  .row-track{
+    display:flex; gap:12px; overflow-x:auto; padding:0 32px 20px;
+    scroll-snap-type:x mandatory; scroll-behavior:smooth;
+    -ms-overflow-style:none; scrollbar-width:none;
+    align-items:flex-start;
   }
-  .method-card{
-    background:var(--bg-2);
-    border:1px solid var(--line);
-    border-radius:var(--radius-md);
-    padding:26px 22px;
-    transition:border-color .3s, transform .3s;
-  }
-  .method-card:hover{border-color:var(--yellow); transform:translateY(-4px);}
-  .method-num{
-    font-family:var(--font-display);
-    font-size:13px;
-    color:var(--yellow);
-    font-weight:700;
-    margin-bottom:18px;
-  }
-  .method-card h4{
-    font-size:17px;
-    margin-bottom:10px;
-  }
-  .method-card p{
-    font-size:13.5px;
-    color:var(--text-1);
-  }
-
-  /* ---------- professores (carrossel) ---------- */
-  .teacher-carousel{
-    position:relative;
-  }
-  .teacher-track{
-    display:flex;
-    gap:22px;
-    overflow-x:auto;
-    scroll-snap-type:x mandatory;
-    scroll-behavior:smooth;
-    padding-bottom:6px;
-    -ms-overflow-style:none;
-    scrollbar-width:none;
-  }
-  .teacher-track::-webkit-scrollbar{display:none;}
-  .teacher-card{
-    flex:0 0 260px;
+  .row-track::-webkit-scrollbar{display:none;}
+  .row-card{
+    flex:0 0 clamp(160px, 16vw, 220px);
     scroll-snap-align:start;
     border-radius:var(--radius-md);
     overflow:hidden;
-    border:1px solid var(--line);
     background:var(--bg-2);
+    border:1px solid var(--line);
+    transition:transform .3s, border-color .3s, box-shadow .3s;
+    cursor:pointer;
+    position:relative;
+  }
+  .row-card:hover{transform:scale(1.06) translateY(-6px); border-color:var(--blue); box-shadow:0 16px 40px rgba(0,0,0,0.5); z-index:10;}
+  .row-card-img{
+    aspect-ratio:2/3; width:100%; object-fit:cover; display:block;
+    background:var(--bg-3);
+  }
+  .row-card-body{
+    padding:12px 14px 16px;
+    display:flex; flex-direction:column; gap:4px;
+  }
+  .row-card-body h4{font-size:15px; font-weight:600; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .row-card-body span{font-size:12px; color:var(--text-2);}
+  .row-card-badge{
+    position:absolute; top:8px; left:8px;
+    background:var(--yellow); color:#181205; font-size:10px; font-weight:700;
+    padding:3px 8px; border-radius:4px; letter-spacing:.06em; text-transform:uppercase;
+    z-index:2;
+  }
+
+  /* ---------- números ---------- */
+  .stats-section{background:var(--bg-1); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:48px 0;}
+  .stat-row{display:grid; grid-template-columns:repeat(4,1fr); gap:20px; padding:0 32px;}
+  .stat-card{
+    background:var(--bg-2); border:1px solid var(--line);
+    border-radius:var(--radius-md); padding:28px 24px;
+    transition:border-color .3s, transform .3s;
+  }
+  .stat-card:hover{border-color:var(--yellow); transform:translateY(-4px);}
+  .stat-number{font-family:var(--font-display); font-size:36px; font-weight:700; display:block; color:var(--yellow); margin-bottom:6px;}
+  .stat-card span{font-size:13.5px; color:var(--text-1);}
+
+  /* ---------- metodologia ---------- */
+  .method-list{display:grid; grid-template-columns:repeat(4,1fr); gap:20px;}
+  .method-card{
+    background:var(--bg-2); border:1px solid var(--line);
+    border-radius:var(--radius-md); padding:26px 22px;
+    transition:border-color .3s, transform .3s;
+  }
+  .method-card:hover{border-color:var(--yellow); transform:translateY(-4px);}
+  .method-num{font-family:var(--font-display); font-size:13px; color:var(--yellow); font-weight:700; margin-bottom:18px;}
+  .method-card h4{font-size:17px; margin-bottom:10px;}
+  .method-card p{font-size:13.5px; color:var(--text-1);}
+
+  /* ---------- professores (carrossel) ---------- */
+  .teacher-carousel{position:relative;}
+  .teacher-track{
+    display:flex; gap:22px; overflow-x:auto; padding:0 32px 20px;
+    scroll-snap-type:x mandatory; scroll-behavior:smooth;
+    -ms-overflow-style:none; scrollbar-width:none;
+  }
+  .teacher-track::-webkit-scrollbar{display:none;}
+  .teacher-card{
+    flex:0 0 240px; scroll-snap-align:start;
+    border-radius:var(--radius-md); overflow:hidden;
+    border:1px solid var(--line); background:var(--bg-2);
     transition:transform .3s, border-color .3s;
   }
   .teacher-card:hover{transform:translateY(-6px); border-color:var(--blue);}
   .teacher-photo{
-    aspect-ratio:3/3.4;
-    background:var(--bg-3);
-    position:relative;
-    overflow:hidden;
+    aspect-ratio:3/4; background:var(--bg-3); overflow:hidden;
   }
-  .teacher-photo img{width:100%; height:100%; object-fit:cover;}
-  .teacher-info{padding:18px 18px 22px;}
+  .teacher-photo img{width:100%; height:100%; object-fit:cover; object-position:center;}
+  .teacher-info{padding:18px;}
   .teacher-info h4{font-size:16px; margin-bottom:4px;}
   .teacher-info p{font-size:12.5px; color:var(--text-2);}
-  .carousel-controls{
-    display:flex;
-    justify-content:flex-end;
-    gap:10px;
-    margin-bottom:20px;
-  }
-  .carousel-controls .carousel-nav{
-    position:static;
-    transform:none;
-  }
 
   /* ---------- planos ---------- */
-  .plans{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:22px;
-  }
+  .plans{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
   .plan-card{
-    background:var(--bg-2);
-    border:1px solid var(--line);
-    border-radius:var(--radius-lg);
-    padding:32px 28px;
-    display:flex;
-    flex-direction:column;
+    background:var(--bg-2); border:1px solid var(--line);
+    border-radius:var(--radius-lg); padding:32px 28px;
+    display:flex; flex-direction:column;
     transition:transform .3s, border-color .3s;
   }
   .plan-card:hover{transform:translateY(-6px);}
   .plan-card.featured{
     border-color:var(--yellow);
     background:linear-gradient(180deg, var(--bg-3), var(--bg-2));
-    box-shadow:0 24px 48px rgba(242,194,48,0.10);
+    box-shadow:0 24px 48px rgba(242,194,48,0.1);
   }
   .plan-tag{
-    display:inline-flex;
-    align-self:flex-start;
-    font-size:11px;
-    font-weight:700;
-    letter-spacing:.08em;
-    text-transform:uppercase;
-    padding:6px 12px;
-    border-radius:999px;
-    background:var(--bg-3);
-    color:var(--text-1);
-    margin-bottom:18px;
+    display:inline-flex; align-self:flex-start;
+    font-size:11px; font-weight:700; letter-spacing:.08em;
+    text-transform:uppercase; padding:6px 12px; border-radius:999px;
+    background:var(--bg-3); color:var(--text-1); margin-bottom:18px;
   }
-  .plan-card.featured .plan-tag{
-    background:var(--yellow-soft);
-    color:var(--yellow);
-  }
+  .plan-card.featured .plan-tag{background:var(--yellow-soft); color:var(--yellow);}
   .plan-card h3{font-size:22px; margin-bottom:10px;}
-  .plan-card > p.desc{
-    color:var(--text-1);
-    font-size:14px;
-    margin-bottom:22px;
-  }
-  .plan-features{
-    list-style:none;
-    padding:0; margin:0 0 28px;
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-  }
-  .plan-features li{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    font-size:13.5px;
-    color:var(--text-1);
-  }
+  .plan-card > p.desc{color:var(--text-1); font-size:14px; margin-bottom:22px;}
+  .plan-features{list-style:none; padding:0; margin:0 0 28px; display:flex; flex-direction:column; gap:12px;}
+  .plan-features li{display:flex; align-items:center; gap:10px; font-size:13.5px; color:var(--text-1);}
   .check{
-    width:18px;height:18px;
-    border-radius:50%;
-    background:var(--blue-soft);
-    color:var(--blue);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:11px;
-    flex-shrink:0;
+    width:18px; height:18px; border-radius:50%;
+    background:var(--blue-soft); color:var(--blue);
+    display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0;
   }
   .plan-card.featured .check{background:var(--yellow-soft); color:var(--yellow);}
-  .plan-card .btn{
-    margin-top:auto;
-    width:100%;
-    justify-content:center;
-  }
+  .plan-card .btn{margin-top:auto; width:100%; justify-content:center;}
 
-  /* ---------- parceiros (carrossel/marquee) ---------- */
+  /* ---------- parceiros ---------- */
   .partners-box{
-    background:var(--bg-2);
-    border:1px solid var(--line);
-    border-radius:var(--radius-lg);
-    padding:44px 0;
-    overflow:hidden;
+    background:var(--bg-2); border:1px solid var(--line);
+    border-radius:var(--radius-lg); padding:44px 0; overflow:hidden;
   }
-  .partners-intro{
-    padding:0 44px;
-    margin-bottom:32px;
-    max-width:520px;
-  }
-  .partners-intro p{
-    color:var(--text-1);
-    font-size:14px;
-    margin-top:8px;
-  }
+  .partners-intro{padding:0 44px; margin-bottom:32px; max-width:520px;}
+  .partners-intro p{color:var(--text-1); font-size:14px; margin-top:8px;}
   .marquee-mask{
     position:relative;
     -webkit-mask-image:linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
     mask-image:linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
   }
-  .partner-track{
-    display:flex;
-    gap:16px;
-    width:max-content;
-    animation:marquee 22s linear infinite;
-  }
+  .partner-track{display:flex; gap:16px; width:max-content; animation:marquee 22s linear infinite;}
   .partner-track:hover{animation-play-state:paused;}
-  @keyframes marquee{
-    from{transform:translateX(0);}
-    to{transform:translateX(-50%);}
-  }
+  @keyframes marquee{from{transform:translateX(0);} to{transform:translateX(-50%);}}
   .partner-logo{
-    background:var(--bg-3);
-    border:1px solid var(--line);
-    border-radius:var(--radius-sm);
-    height:64px;
-    min-width:150px;
-    padding:0 24px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-family:var(--font-display);
-    font-weight:700;
-    color:var(--text-1);
-    font-size:13px;
-    letter-spacing:.03em;
-    transition:border-color .3s, color .3s;
-    flex-shrink:0;
+    background:var(--bg-3); border:1px solid var(--line);
+    border-radius:var(--radius-sm); height:64px; min-width:150px;
+    padding:0 24px; display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-display); font-weight:700; color:var(--text-1);
+    font-size:13px; letter-spacing:.03em; transition:border-color .3s, color .3s; flex-shrink:0;
   }
   .partner-logo:hover{border-color:var(--blue); color:var(--text-0);}
 
   /* ---------- sobre nós ---------- */
-  .about-grid{
-    display:grid;
-    grid-template-columns:0.9fr 1.1fr;
-    gap:60px;
-    align-items:center;
-  }
+  .about-grid{display:grid; grid-template-columns:0.9fr 1.1fr; gap:60px; align-items:center;}
   .about-visual{
-    aspect-ratio:1/1;
-    border-radius:var(--radius-lg);
-    background:var(--bg-2);
-    border:1px solid var(--line);
-    position:relative;
-    overflow:hidden;
+    aspect-ratio:1/1; border-radius:var(--radius-lg);
+    background:var(--bg-2); border:1px solid var(--line);
+    position:relative; overflow:hidden;
   }
-  .about-visual video{
-    position:absolute;
-    inset:0;
-    width:100%;
-    height:100%;
-    object-fit:cover;
-  }
+  .about-visual video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
   .about-visual::after{
-    content:'';
-    position:absolute;
-    inset:0;
-    background:
-      radial-gradient(circle at 30% 30%, rgba(242,194,48,0.18), transparent 55%),
-      radial-gradient(circle at 70% 70%, rgba(63,107,255,0.22), transparent 55%);
-    mix-blend-mode:screen;
-    pointer-events:none;
+    content:''; position:absolute; inset:0;
+    background:radial-gradient(circle at 30% 30%, rgba(242,194,48,0.18), transparent 55%),
+              radial-gradient(circle at 70% 70%, rgba(63,107,255,0.22), transparent 55%);
+    mix-blend-mode:screen; pointer-events:none;
   }
-  .about-text p{
-    color:var(--text-1);
-    font-size:15px;
-    margin-top:18px;
-    max-width:520px;
-  }
-  .about-cols{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:24px;
-    margin-top:32px;
-  }
-  .about-cols h4{
-    font-size:15px;
-    margin-bottom:8px;
-    color:var(--text-0);
-  }
-  .about-cols p{
-    font-size:13px;
-    color:var(--text-2);
-  }
+  .about-text p{color:var(--text-1); font-size:15px; margin-top:18px; max-width:520px;}
+  .about-cols{display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:32px;}
+  .about-cols h4{font-size:15px; margin-bottom:8px; color:var(--text-0);}
+  .about-cols p{font-size:13px; color:var(--text-2);}
 
   /* ---------- footer ---------- */
-  footer{
-    border-top:1px solid var(--line);
-    padding:56px 0 32px;
-  }
-  .foot-top{
-    display:flex;
-    justify-content:space-between;
-    gap:40px;
-    padding-bottom:40px;
-    border-bottom:1px solid var(--line);
-    margin-bottom:24px;
-  }
-  .foot-cols{
-    display:flex;
-    gap:60px;
-  }
-  .foot-cols h5{
-    font-size:12.5px;
-    letter-spacing:.08em;
-    text-transform:uppercase;
-    color:var(--text-2);
-    margin-bottom:14px;
-  }
-  .foot-cols a{
-    display:block;
-    font-size:13.5px;
-    color:var(--text-1);
-    margin-bottom:10px;
-    transition:color .2s;
-  }
+  footer{border-top:1px solid var(--line); padding:56px 32px 32px;}
+  .foot-top{display:flex; justify-content:space-between; gap:40px; padding-bottom:40px; border-bottom:1px solid var(--line); margin-bottom:24px;}
+  .foot-cols{display:flex; gap:60px;}
+  .foot-cols h5{font-size:12.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--text-2); margin-bottom:14px;}
+  .foot-cols a{display:block; font-size:13.5px; color:var(--text-1); margin-bottom:10px; transition:color .2s;}
   .foot-cols a:hover{color:var(--text-0);}
-  .foot-bottom{
-    display:flex;
-    justify-content:space-between;
-    font-size:12.5px;
-    color:var(--text-2);
+  .foot-bottom{display:flex; justify-content:space-between; font-size:12.5px; color:var(--text-2); flex-wrap:wrap; gap:8px;}
+
+  /* section-head usada apenas na seção de autorais (mantida do original) */
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    margin-bottom: 48px;
+    padding: 0 32px;
+  }
+  .section-head h2 {
+    font-size: clamp(26px,3vw,36px);
+    font-weight: 700;
+    max-width: 560px;
+  }
+  .section-head p {
+    color: var(--text-1);
+    max-width: 340px;
+    font-size: 14.5px;
   }
 
+  /* mobile adjustments */
   @media (max-width:900px){
-    .method-list, .plans, .about-grid{
-      grid-template-columns:1fr;
-    }
+    .nav-links{display:none;}
+    .hero{height:100vh; min-height:560px;}
+    .hero h1{font-size:32px;}
+    .hero-content{bottom:10%;}
     .method-list{grid-template-columns:1fr 1fr;}
     .stat-row{grid-template-columns:1fr 1fr;}
+    .plans{grid-template-columns:1fr;}
+    .about-grid{grid-template-columns:1fr;}
+    .row-card{flex:0 0 45vw;}
+    .foot-top{flex-direction:column; gap:24px;}
+    .foot-cols{flex-wrap:wrap; gap:24px;}
     .partners-intro{padding:0 24px;}
     .carousel.autorais-carousel{aspect-ratio:4/5;}
-    .hero{min-height:560px;}
-    .hero-content{padding:120px 20px 56px;}
-    .hero .carousel-nav{display:none;}
-    .nav-links{display:none;}
-    .foot-top{flex-direction:column; gap:24px;}
-    section{padding:64px 0;}
+    .section-head{flex-direction:column; align-items:flex-start; gap:12px; margin-bottom:32px;}
   }
 </style>
 </head>
 <body>
 
-<header>
+<header id="mainHeader">
   <div class="nav">
-    <div class="logo">  <img src="assets/ACELERADOR DO POTENCIAL HUMANO (1).png"
-         alt="gostay"
-         style="height: 100px; width: auto; object-fit: contain; display: block;"></div>
+    <div class="logo">
+      <img src="assets/ACELERADOR DO POTENCIAL HUMANO (1).png" alt="GoStay">
+    </div>
     <nav class="nav-links">
       <a href="login.php">Início</a>
       <a href="login.php">Autorais</a>
@@ -762,13 +510,12 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
 
 <main>
 
-  <!-- CARD PRINCIPAL -->
+  <!-- HERO BANNER (exatamente como original) -->
   <section id="hero" class="hero">
-
     <div class="hero-carousel" id="carousel">
       <div class="track" id="track">
         <div class="slide" style="background-color:#0C1322;">
-          <video class="hero-video" autoplay muted loop playsinline preload="auto">
+          <video class="hero-video" autoplay muted loop playsinline preload="none">
             <source src="assets/videosite.mp4" type="video/mp4">
           </video>
         </div>
@@ -780,53 +527,22 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
     </div>
     <div class="hero-overlay"></div>
 
-    <div class="carousel-nav carousel-prev" id="prev">&#8592;</div>
-    <div class="carousel-nav carousel-next" id="next">&#8594;</div>
+    <div class="carousel-nav carousel-prev" id="prev" aria-label="Anterior">&#8592;</div>
+    <div class="carousel-nav carousel-next" id="next" aria-label="Próximo">&#8594;</div>
     <div class="carousel-dots" id="dots"></div>
 
-    <div class="hero-content">
-      <div class="hero-content-inner fade">
-        <div class="eyebrow">Domine a estética profissional</div>
-        <h1>A nova casa do <br><span class="accent">conhecimento</span> em Saúde</h1>
-        <p class="hero-sub">Conteúdos originais, grandes especialistas e cursos para transformar conhecimento em prática, carreira e resultado.</p>
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="login.php">Conheça os planos</a>
-          <a class="btn btn-ghost" href="login.php">Fale conosco</a>
-        </div>
+    <div class="hero-content fade">
+      <div class="eyebrow">Domine a estética profissional</div>
+      <h1>A nova casa do <br><span class="accent">conhecimento</span> em Saúde</h1>
+      <p class="hero-sub">Conteúdos originais, grandes especialistas e cursos para transformar conhecimento em prática, carreira e resultado.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="login.php">Conheça os planos</a>
+        <a class="btn btn-ghost" href="login.php">Fale conosco</a>
       </div>
     </div>
   </section>
 
-  <section id="numeros" class="stats-section">
-    <div class="wrap">
-      <div class="section-head fade">
-        <h2>Números que comprovam nosso impacto</h2>
-        <p>Resultados construídos com ciência, prática e consistência ao longo dos anos.</p>
-      </div>
-      <div class="stat-row">
-        <div class="stat-card fade fade-d1">
-          <b class="stat-number" data-target="40" data-prefix="+" data-suffix=" mil">0 mil</b>
-          <span>Alunos formados</span>
-        </div>
-        <div class="stat-card fade fade-d2">
-          <b class="stat-number" data-target="120" data-prefix="+">0</b>
-          <span>Aulas científicas</span>
-        </div>
-        <div class="stat-card fade fade-d3">
-          <b class="stat-number" data-target="18">0</b>
-          <span>Professores especialistas</span>
-        </div>
-        <div class="stat-card fade fade-d4">
-          <b class="stat-number" data-target="4.9" data-decimals="1" data-suffix="/5">0/5</b>
-          <span>Avaliação média</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <hr class="divider">
-
-  <!-- AUTORAIS -->
+  <!-- AUTORAIS (exatamente como original, com slideshow) -->
   <section id="autorais">
     <div class="wrap">
       <div class="section-head fade">
@@ -880,117 +596,97 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
     </div>
   </section>
 
-  <hr class="divider">
+  <!-- DESTAQUES (streaming row) -->
+  <section id="destaques" class="row-section">
+    <div class="row-header">
+      <h2 class="row-title">Destaques</h2>
+    </div>
+    <div class="row-carousel">
+      <div class="row-track" id="destaquesTrack">
+        <div class="row-card">
+          <img class="row-card-img" src="https://images.unsplash.com/photo-1580281657702-257584239a55?q=80&w=600&auto=format&fit=crop" alt="Curso">
+          <div class="row-card-body"><h4>Programas de Formação</h4><span>12 módulos</span></div>
+        </div>
+        <div class="row-card">
+          <img class="row-card-img" src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=600&auto=format&fit=crop" alt="Livro">
+          <div class="row-card-body"><h4>Intercorrências em Procedimentos</h4><span>Livro digital</span></div>
+        </div>
+        <div class="row-card">
+          <img class="row-card-img" src="https://images.unsplash.com/photo-1516549655169-df83a0774514?q=80&w=600&auto=format&fit=crop" alt="Mentoria">
+          <div class="row-card-body"><h4>Mentorias ao Vivo</h4><span>Semanal</span></div>
+        </div>
+        <div class="row-card">
+          <img class="row-card-img" src="https://images.unsplash.com/photo-1587854692152-cbe660dbde88?q=80&w=600&auto=format&fit=crop" alt="Artigos">
+          <div class="row-card-body"><h4>Biblioteca de Artigos</h4><span>Exclusivos</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NÚMEROS -->
+  <section id="numeros" class="stats-section">
+    <div class="wrap">
+      <div class="row-header" style="padding:0;">
+        <h2 class="row-title">Números que comprovam nosso impacto</h2>
+        <p style="color:var(--text-1); max-width:300px;">Resultados construídos com ciência, prática e consistência.</p>
+      </div>
+      <div class="stat-row">
+        <div class="stat-card fade fade-d1"><b class="stat-number" data-target="40" data-prefix="+" data-suffix=" mil">0 mil</b><span>Alunos formados</span></div>
+        <div class="stat-card fade fade-d2"><b class="stat-number" data-target="120" data-prefix="+">0</b><span>Aulas científicas</span></div>
+        <div class="stat-card fade fade-d3"><b class="stat-number" data-target="18">0</b><span>Professores especialistas</span></div>
+        <div class="stat-card fade fade-d4"><b class="stat-number" data-target="4.9" data-decimals="1" data-suffix="/5">0/5</b><span>Avaliação média</span></div>
+      </div>
+    </div>
+  </section>
 
   <!-- METODOLOGIA -->
-  <section id="metodologia">
+  <section id="metodologia" class="row-section">
     <div class="wrap">
-      <div class="section-head fade">
-        <h2>Uma metodologia construída para a prática clínica real</h2>
-        <p>Ciência, segurança e repetição — o caminho que consolida técnica em confiança.</p>
+      <div class="row-header" style="padding:0;">
+        <h2 class="row-title">Metodologia</h2>
       </div>
       <div class="method-list">
-        <div class="method-card fade fade-d1">
-          <div class="method-num">Fundamentos</div>
-          <h4>Base científica</h4>
-          <p>Anatomia, farmacologia e biossegurança antes de qualquer agulha.</p>
-        </div>
-        <div class="method-card fade fade-d2">
-          <div class="method-num">Demonstração</div>
-          <h4>Protocolos ao vivo</h4>
-          <p>Workshops presenciais com aplicação em pacientes reais.</p>
-        </div>
-        <div class="method-card fade fade-d3">
-          <div class="method-num">Supervisão</div>
-          <h4>Prática guiada</h4>
-          <p>Cursos presenciais com acompanhamento especializado passo a passo.</p>
-        </div>
-        <div class="method-card fade fade-d4">
-          <div class="method-num">Atualização</div>
-          <h4>Formação contínua</h4>
-          <p>Pós-graduação e conteúdo renovado conforme a estética evolui.</p>
-        </div>
+        <div class="method-card fade fade-d1"><div class="method-num">Fundamentos</div><h4>Base científica</h4><p>Anatomia, farmacologia e biossegurança antes de qualquer agulha.</p></div>
+        <div class="method-card fade fade-d2"><div class="method-num">Demonstração</div><h4>Protocolos ao vivo</h4><p>Workshops presenciais com aplicação em pacientes reais.</p></div>
+        <div class="method-card fade fade-d3"><div class="method-num">Supervisão</div><h4>Prática guiada</h4><p>Cursos presenciais com acompanhamento especializado passo a passo.</p></div>
+        <div class="method-card fade fade-d4"><div class="method-num">Atualização</div><h4>Formação contínua</h4><p>Pós-graduação e conteúdo renovado conforme a estética evolui.</p></div>
       </div>
     </div>
   </section>
-
-  <hr class="divider">
 
   <!-- PROFESSORES -->
-  <section id="professores">
-    <div class="wrap">
-      <div class="section-head fade">
-        <h2>Aprenda com os melhores professores do Brasil</h2>
-        <p>Especialistas que vivem a estética na teoria e na clínica.</p>
+  <section id="professores" class="row-section">
+    <div class="row-header">
+      <h2 class="row-title">Professores</h2>
+      <div class="row-controls">
+        <div class="carousel-nav" id="teacherPrev" aria-label="Anterior">&#8592;</div>
+        <div class="carousel-nav" id="teacherNext" aria-label="Próximo">&#8594;</div>
       </div>
-      <div class="carousel-controls fade">
-        <div class="carousel-nav" id="teacherPrev">&#8592;</div>
-        <div class="carousel-nav" id="teacherNext">&#8594;</div>
-      </div>
-      <div class="teacher-carousel fade fade-d1">
-        <div class="teacher-track" id="teacherTrack">
-            <div class="teacher-card">
-              <div class="teacher-photo"><img src="assets/1.png" alt="Antônio Castelo Branco" style="width:100%; height:100%; object-fit:contain; object-position:center; background:#0C1322;"></div>
-              <div class="teacher-info"><h4>Antônio Castelo Branco</h4><p></p></div>
-            </div>
-            
-            <div class="teacher-card">
-              <div class="teacher-photo"><img src="assets/2.png" alt="Lucas de Paula" style="width:100%; height:100%; object-fit:contain; object-position:center; background:#0C1322;"></div>
-              <div class="teacher-info"><h4>Lucas de Paula</h4><p></p></div>
-            </div>
-            
-            <div class="teacher-card">
-              <div class="teacher-photo"><img src="assets/3.png" alt="Manoel Oliveira" style="width:100%; height:100%; object-fit:contain; object-position:center; background:#0C1322;"></div>
-              <div class="teacher-info"><h4>Manoel Oliveira</h4><p></p></div>
-            </div>
-            
-            <div class="teacher-card">
-              <div class="teacher-photo"><img src="assets/4.png" alt="Luma Fernandes" style="width:100%; height:100%; object-fit:contain; object-position:center; background:#0C1322;"></div>
-              <div class="teacher-info"><h4>Luma Fernandes</h4><p></p></div>
-            </div>
-            
-            <div class="teacher-card">
-              <div class="teacher-photo"><img src="assets/5.png" alt="Joyce Torraca" style="width:100%; height:100%; object-fit:contain; object-position:center; background:#0C1322;"></div>
-              <div class="teacher-info"><h4>Joyce Torraca</h4><p></p></div>
-            </div>
-            
-            <div class="teacher-card">
-              <div class="teacher-photo"><img src="assets/6.png" alt="Christian Rodrigues" style="width:100%; height:100%; object-fit:contain; object-position:center; background:#0C1322;"></div>
-              <div class="teacher-info"><h4>Christian Rodrigues</h4><p></p></div>
-            </div>
-            
-            <div class="teacher-card">
-              <div class="teacher-photo"><img src="assets/7.png" alt="Matheus Cavalcante" style="width:100%; height:100%; object-fit:contain; object-position:center; background:#0C1322;"></div>
-              <div class="teacher-info"><h4>Matheus Cavalcante</h4><p></p></div>
-            </div>
-            
-            <div class="teacher-card">
-              <div class="teacher-photo"><img src="assets/8.png" alt="Verônica Almeida" style="width:100%; height:100%; object-fit:contain; object-position:center; background:#0C1322;"></div>
-              <div class="teacher-info"><h4>Verônica Almeida</h4><p></p></div>
-            </div>
-            
-            <div class="teacher-card">
-              <div class="teacher-photo"><img src="assets/9.png" alt="Elane Maciel" style="width:100%; height:100%; object-fit:contain; object-position:center; background:#0C1322;"></div>
-              <div class="teacher-info"><h4>Elane Maciel</h4><p></p></div>
-            </div>
-        </div>
+    </div>
+    <div class="teacher-carousel">
+      <div class="teacher-track" id="teacherTrack">
+        <div class="teacher-card"><div class="teacher-photo"><img src="assets/1.png" alt="Antônio Castelo Branco"></div><div class="teacher-info"><h4>Antônio Castelo Branco</h4><p></p></div></div>
+        <div class="teacher-card"><div class="teacher-photo"><img src="assets/2.png" alt="Lucas de Paula"></div><div class="teacher-info"><h4>Lucas de Paula</h4><p></p></div></div>
+        <div class="teacher-card"><div class="teacher-photo"><img src="assets/3.png" alt="Manoel Oliveira"></div><div class="teacher-info"><h4>Manoel Oliveira</h4><p></p></div></div>
+        <div class="teacher-card"><div class="teacher-photo"><img src="assets/4.png" alt="Luma Fernandes"></div><div class="teacher-info"><h4>Luma Fernandes</h4><p></p></div></div>
+        <div class="teacher-card"><div class="teacher-photo"><img src="assets/5.png" alt="Joyce Torraca"></div><div class="teacher-info"><h4>Joyce Torraca</h4><p></p></div></div>
+        <div class="teacher-card"><div class="teacher-photo"><img src="assets/6.png" alt="Christian Rodrigues"></div><div class="teacher-info"><h4>Christian Rodrigues</h4><p></p></div></div>
+        <div class="teacher-card"><div class="teacher-photo"><img src="assets/7.png" alt="Matheus Cavalcante"></div><div class="teacher-info"><h4>Matheus Cavalcante</h4><p></p></div></div>
+        <div class="teacher-card"><div class="teacher-photo"><img src="assets/8.png" alt="Verônica Almeida"></div><div class="teacher-info"><h4>Verônica Almeida</h4><p></p></div></div>
+        <div class="teacher-card"><div class="teacher-photo"><img src="assets/9.png" alt="Elane Maciel"></div><div class="teacher-info"><h4>Elane Maciel</h4><p></p></div></div>
       </div>
     </div>
   </section>
 
-  <hr class="divider">
-
   <!-- PLANOS -->
-  <section id="planos">
+  <section id="planos" class="row-section">
     <div class="wrap">
-      <div class="section-head fade">
-        <h2>Modelos de cobrança</h2>
-        <p>Escolha o plano ideal para o seu ritmo de aprendizado e objetivos profissionais.</p>
+      <div class="row-header" style="padding:0;">
+        <h2 class="row-title">Planos</h2>
       </div>
       <div class="plans">
         <div class="plan-card fade fade-d1">
-          <span class="plan-tag">Básico</span>
-          <h3>GoStay Starter</h3>
+          <span class="plan-tag">Básico</span><h3>GoStay Starter</h3>
           <p class="desc">Ideal para quem está começando e quer explorar conteúdos essenciais com flexibilidade.</p>
           <ul class="plan-features">
             <li><span class="check">✓</span>Acesso a cursos selecionados</li>
@@ -1001,8 +697,7 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
           <a class="btn btn-ghost" href="planos.php">Conhecer</a>
         </div>
         <div class="plan-card featured fade fade-d2">
-          <span class="plan-tag">★ Mais popular</span>
-          <h3>GoStay Max</h3>
+          <span class="plan-tag">★ Mais popular</span><h3>GoStay Max</h3>
           <p class="desc">Grandes aulas, experiências imperdíveis e os melhores professores em um único plano.</p>
           <ul class="plan-features">
             <li><span class="check">✓</span>Acesso completo ao catálogo</li>
@@ -1013,11 +708,10 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
           <a class="btn btn-primary" href="planos.php">Conhecer</a>
         </div>
         <div class="plan-card fade fade-d3">
-          <span class="plan-tag">Pro</span>
-          <h3>GoStay Pro</h3>
+          <span class="plan-tag">Pro</span><h3>GoStay Pro</h3>
           <p class="desc">Para profissionais que querem o máximo em crescimento acelerado e networking de alto nível.</p>
           <ul class="plan-features">
-            <li><span class="check">✓</span>Tudo do Black</li>
+            <li><span class="check">✓</span>Tudo do Max</li>
             <li><span class="check">✓</span>Trilhas personalizadas com IA</li>
             <li><span class="check">✓</span>Acesso antecipado a lançamentos</li>
             <li><span class="check">✓</span>Comunidade exclusiva Pro</li>
@@ -1028,14 +722,11 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
     </div>
   </section>
 
-  <hr class="divider">
-
-  <!-- CANAIS PARCEIROS -->
-  <section id="parceiros">
+  <!-- PARCEIROS -->
+  <section id="parceiros" class="row-section">
     <div class="wrap">
-      <div class="section-head fade">
-        <h2>Canais e parceiros</h2>
-        <p>Leve a GoStay para onde você estiver.</p>
+      <div class="row-header" style="padding:0;">
+        <h2 class="row-title">Canais e parceiros</h2>
       </div>
       <div class="partners-box fade fade-d1">
         <div class="partners-intro">
@@ -1062,15 +753,13 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
     </div>
   </section>
 
-  <hr class="divider">
-
   <!-- SOBRE NÓS -->
-  <section id="sobre">
+  <section id="sobre" class="row-section">
     <div class="wrap">
       <div class="about-grid">
         <div class="about-visual fade">
-          <video autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1612531386530-97286d97c2d2?q=80&w=800&auto=format&fit=crop">
-            <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
+          <video autoplay muted loop playsinline preload="none">
+            <source src="assets/videos.mp4" type="video/mp4">
           </video>
         </div>
         <div class="about-text fade fade-d2">
@@ -1078,14 +767,8 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
           <h2 style="font-size:clamp(24px,3vw,32px);">Aprenda com ciência. Aplique com segurança. Destaque-se na estética.</h2>
           <p>A GoStay nasceu para elevar o padrão da estética na América Latina, unindo rigor científico, prática clínica real e atualização constante em harmonização facial, corporal e capilar em uma única plataforma.</p>
           <div class="about-cols">
-            <div>
-              <h4>Missão</h4>
-              <p>Formar profissionais seguros, técnicos e éticos em cada etapa da carreira.</p>
-            </div>
-            <div>
-              <h4>Corpo docente</h4>
-              <p>Especialistas que vivem a clínica e trazem experiência real para a sala de aula.</p>
-            </div>
+            <div><h4>Missão</h4><p>Formar profissionais seguros, técnicos e éticos em cada etapa da carreira.</p></div>
+            <div><h4>Corpo docente</h4><p>Especialistas que vivem a clínica e trazem experiência real para a sala de aula.</p></div>
           </div>
           <div class="hero-actions" style="margin-top:28px;">
             <a class="btn btn-primary" href="login.php">Vá para a página de suporte</a>
@@ -1098,11 +781,11 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
 </main>
 
 <footer>
-  <div class="wrap">
+  <div class="wrap" style="padding:0;">
     <div class="foot-top">
-      <div class="logo"> <img src="assets/ACELERADOR DO POTENCIAL HUMANO (1).png"
-          alt="gostay"
-          style="height: 140px; width: auto; object-fit: contain; display: block;"></div>
+      <div class="logo">
+        <img src="assets/ACELERADOR DO POTENCIAL HUMANO (1).png" alt="GoStay" style="height:60px;">
+      </div>
       <div class="foot-cols">
         <div>
           <h5>Plataforma</h5>
@@ -1126,23 +809,22 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
     </div>
     <div class="foot-bottom">
       <span>© 2026 GoStay — Todos os direitos reservados.</span>
-      <span>Made by Lucas</span>
+      <span>Desenvolvido por Lucas</span>
     </div>
   </div>
 </footer>
 
 <script>
-  // ---------- navbar aparece só ao rolar ----------
-  const header = document.querySelector('header');
-  function onScrollHeader(){
-    if(window.scrollY > 40){
+  // ---------- header aparece ao rolar ----------
+  const header = document.getElementById('mainHeader');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 40) {
       header.classList.add('header-visible');
     } else {
       header.classList.remove('header-visible');
     }
-  }
-  window.addEventListener('scroll', onScrollHeader, { passive:true });
-  onScrollHeader();
+    header.classList.toggle('scrolled', window.scrollY > 10);
+  }, {passive:true});
 
   // ---------- fade on scroll ----------
   const faders = document.querySelectorAll('.fade');
@@ -1153,7 +835,7 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
         io.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+  }, {threshold:0.15, rootMargin:'0px 0px -60px 0px'});
   faders.forEach(el => io.observe(el));
 
   // ---------- contagem animada dos números ----------
@@ -1187,15 +869,16 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
         statObserver.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.5 });
+  }, {threshold:0.5});
   document.querySelectorAll('.stat-number').forEach(el => statObserver.observe(el));
 
-  // ---------- carousel (função reutilizável) ----------
-  function setupCarousel({ trackId, dotsId, prevId, nextId, intervalMs }){
+  // ---------- carousel hero ----------
+  function setupCarousel({trackId, dotsId, prevId, nextId, intervalMs}){
     const track = document.getElementById(trackId);
     const dotsWrap = document.getElementById(dotsId);
     const prevBtn = document.getElementById(prevId);
     const nextBtn = document.getElementById(nextId);
+    if(!track || !dotsWrap || !prevBtn || !nextBtn) return;
     const slides = Array.from(track.children);
     let index = 0;
     let timer;
@@ -1231,26 +914,26 @@ $_SESSION['tokenn1'] = bin2hex(random_bytes(32));
     restart();
   }
 
-  setupCarousel({ trackId:'track', dotsId:'dots', prevId:'prev', nextId:'next', intervalMs:5500 });
-  setupCarousel({ trackId:'autoraisTrack', dotsId:'autoraisDots', prevId:'autoraisPrev', nextId:'autoraisNext', intervalMs:6500 });
+  setupCarousel({trackId:'track', dotsId:'dots', prevId:'prev', nextId:'next', intervalMs:5500});
+  setupCarousel({trackId:'autoraisTrack', dotsId:'autoraisDots', prevId:'autoraisPrev', nextId:'autoraisNext', intervalMs:6500});
 
-  // ---------- carrossel de professores ----------
+  // ---------- professores carousel ----------
   const teacherTrack = document.getElementById('teacherTrack');
   const teacherPrev = document.getElementById('teacherPrev');
   const teacherNext = document.getElementById('teacherNext');
 
   function teacherStep(){
     const card = teacherTrack.querySelector('.teacher-card');
-    if(!card) return 0;
+    if(!card) return 300;
     const style = getComputedStyle(teacherTrack);
     const gap = parseFloat(style.columnGap || style.gap || 22);
     return card.getBoundingClientRect().width + gap;
   }
   teacherNext.addEventListener('click', () => {
-    teacherTrack.scrollBy({ left: teacherStep(), behavior: 'smooth' });
+    teacherTrack.scrollBy({left: teacherStep(), behavior:'smooth'});
   });
   teacherPrev.addEventListener('click', () => {
-    teacherTrack.scrollBy({ left: -teacherStep(), behavior: 'smooth' });
+    teacherTrack.scrollBy({left: -teacherStep(), behavior:'smooth'});
   });
 </script>
 
