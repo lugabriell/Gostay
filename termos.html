@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Política de Privacidade | GoStay</title>
+  <link rel="shortcut icon" href="assets/ACELERADOR DO POTENCIAL HUMANO (1).png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-0: #080c16;
+      --bg-1: #0c1322;
+      --bg-2: #121b2e;
+      --bg-3: #182541;
+      --line: rgba(255, 255, 255, 0.08);
+      --line-strong: rgba(255, 255, 255, 0.16);
+      --text-0: #f4f6fb;
+      --text-1: #aab2c5;
+      --text-2: #717c95;
+      --yellow: #f2c230;
+      --yellow-soft: rgba(242, 194, 48, 0.14);
+      --blue: #3f6bff;
+      --blue-soft: rgba(63, 107, 255, 0.16);
+      --font-display: 'Sora', sans-serif;
+      --font-body: 'Ubuntu', sans-serif;
+      --radius-lg: 22px;
+      --radius-md: 14px;
+      --radius-sm: 8px;
+      --nav-height: 72px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg-0);
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-0);
+      color: var(--text-0);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      padding-top: var(--nav-height);
+    }
+
+    h1, h2, h3, h4 {
+      font-family: var(--font-display);
+      letter-spacing: -0.01em;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    /* ---------- header (idêntico ao index) ---------- */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      height: var(--nav-height);
+      background: linear-gradient(180deg, rgba(8, 12, 22, 0.95) 0%, rgba(8, 12, 22, 0.6) 100%);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid transparent;
+      transition: background 0.3s, border-color 0.3s;
+      display: flex;
+      align-items: center;
+    }
+
+    header.scrolled {
+      background: rgba(8, 12, 22, 0.92);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(20px);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .logo img {
+      height: 44px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-1);
+      margin-left: 40px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      transition: color 0.2s;
+      white-space: nowrap;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-0);
+    }
+
+    .nav-cta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-left: auto;
+    }
+
+    .btn {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 13px;
+      padding: 10px 20px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.2s, border-color 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      letter-spacing: 0.01em;
+    }
+
+    .btn-primary {
+      background: var(--yellow);
+      color: #181205;
+      font-weight: 700;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(242, 194, 48, 0.3);
+    }
+
+    .btn-ghost {
+      border-color: var(--line-strong);
+      color: var(--text-0);
+      background: transparent;
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 14px;
+      color: var(--text-1);
+      padding: 8px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 6px;
+      background: transparent;
+      transition: all 0.2s;
+      margin-bottom: 32px;
+    }
+
+    .back-btn:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+      background: rgba(63, 107, 255, 0.05);
+    }
+
+    /* ---------- conteúdo principal ---------- */
+    .privacy-container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 56px 32px 80px;
+    }
+
+    .privacy-container h1 {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text-0);
+    }
+
+    .privacy-container .last-update {
+      font-size: 13px;
+      color: var(--text-2);
+      margin-bottom: 40px;
+    }
+
+    .privacy-container h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 32px 0 12px;
+      color: var(--text-0);
+      border-left: 3px solid var(--yellow);
+      padding-left: 14px;
+    }
+
+    .privacy-container p,
+    .privacy-container li {
+      font-size: 14.5px;
+      color: var(--text-1);
+      margin-bottom: 12px;
+    }
+
+    .privacy-container ul {
+      padding-left: 24px;
+      margin-bottom: 16px;
+    }
+
+    .privacy-container li {
+      margin-bottom: 8px;
+    }
+
+    .privacy-container strong {
+      color: var(--text-0);
+      font-weight: 600;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--line);
+      margin: 32px 0;
+    }
+
+    /* ---------- footer ---------- */
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 32px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-2);
+    }
+
+    footer .footer-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    footer .footer-logo img {
+      height: 36px;
+      width: auto;
+    }
+
+    @media (max-width: 900px) {
+      .nav-links {
+        display: none;
+      }
+
+      .privacy-container {
+        padding: 40px 20px 60px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header id="mainHeader">
+    <div class="nav">
+      <div class="logo">
+        <a href="index.php">
+          <img src="assets/ACELERADOR DO POTENCIAL HUMANO (1).png" alt="GoStay" />
+        </a>
+      </div>
+      <div class="nav-cta">
+        <a class="btn btn-ghost" href="login.php">Já sou aluno</a>
+        <a class="btn btn-primary" href="formAluno.php">Começar agora</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="privacy-container">
+      <a href="javascript:history.back()" class="back-btn">
+        &#8592; Voltar
+      </a>
+
+      <h1>Política de Privacidade</h1>
+      <p class="last-update">Última atualização: 5 de agosto de 2026</p>
+
+      <p>
+        A GoStay leva a sua privacidade a sério. Esta política descreve como coletamos, usamos, armazenamos e protegemos suas informações pessoais quando você utiliza nossa plataforma de ensino em estética e saúde.
+      </p>
+
+      <hr class="divider" />
+
+      <h2>1. Informações que coletamos</h2>
+      <p>Para oferecer uma experiência de aprendizado personalizada, podemos coletar os seguintes dados:</p>
+      <ul>
+        <li><strong>Dados cadastrais:</strong> nome completo, e-mail, CPF, telefone e endereço.</li>
+        <li><strong>Dados de navegação:</strong> cursos acessados, tempo de estudo, progresso nas aulas e interações com a plataforma.</li>
+        <li><strong>Dados de pagamento:</strong> informações de cartão de crédito e histórico de transações (processados por parceiros homologados, como Stripe e PagSeguro).</li>
+        <li><strong>Dados de dispositivo:</strong> endereço IP, tipo de navegador, sistema operacional e identificadores únicos do dispositivo.</li>
+      </ul>
+
+      <h2>2. Como utilizamos seus dados</h2>
+      <p>Os dados coletados são utilizados exclusivamente para as seguintes finalidades:</p>
+      <ul>
+        <li>Garantir o acesso à plataforma e aos cursos adquiridos.</li>
+        <li>Personalizar recomendações de cursos e conteúdos com base em seu perfil.</li>
+        <li>Processar pagamentos e gerir sua conta financeira dentro da plataforma.</li>
+        <li>Enviar comunicados relevantes, como atualizações de cursos e novidades da GoStay.</li>
+        <li>Melhorar continuamente a plataforma por meio de análises de uso anonimizadas.</li>
+        <li>Cumprir obrigações legais e regulatórias.</li>
+      </ul>
+
+      <h2>3. Compartilhamento de dados</h2>
+      <p>A GoStay não vende, aluga ou compartilha seus dados pessoais com terceiros, exceto nas seguintes situações:</p>
+      <ul>
+        <li><strong>Parceiros de pagamento:</strong> para processar suas transações de forma segura.</li>
+        <li><strong>Provedores de infraestrutura:</strong> serviços de hospedagem, CDN e e-mail que suportam a operação técnica da plataforma.</li>
+        <li><strong>Exigência legal:</strong> quando requerido por lei, ordem judicial ou autoridade competente.</li>
+      </ul>
+
+      <h2>4. Cookies e tecnologias de rastreamento</h2>
+      <p>
+        Utilizamos cookies essenciais para o funcionamento da plataforma e cookies de desempenho para análise de métricas. Você pode gerenciar as preferências de cookies diretamente no seu navegador.
+      </p>
+      <p>
+        Também utilizamos ferramentas de analytics (como Google Analytics) para entender o comportamento de navegação. Os dados coletados são agregados e não identificam você pessoalmente.
+      </p>
+
+      <h2>5. Armazenamento e segurança</h2>
+      <p>
+        Seus dados são armazenados em servidores seguros localizados no Brasil e em nuvem (AWS), seguindo os mais altos padrões de segurança da informação, incluindo:
+      </p>
+      <ul>
+        <li>Criptografia em trânsito (TLS 1.3) e em repouso (AES-256).</li>
+        <li>Monitoramento contínuo contra acessos não autorizados.</li>
+        <li>Controles rígidos de acesso baseados em função (RBAC).</li>
+        <li>Backups diários e planos de recuperação de desastres.</li>
+      </ul>
+
+      <h2>6. Retenção de dados</h2>
+      <p>
+        Mantemos seus dados pessoais apenas pelo tempo necessário para cumprir as finalidades descritas nesta política, salvo quando a lei exigir um prazo maior de retenção. Dados de conta são mantidos enquanto você for um aluno ativo. Após o encerramento, os dados são anonimizados ou excluídos em até 90 dias.
+      </p>
+
+      <h2>7. Seus direitos (LGPD)</h2>
+      <p>
+        De acordo com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018), você possui os seguintes direitos:
+      </p>
+      <ul>
+        <li><strong>Acesso:</strong> saber quais dados possuímos sobre você.</li>
+        <li><strong>Correção:</strong> corrigir dados incompletos ou desatualizados.</li>
+        <li><strong>Exclusão:</strong> solicitar a remoção dos seus dados pessoais.</li>
+        <li><strong>Portabilidade:</strong> receber seus dados em formato estruturado.</li>
+        <li><strong>Oposição:</strong> contestar o uso dos seus dados para determinadas finalidades.</li>
+        <li><strong>Revogação de consentimento:</strong> retirar seu consentimento a qualquer momento.</li>
+      </ul>
+      <p>
+        Para exercer seus direitos, entre em contato com nosso Encarregado de Proteção de Dados (DPO) pelo e-mail <strong>privacidade@gostay.com.br</strong>.
+      </p>
+
+      <h2>8. Menores de idade</h2>
+      <p>
+        A GoStay é destinada a profissionais da saúde e estudantes maiores de 18 anos. Não coletamos intencionalmente dados de menores. Se você é responsável e acredita que um menor nos forneceu dados, entre em contato para que possamos removê-los.
+      </p>
+
+      <h2>9. Alterações nesta política</h2>
+      <p>
+        Esta política pode ser atualizada periodicamente. Sempre que houver mudanças significativas, você será notificado por e-mail e um aviso será exibido na plataforma. A data da última atualização estará sempre disponível no topo desta página.
+      </p>
+
+      <h2>10. Contato</h2>
+      <p>
+        Se você tiver dúvidas sobre esta Política de Privacidade ou sobre o tratamento dos seus dados, entre em contato:
+      </p>
+      <ul>
+        <li><strong>E-mail:</strong> privacidade@gostay.com.br</li>
+        <li><strong>Endereço:</strong> Rua Exemplo, 123, Sala 456, São Paulo/SP</li>
+        <li><strong>Telefone:</strong> (11) 3000-0000</li>
+      </ul>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-logo">
+      <img src="assets/ACELERADOR DO POTENCIAL HUMANO (1).png" alt="GoStay" />
+    </div>
+    <p>© 2026 GoStay — Todos os direitos reservados.</p>
+  </footer>
+
+  <script>
+    // Efeito de scroll no header
+    const header = document.getElementById('mainHeader');
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('scrolled', window.scrollY > 10);
+    }, { passive: true });
+  </script>
+</body>
+</html>

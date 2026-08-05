@@ -495,15 +495,15 @@ require_once __DIR__ . '/functions/analytics.php';
     </div>
     <nav class="nav-links">
       <a href="login.php">Início</a>
-      <a href="login.php">Autorais</a>
-      <a href="login.php">Metodologia</a>
-      <a href="login.php">Professores</a>
-      <a href="login.php">Planos</a>
-      <a href="login.php">Sobre nós</a>
+      <a href="index.php#autorais">Autorais</a>
+      <a href="index.php#metodologia">Metodologia</a>
+      <a href="index.php#professores">Professores</a>
+      <a href="index.php#planos">Planos</a>
+      <a href="index.php#sobre">Sobre nós</a>
     </nav>
     <div class="nav-cta">
       <a class="btn btn-ghost" href="login.php">Já sou aluno</a>
-      <a class="btn btn-primary" href="login.php">Começar agora</a>
+      <a class="btn btn-primary" href="formAluno.php">Começar agora</a>
     </div>
   </div>
 </header>
@@ -801,7 +801,7 @@ require_once __DIR__ . '/functions/analytics.php';
         </div>
         <div>
           <h5>Legal</h5>
-          <a href="login.php">Termos de uso</a>
+          <a href="termos.html">Termos de uso</a>
           <a href="login.php">Política de privacidade</a>
           <a href="login.php">Garantia de 7 dias</a>
         </div>
